@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kmbeast.mapper.NoticeMapper">
+
+    <insert id="save">
+        INSERT INTO notice (name, content,create_time)
+        VALUES (#{name}, #{content},#{createTime})
+    </insert>
+
+    <update id="update">
+        UPDATE notice
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="batchDelete" parameterType="list">
+        DELETE FROM notice WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="query" resultMap="BaseResultMap">
+
+        SELECT n.*
+        FROM notice n
+        <where>
+            <if test="name != null and name != ''">
+                n.name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="startTime != null and endTime != null">
+                AND n.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+        ORDER BY n.create_time DESC
+        <if test="current != null and size != null">
+            LIMIT #{current},#{size}
+        </if>
+    </select>
+
+    <select id="queryCount" resultType="integer">
+
+        SELECT COUNT(*)
+        FROM notice n
+        <where>
+            <if test="name != null and name != ''">
+                n.name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="startTime != null and endTime != null">
+                AND n.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+
+    </select>
+
+    <resultMap id="BaseResultMap" type="cn.kmbeast.pojo.entity.Notice">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="content" property="content"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+
+</mapper>

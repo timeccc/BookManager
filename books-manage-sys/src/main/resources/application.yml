@@ -1,0 +1,26 @@
+# 服务配置
+server:
+  port: 21090
+  servlet:
+    context-path: /api/book-manage-sys-api/v1.0
+# API地址前缀，用于接口拦截放行
+my-server:
+  api-context-path: /api/book-manage-sys-api/v1.0
+#MySQL与文件上传限制配置
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/book-manage-sys?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+    username: root
+    password: 952377
+# 让 Mybatis 在 Mapper目录下找到 XML 映射文件
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+
+
+

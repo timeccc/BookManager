@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kmbeast.mapper.BookShelfMapper">
+
+    <insert id="save">
+        INSERT INTO bookshelf (floor, area, frame)
+        VALUES (#{floor},#{area},#{frame})
+    </insert>
+
+    <update id="update">
+        UPDATE bookshelf
+        <set>
+            <if test="floor != null and floor != ''">
+                floor = #{floor},
+            </if>
+            <if test="area != null and area != ''">
+                area = #{area},
+            </if>
+            <if test="frame != null and frame != ''">
+                frame = #{frame},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="batchDelete" parameterType="list">
+        DELETE FROM bookshelf WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="query" resultMap="BaseResultMap">
+
+        SELECT b.*
+        FROM bookshelf b
+        <where>
+            <if test="floor != null and floor != ''">
+                b.floor LIKE concat('%',#{floor},'%')
+            </if>
+        </where>
+        <if test="current != null and size != null">
+            LIMIT #{current},#{size}
+        </if>
+    </select>
+
+    <select id="queryCount" resultType="integer">
+
+        SELECT COUNT(*)
+        FROM bookshelf b
+        <where>
+            <if test="floor != null and floor != ''">
+                b.floor LIKE concat('%',#{floor},'%')
+            </if>
+        </where>
+
+    </select>
+
+    <resultMap id="BaseResultMap" type="cn.kmbeast.pojo.entity.BookShelf">
+        <id column="id" property="id"/>
+        <result column="floor" property="floor"/>
+        <result column="area" property="area"/>
+        <result column="frame" property="frame"/>
+    </resultMap>
+
+
+</mapper>

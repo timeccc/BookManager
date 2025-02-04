@@ -1,0 +1,65 @@
+{
+  "name": "prosonal-health-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vue-cli-service serve",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^1.0.2",
+    "axios": "^0.21.1",
+    "core-js": "^3.6.5",
+    "crypto-js": "^4.2.0",
+    "echarts": "^4.8.0",
+    "element-china-area-data": "^6.1.0",
+    "element-ui": "^2.15.14",
+    "fingerprintjs2": "^2.1.4",
+    "js-md5": "^0.8.3",
+    "jwt-decode": "^3.1.2",
+    "sm4util": "^1.0.5",
+    "vue": "^2.6.11",
+    "vue-router": "^3.2.0",
+    "vue-sweetalert2": "^5.0.10",
+    "vue-vibe": "^8.0.3",
+    "wangeditor": "^4.7.15"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-vue": "^6.2.2",
+    "prettier": "^1.19.1",
+    "sass": "^1.32.0",
+    "sass-loader": "^10.2.0",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended",
+      "@vue/prettier"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

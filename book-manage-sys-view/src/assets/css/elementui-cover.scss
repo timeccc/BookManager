@@ -1,0 +1,178 @@
+// ElementUI 自定义覆盖样式
+
+.dialog-footer {
+  /* 使按钮水平居中 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.el-dialog {
+  border-radius: 8px !important;
+}
+
+.el-slider__bar {
+  height: 16px;
+  background-color: #c1cc57;
+}
+
+.el-slider__button-wrapper {
+  height: 66px;
+  width: 66px;
+  top: -25px;
+}
+
+
+.el-switch.is-checked .el-switch__core{
+  border-color: rgb(43, 121, 203) !important;
+  background-color: rgb(43, 121, 203) !important;
+}
+
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 标签栏 */
+.el-tabs__active-bar {
+  height: 2px !important;
+  border-radius: 3px;
+}
+
+/* 标签栏 */
+.el-tabs__item {
+  height: 50px !important;
+  line-height: 50px !important;
+  user-select: none;
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 88px;
+  height: 88px !important;
+  line-height: 88px !important;
+  text-align: center;
+}
+
+.el-timeline {
+  padding: 10px;
+}
+
+.el-timeline-item__tail {
+  border-left: 2px solid #155599 !important;
+}
+
+.el-timeline-item__node {
+  background-color: #155599 !important;
+}
+
+/* 表格表头 */
+.el-table thead tr th {
+  color: #656464 !important;
+  font-weight: 400;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  //background-color: rgb(246, 246, 246) !important;
+  text-align: left !important;
+}
+
+.el-dialog__body {
+  padding: 0 !important;
+}
+
+.el-badge__content.is-fixed {
+  top: 4px !important;
+  right: 6px !important;
+}
+
+.el-dialog__header {
+  padding: 0 !important;
+}
+
+/* 多选框偏移 */
+.el-table th>.cell {
+  padding-left: 15px !important;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+/* 表格单元格 */
+.el-table__row .cell {
+  font-size: 14px !important;
+  color: #1c1c1c;
+  padding-left: 15px !important;
+}
+
+/* 表格多选框颜色 */
+.el-checkbox__input.is-checked .el-checkbox__inner,
+.el-checkbox__input.is-indeterminate .el-checkbox__inner {
+  background-color: #a7535a !important;
+  border-color: #a7535a !important;
+}
+
+/* 分页显示色 */
+.el-pager li.active {
+  color: #565555 !important;
+  cursor: default;
+  border-radius: 3px;
+  border: 1px solid rgb(240, 241, 242);
+  background-color: rgb(240, 241, 242);
+}
+
+.el-radio-button__orig-radio:checked+.el-radio-button__inner {
+  color: #ffffff !important;
+  background-color: #64d134 !important;
+  border-color: #64d134 !important;
+  box-shadow: -1px 0 0 0 #64d134 !important;
+}
+
+.el-menu {
+  border-right: none !important;
+}
+
+.w-e-text-container [data-slate-editor] pre>code {
+  text-shadow: none !important;
+  background-color: #2d2d2d !important;
+  color: aliceblue !important;
+  padding: 0 10px !important;
+}
+
+/* 代码高亮插入后，会出现 “=” 背景色，这里去掉 */
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  background: none !important;
+}
+
+#w-e-text-12 span {
+  background-color: #268611 !important;
+}
+
+/* 气泡确认框 */
+.el-popconfirm__main {
+  padding-bottom: 21px !important;
+}
+
+
+/* 标签 */
+.el-tag+.el-tag {
+  margin-left: 10px !important;
+}
+
+.el-dropdown-menu {
+  padding: 20px !important;
+  user-select: none !important;
+  color: #1c1c1c;
+
+  .el-dropdown-item:hover {
+    background-color: #ffffff !important;
+  }
+}

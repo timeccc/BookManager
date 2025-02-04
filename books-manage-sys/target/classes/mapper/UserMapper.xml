@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kmbeast.mapper.UserMapper">
+    <insert id="insert" parameterType="cn.kmbeast.pojo.entity.User">
+        INSERT INTO user (user_account,
+                          user_name,
+                          user_pwd,
+                          user_avatar,
+                          user_email,
+                          user_role,
+                          is_login,
+                          is_word,
+                          create_time)
+        VALUES (#{userAccount},
+                #{userName},
+                #{userPwd},
+                #{userAvatar},
+                #{userEmail},
+                #{userRole},
+                #{isLogin},
+                #{isWord},
+                #{createTime})
+    </insert>
+    <update id="update" parameterType="cn.kmbeast.pojo.entity.User">
+        UPDATE user
+        <set>
+            <if test="userAccount != null">
+                user_account = #{userAccount},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName},
+            </if>
+            <if test="userPwd != null">
+                user_pwd = #{userPwd},
+            </if>
+            <if test="userAvatar != null">
+                user_avatar = #{userAvatar},
+            </if>
+            <if test="userEmail != null">
+                user_email = #{userEmail},
+            </if>
+            <if test="isLogin != null">
+                is_login = #{isLogin},
+            </if>
+            <if test="isWord != null">
+                is_word = #{isWord},
+            </if>
+            <if test="userRole != null">
+                user_role = #{userRole},
+            </if>
+        </set>
+        WHERE id = #{id}
+
+    </update>
+
+    <delete id="batchDelete" parameterType="list">
+        DELETE FROM user WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getByActive" resultMap="BaseResultMap">
+        SELECT u.*
+        FROM user u
+        <where>
+            1 = 1
+            <if test="id != null">
+                AND u.id = #{id}
+            </if>
+            <if test="userName != null and userName != ''">
+                AND u.user_name = #{userName}
+            </if>
+            <if test="userAccount != null and userAccount != ''">
+                AND u.user_account = #{userAccount}
+            </if>
+        </where>
+
+    </select>
+
+    <!--分页查询用户信息-->
+    <select id="query" resultMap="BaseResultMap">
+
+        SELECT u.*
+        FROM user u
+        <where>
+            <if test="userAccount != null and userAccount != ''">
+                AND u.user_account LIKE concat('%',#{userAccount},'%')
+            </if>
+            <if test="userName != null and userName != ''">
+                AND u.user_name LIKE concat('%',#{userName},'%')
+            </if>
+            <if test="userEmail != null and userEmail != ''">
+                AND u.user_email LIKE concat('%',#{userEmail},'%')
+            </if>
+            <if test="role != null">
+                AND u.role = #{role}
+            </if>
+            <if test="isLogin != null">
+                AND u.is_login = #{isLogin}
+            </if>
+            <if test="isWord != null">
+                AND u.is_word = #{isWord}
+            </if>
+            <if test="startTime != null and endTime != null">
+                AND u.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+        ORDER BY u.create_time DESC
+        <if test="current != null and size != null">
+            LIMIT #{current},#{size}
+        </if>
+    </select>
+
+    <!--满足分页条件的数据总项-->
+    <select id="queryCount" resultType="integer">
+
+        SELECT COUNT(*)
+        FROM user u
+        <where>
+            <if test="userAccount != null and userAccount != ''">
+                AND u.user_account LIKE concat('%',#{userAccount},'%')
+            </if>
+            <if test="userName != null and userName != ''">
+                AND u.user_name LIKE concat('%',#{userName},'%')
+            </if>
+            <if test="userEmail != null and userEmail != ''">
+                AND u.user_email LIKE concat('%',#{userEmail},'%')
+            </if>
+            <if test="role != null">
+                AND u.role = #{role}
+            </if>
+            <if test="isLogin != null">
+                AND u.is_login = #{isLogin}
+            </if>
+            <if test="isWord != null">
+                AND u.is_word = #{isWord}
+            </if>
+            <if test="startTime != null and endTime != null">
+                AND u.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+
+    </select>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.kmbeast.pojo.entity.User">
+        <id column="id" property="id"/>
+        <result column="user_account" property="userAccount"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_pwd" property="userPwd"/>
+        <result column="user_avatar" property="userAvatar"/>
+        <result column="user_email" property="userEmail"/>
+        <result column="user_role" property="userRole"/>
+        <result column="is_login" property="isLogin"/>
+        <result column="is_word" property="isWord"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+
+</mapper>

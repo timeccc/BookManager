@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kmbeast.mapper.BookOrderHistoryMapper">
+
+    <insert id="save">
+        INSERT INTO book_order_history (book_id, user_id, deadline_num, is_return, return_time, create_time)
+        VALUES (#{bookId}, #{userId}, #{deadlineNum}, #{isReturn}, #{returnTime}, #{createTime})
+    </insert>
+
+    <update id="update">
+        UPDATE book_order_history
+        <set>
+            <if test="isReturn != null">
+                is_return = #{isReturn},
+            </if>
+            <if test="returnTime != null">
+                return_time = #{returnTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="batchDelete" parameterType="list">
+        DELETE FROM book_order_history WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="query" resultMap="BaseResultMap">
+
+        SELECT boh.*,u.user_name,b.name AS book_name,b.cover AS book_cover
+        FROM book_order_history boh
+        LEFT JOIN user u ON u.id = boh.user_id
+        LEFT JOIN book b ON b.id = boh.book_id
+        <where>
+            <if test="userId != null">
+                AND boh.user_id = #{userId}
+            </if>
+            <if test="bookId != null">
+                AND boh.book_id = #{bookId}
+            </if>
+            <if test="isReturn != null">
+                AND boh.is_return = #{isReturn}
+            </if>
+            <if test="startTime != null and endTime != null">
+                AND boh.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+        ORDER BY boh.create_time DESC
+        <if test="current != null and size != null">
+            LIMIT #{current},#{size}
+        </if>
+    </select>
+
+    <select id="queryCount" resultType="integer">
+
+        SELECT COUNT(*)
+        FROM book_order_history boh
+        <where>
+            <if test="userId != null">
+                AND boh.user_id = #{userId}
+            </if>
+            <if test="isReturn != null">
+                AND boh.is_return = #{isReturn}
+            </if>
+            <if test="startTime != null and endTime != null">
+                AND boh.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+
+    </select>
+
+    <resultMap id="BaseResultMap" type="cn.kmbeast.pojo.vo.BookOrderHistoryVO">
+        <id column="id" property="id"/>
+        <result column="book_id" property="bookId"/>
+        <result column="book_name" property="bookName"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="deadline_num" property="deadlineNum"/>
+        <result column="book_cover" property="bookCover"/>
+        <result column="is_return" property="isReturn"/>
+        <result column="return_time" property="returnTime"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+
+</mapper>

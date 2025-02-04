@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kmbeast.mapper.BookMapper">
+
+    <insert id="save">
+        INSERT INTO book (name, cover, publisher, author, isbn, num, detail, bookshelf_id, category_id, is_plan_buy,
+                          plan_buy_time,
+                          create_time)
+        VALUES (#{name}, #{cover}, #{publisher}, #{author}, #{isbn}, #{num}, #{detail}, #{bookShelfId}, #{categoryId},
+                #{isPlanBuy},
+                #{planBuyTime}, #{createTime})
+    </insert>
+
+    <update id="update">
+        UPDATE book
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="cover != null and cover != ''">
+                cover = #{cover},
+            </if>
+            <if test="publisher != null and publisher != ''">
+                publisher = #{publisher},
+            </if>
+            <if test="author != null and author != ''">
+                author = #{author},
+            </if>
+            <if test="isbn != null and isbn != ''">
+                isbn = #{isbn},
+            </if>
+            <if test="num != null">
+                num = #{num},
+            </if>
+            <if test="detail != null and detail != ''">
+                detail = #{detail},
+            </if>
+            <if test="bookShelfId != null">
+                bookshelf_id = #{bookShelfId},
+            </if>
+            <if test="categoryId != null">
+                category_id = #{categoryId},
+            </if>
+            <if test="isPlanBuy != null">
+                is_plan_buy = #{isPlanBuy},
+            </if>
+            <if test="planBuyTime != null">
+                plan_buy_time = #{planBuyTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="batchDelete" parameterType="list">
+        DELETE FROM book WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="query" resultMap="BaseResultMap">
+        SELECT b.*,
+        c.name AS category_name,
+        bs.floor,
+        bs.area,
+        bs.frame,
+        (SELECT COUNT(bsave.id)
+        FROM book_save bsave
+        WHERE bsave.book_id = b.id AND bsave.user_id = #{userId}) AS is_save,
+        (SELECT boh.is_return
+        FROM book_order_history boh
+        WHERE boh.book_id = b.id AND boh.user_id = #{userId}
+        ORDER BY boh.id DESC
+        LIMIT 1) AS is_return,
+        (SELECT COUNT(brh.id)
+        FROM book_rss_history brh
+        WHERE brh.book_id = b.id AND brh.user_id = #{userId}) AS is_rss
+        FROM book b
+        LEFT JOIN category c ON c.id = b.category_id
+        LEFT JOIN bookshelf bs ON bs.id = b.bookshelf_id
+        <where>
+            <if test="id != null">
+                AND b.id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                AND b.name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="publisher != null and publisher != ''">
+                AND b.publisher LIKE concat('%',#{publisher},'%')
+            </if>
+            <if test="categoryId != null">
+                AND b.category_id = #{categoryId}
+            </if>
+            <if test="isPlanBuy != null">
+                AND b.is_plan_buy = #{isPlanBuy}
+            </if>
+            <if test="startTime != null and endTime != null">
+                AND b.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+        ORDER BY b.create_time DESC
+        <if test="current != null and size != null">
+            LIMIT #{current},#{size}
+        </if>
+    </select>
+
+    <select id="queryCount" resultType="integer">
+
+        SELECT COUNT(*)
+        FROM book b
+        <where>
+            <if test="id != null">
+                AND b.id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                AND b.name LIKE concat('%',#{name},'%')
+            </if>
+            <if test="publisher != null and publisher != ''">
+                AND b.publisher LIKE concat('%',#{publisher},'%')
+            </if>
+            <if test="isPlanBuy != null">
+                AND b.is_plan_buy = #{isPlanBuy}
+            </if>
+            <if test="startTime != null and endTime != null">
+                AND b.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+
+    </select>
+
+    <resultMap id="BaseResultMap" type="cn.kmbeast.pojo.vo.BookVO">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="cover" property="cover"/>
+        <result column="publisher" property="publisher"/>
+        <result column="author" property="author"/>
+        <result column="isbn" property="isbn"/>
+        <result column="num" property="num"/>
+        <result column="detail" property="detail"/>
+        <result column="bookshelf_id" property="bookShelfId"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="is_plan_buy" property="isPlanBuy"/>
+        <result column="plan_buy_time" property="planBuyTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="category_name" property="categoryName"/>
+        <result column="floor" property="floor"/>
+        <result column="area" property="area"/>
+        <result column="frame" property="frame"/>
+        <result column="is_save" property="isSave"/>
+        <result column="is_rss" property="isRss"/>
+        <result column="is_return" property="isReturn"/>
+    </resultMap>
+
+
+</mapper>

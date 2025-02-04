@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kmbeast.mapper.UserOperationLogMapper">
+
+    <insert id="save">
+        INSERT INTO user_operation_log (user_id, content, create_time)
+        VALUES
+        <foreach collection="list" item="userOperationLog" separator=",">
+            (#{userOperationLog.userId}, #{userOperationLog.content},#{userOperationLog.createTime})
+        </foreach>
+    </insert>
+
+    <update id="update">
+        UPDATE user_operation_log
+        <set>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="batchDelete" parameterType="list">
+        DELETE FROM user_operation_log WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="query" resultMap="BaseResultMap">
+
+        SELECT uol.*,u.user_name
+        FROM user_operation_log uol
+        LEFT JOIN user u ON u.id = uol.user_id
+        <where>
+            <if test="userId != null">
+                AND uol.user_id = #{userId}
+            </if>
+            <if test="content != null and content != ''">
+                AND uol.content LIKE concat("%",#{content},'%')
+            </if>
+            <if test="startTime != null and endTime != null">
+                AND uol.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+        ORDER BY uol.create_time DESC
+        <if test="current != null and size != null">
+            LIMIT #{current},#{size}
+        </if>
+    </select>
+
+    <select id="queryCount" resultType="integer">
+
+        SELECT COUNT(*)
+        FROM user_operation_log uol
+        <where>
+            <if test="userId != null">
+                AND uol.user_id = #{userId}
+            </if>
+            <if test="startTime != null and endTime != null">
+                AND uol.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+
+    </select>
+
+    <resultMap id="BaseResultMap" type="cn.kmbeast.pojo.vo.UserOperationLogVO">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="content" property="content"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+
+</mapper>

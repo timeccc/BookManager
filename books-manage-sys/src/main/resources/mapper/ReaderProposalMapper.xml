@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kmbeast.mapper.ReaderProposalMapper">
+
+    <insert id="save">
+        INSERT INTO reader_proposal (user_id, content, is_publish, reply_content, reply_time, is_reply,create_time)
+        VALUES (#{userId}, #{content}, #{isPublish}, #{replyContent}, #{replyTime}, #{isReply},#{createTime})
+    </insert>
+
+    <update id="update">
+        UPDATE reader_proposal
+        <set>
+            <if test="replyContent != null and replyContent != ''">
+                reply_content = #{replyContent},
+            </if>
+            <if test="replyTime != null">
+                reply_time = #{replyTime},
+            </if>
+            <if test="isReply != null">
+                is_reply = #{isReply},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="batchDelete" parameterType="list">
+        DELETE FROM reader_proposal WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="query" resultMap="BaseResultMap">
+
+        SELECT rp.*,u.user_name,u.user_avatar
+        FROM reader_proposal rp
+        LEFT JOIN user u ON u.id = rp.user_id
+        <where>
+            <if test="content != null and content != ''">
+                AND rp.content LIKE concat('%',#{content},'%')
+            </if>
+            <if test="userId != null">
+                AND rp.user_id = #{userId}
+            </if>
+            <if test="isPublish != null">
+                AND rp.is_publish = #{isPublish}
+            </if>
+            <if test="isReply != null">
+                AND rp.is_reply = #{isReply}
+            </if>
+            <if test="startTime != null and endTime != null">
+                AND rp.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+        ORDER BY rp.create_time DESC
+        <if test="current != null and size != null">
+            LIMIT #{current},#{size}
+        </if>
+    </select>
+
+    <select id="queryCount" resultType="integer">
+
+        SELECT COUNT(*)
+        FROM reader_proposal rp
+        <where>
+            <if test="content != null and content != ''">
+                AND rp.content LIKE concat('%',#{content},'%')
+            </if>
+            <if test="userId != null">
+                AND rp.user_id = #{userId}
+            </if>
+            <if test="isPublish != null">
+                AND rp.is_publish = #{isPublish}
+            </if>
+            <if test="isReply != null">
+                AND rp.is_reply = #{isReply}
+            </if>
+            <if test="startTime != null and endTime != null">
+                AND rp.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+        </where>
+
+    </select>
+
+    <resultMap id="BaseResultMap" type="cn.kmbeast.pojo.vo.ReaderProposalVO">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="user_avatar" property="userAvatar"/>
+        <result column="content" property="content"/>
+        <result column="is_publish" property="isPublish"/>
+        <result column="reply_content" property="replyContent"/>
+        <result column="reply_time" property="replyTime"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+
+</mapper>
