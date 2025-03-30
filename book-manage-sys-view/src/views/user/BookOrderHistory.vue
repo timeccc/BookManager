@@ -16,11 +16,11 @@
                     <el-col v-for="(book, index) in tableData" :key="index" :span="6">
                         <div class="item-book">
                             <div style="display: flex;justify-content: center;">
-                                <img style="width: 100%;max-height: 380px;border-radius: 5px;" :src="book.bookCover"
+                                <img style="width: 100%;max-height: 280px;border-radius: 5px;" :src="book.bookCover"
                                     alt="">
                             </div>
-                            <div style="padding: 10px 22px;">
-                                <div style="color: rgb(51,51,51);font-size: 24px;font-weight: bold;margin-block: 4px;">
+                            <div style="padding: 8px 16px;">
+                                <div style="color: rgb(51,51,51);font-size: 20px;font-weight: bold;margin-block: 4px;">
                                     <el-tooltip class="item" effect="dark" :content="book.bookName"
                                         placement="bottom-end">
                                         <div class="title">{{ book.bookName }}</div>
@@ -200,14 +200,14 @@ export default {
 <style scoped lang="scss">
 .item-book {
     border: 1px solid rgb(235, 235, 235);
-    margin: 5px;
+    margin: 4px;
     border-radius: 5px;
-    padding: 6px;
+    padding: 4px;
     box-sizing: border-box;
 }
 
 .title {
-    width: 140px;
+    width: 120px;
     overflow: hidden;
     /* 隐藏超出部分 */
     text-overflow: ellipsis;

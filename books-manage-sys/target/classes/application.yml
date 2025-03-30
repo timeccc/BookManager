@@ -16,7 +16,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/book-manage-sys?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
     username: root
-    password: 952377
+    password: 123456
 # 让 Mybatis 在 Mapper目录下找到 XML 映射文件
 mybatis:
   mapper-locations: classpath:mapper/*.xml

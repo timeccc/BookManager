@@ -21,13 +21,13 @@
                 <el-empty description="暂无书籍"></el-empty>
             </el-row>
             <el-row v-else style="width: 1200px;margin: 0 auto;">
-                <el-col v-for="(book, index) in tableData" :key="index" :span="6">
+                <el-col v-for="(book, index) in tableData" :key="index" :span="4">
                     <div class="item-book">
-                        <div style="display: flex;justify-content: center;padding: 6px;">
-                            <img style="width: 100%;height: 360px;border-radius: 5px;" :src="book.cover" alt="">
+                        <div style="display: flex;justify-content: center;padding: 0;">
+                            <img style="width: 140px;height: 140px;object-fit: cover;" :src="book.cover" alt="">
                         </div>
                         <div style="padding: 4px 6px;">
-                            <div style="color: rgb(51,51,51);font-size: 22px;font-weight: bold;margin-block: 4px;">
+                            <div style="color: rgb(51,51,51);font-size: 16px;font-weight: bold;margin-block: 4px;">
                                 <el-tooltip class="item" effect="dark" :content="book.name" placement="bottom-end">
                                     <div class="title">{{ book.name }}</div>
                                 </el-tooltip>
@@ -62,7 +62,7 @@
                                 </div>
                                 <div>
                                     <span v-if="!book.isPlanBuy">
-                                        <span style="color: blue;" v-if="book.isSave">已收藏该书籍</span>
+                                        <span class="edit-round status" v-if="book.isSave">已收藏该书籍</span>
                                         <span v-else class="edit-round" style="margin-right: 5px;"
                                             @click="saveBook(book)">
                                             <i class="el-icon-star-off"></i>
@@ -74,21 +74,20 @@
                                             <span v-else>
                                                 <!-- 没借过书的情况 -->
                                                 <span v-if="book.isReturn === null">
-                                                    <span style="margin-left: 4px;" class="edit-round"
+                                                    <span class="edit-round" style="margin-left: 4px;"
                                                         @click="handleEdit(book)">借书</span>
                                                 </span>
                                                 <span v-else>
                                                     <!-- 待归还状态，只做显示 -->
-                                                    <span v-if="!book.isReturn" style="color: blue;">待归还</span>
-                                                    <span v-else style="margin-left: 4px;" class="edit-round"
+                                                    <span v-if="!book.isReturn" class="edit-round status">待归还</span>
+                                                    <span v-else class="edit-round" style="margin-left: 4px;"
                                                         @click="handleEdit(book)">借书</span>
                                                 </span>
                                             </span>
                                         </span>
-
                                     </span>
                                     <span v-else>
-                                        <span style="color: blue;" v-if="book.isRss">已订阅该书籍</span>
+                                        <span class="edit-round status" v-if="book.isRss">已订阅该书籍</span>
                                         <span v-else class="edit-round" @click="rssBook(book)">订阅</span>
                                     </span>
                                 </div>
@@ -339,6 +338,33 @@ export default {
     box-sizing: border-box;
 }
 
+.edit-round {
+    background-color: #fff;
+    border: 1px solid #dcdfe6;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all .2s;
+    color: #333;
+}
+
+.edit-round.status {
+    color: rgb(64, 158, 255);
+    cursor: default;
+}
+
+.edit-round:hover {
+    color: #409eff;
+    border-color: #c6e2ff;
+    background-color: #ecf5ff;
+}
+
+.edit-round.status:hover {
+    color: rgb(64, 158, 255);
+    border-color: #dcdfe6;
+    background-color: #fff;
+}
 
 .title {
     width: 140px;

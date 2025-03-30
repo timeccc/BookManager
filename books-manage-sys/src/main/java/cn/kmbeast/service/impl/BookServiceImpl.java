@@ -107,6 +107,9 @@ public class BookServiceImpl implements BookService {
                 );
                 rssNotifications.add(rssNotification);
             }
+            if (rssNotifications.isEmpty()){
+                return;
+            }
             rssNotificationMapper.save(rssNotifications);
         }
     }

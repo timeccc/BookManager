@@ -6,7 +6,6 @@ import java.util.Map;
 /**
  * 用户身份支持器
  *
- * @author 【B站：程序员晨星】
  */
 public class LocalThreadHolder {
 
@@ -17,7 +16,6 @@ public class LocalThreadHolder {
      *
      * @param userId   用户ID
      * @param userRole 用户角色
-     * @author 【B站：程序员晨星】
      */
     public static void setUserId(Integer userId, Integer userRole) {
         Map<String, Integer> map = new HashMap<>();
@@ -30,7 +28,6 @@ public class LocalThreadHolder {
      * 取出用户ID
      *
      * @return Integer
-     * @author 【B站：程序员晨星】
      */
     public static Integer getUserId() {
         return USER_HOLDER.get().get("userId");
@@ -40,7 +37,6 @@ public class LocalThreadHolder {
      * 取出用户角色
      *
      * @return Integer
-     * @author 【B站：程序员晨星】
      */
     public static Integer getRoleId() {
         return USER_HOLDER.get().get("userRole");
@@ -49,7 +45,6 @@ public class LocalThreadHolder {
     /**
      * 防止内存溢出，当前线程结束，释放资源
      *
-     * @author 【B站：程序员晨星】
      */
     public static void clear() {
         USER_HOLDER.remove();
