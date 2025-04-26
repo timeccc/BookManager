@@ -1,31 +1,34 @@
 <template>
-    <div style="padding: 0 10px;overflow-y: hidden;overflow-x: hidden;">
-        <el-row>
-            <el-col :span="8">
-                <div style="padding: 10px;box-sizing: border-box;">
-                    <PieChart fontColor="#000" bag="rgb(236, 245, 255)" tag="基础数据" :values="pieValues"
+    <div class="dashboard-container">
+        <el-row :gutter="16">
+            <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
+                <div class="dashboard-card">
+                    <PieChart fontColor="#333" bag="rgba(255, 255, 255, 0.6)" tag="基础数据" :values="pieValues"
                         :types="pieTypes" />
                 </div>
-                <div style="padding: 10px 20px;box-sizing: border-box;">
-                    <h3>最新公告</h3>
-                    <div style="background-color: rgb(236, 245, 255);border-radius: 5px;padding: 5px 10px;">
-                        <div style="margin-bottom: 20px;margin-top: 5px;" v-for="(notice, index) in noticeList" :key="index">
-                            <div style="margin: 5px 0;cursor: pointer;">
-                                <span style="font-size: 14px;">{{ notice.name }}</span>
+                <div class="dashboard-card mt-16">
+                    <h3 class="card-title">最新公告</h3>
+                    <div class="notice-list">
+                        <div class="notice-item" v-for="(notice, index) in noticeList" :key="index">
+                            <div class="notice-title">
+                                <span>{{ notice.name }}</span>
                             </div>
-                            <div>
-                                <span style="font-size: 14px;">时间：{{ notice.createTime }}</span>
+                            <div class="notice-time">
+                                <span>时间：{{ notice.createTime }}</span>
                             </div>
+                        </div>
+                        <div class="empty-notice" v-if="noticeList.length === 0">
+                            <span>暂无公告</span>
                         </div>
                     </div>
                 </div>
             </el-col>
-            <el-col :span="16">
-                <div style="padding: 8px;box-sizing: border-box;">
+            <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
+                <div class="dashboard-card">
                     <LineChart height="310px" tag="用户数" @on-selected="userDatesSelected" :values="userValues"
                         :date="userDates" />
                 </div>
-                <div style="padding: 8px;box-sizing: border-box;">
+                <div class="dashboard-card mt-16">
                     <LineChart height="310px" tag="图书上架情况" @on-selected="modelDatesSelected" :values="modelValues"
                         :date="modelDates" />
                 </div>
@@ -102,22 +105,103 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.dashboard-container {
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+.dashboard-card {
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    
+    &:hover {
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
+    }
+}
+
+.mt-16 {
+    margin-top: 16px;
+}
+
+.card-title {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.notice-list {
+    background-color: rgba(236, 245, 255, 0.5);
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.notice-item {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    
+    &:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+}
+
+.notice-title {
+    margin: 5px 0;
+    cursor: pointer;
+    font-weight: 500;
+    
+    span {
+        font-size: 15px;
+        color: #333;
+    }
+    
+    &:hover span {
+        color: #3a8ee6;
+    }
+}
+
+.notice-time {
+    span {
+        font-size: 13px;
+        color: #666;
+    }
+}
+
+.empty-notice {
+    text-align: center;
+    padding: 20px 0;
+    color: #999;
+    font-size: 14px;
+}
+
 .status-success {
     display: inline-block;
-    padding: 1px 5px;
-    border-radius: 2px;
-    background-color: rgb(201, 237, 249);
-    color: rgb(111, 106, 196);
+    padding: 3px 8px;
+    border-radius: 4px;
+    background-color: rgba(201, 237, 249, 0.7);
+    color: #5e81ac;
     font-size: 12px;
 }
 
 .status-error {
     display: inline-block;
-    padding: 1px 5px;
-    border-radius: 2px;
-    background-color: rgb(233, 226, 134);
-    color: rgb(131, 138, 142);
-    color: rgb(111, 106, 196);
+    padding: 3px 8px;
+    border-radius: 4px;
+    background-color: rgba(233, 226, 134, 0.7);
+    color: #6f6ac4;
     font-size: 12px;
 }
 </style>

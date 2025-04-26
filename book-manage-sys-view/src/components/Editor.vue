@@ -2,7 +2,7 @@
     <div>
         <Toolbar style="border-bottom: 1px solid #eae8e8;" :editor="editor" :defaultConfig="toolbarConfig"
             :mode="mode" />
-        <Editor :style="{ height: height, overflowY: 'hidden' }" v-model="content" :defaultConfig="editorConfig"
+        <Editor :style="{ height: height, overflowY: 'hidden' }" v-model="editorContent" :defaultConfig="editorConfig"
             :mode="mode" @onCreated="onCreated" />
     </div>
 </template>
@@ -12,23 +12,22 @@ import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 export default Vue.extend({
     components: { Editor, Toolbar },
     props: {
-        receiveContent: {
+        value: {
             type: String,
             default: '',
-            required: true
         },
         height: {
             type: String,
-            default: 'calc(100vh - 100px)'
+            default: 'calc(100vh - 250px)'
         }
     },
     data() {
         return {
             editor: null,
-            content: '<p>创作内容</p>',
+            editorContent: this.value || '<p>请输入内容...</p>',
             toolbarConfig: {},
             editorConfig: {
-                placeholder: '请输入题目...',
+                placeholder: '请输入内容...',
                 MENU_CONF: {
                     uploadImage: {
                         server: '/api/book-manage-sys-api/v1.0/file/upload',
@@ -70,16 +69,20 @@ export default Vue.extend({
         },
     },
     watch: {
-        receiveContent: {
-            handler(v1, v2) {
-                this.content = v1;
+        value: {
+            handler(newVal) {
+                if (newVal !== this.editorContent) {
+                    this.editorContent = newVal || '<p>请输入内容...</p>';
+                }
             },
-            deep: true, // 启用深度监听  
             immediate: true
         },
-        content(newVal, oldVal) {
-            this.$emit('on-receive', newVal);
-        },
+        editorContent: {
+            handler(newVal) {
+                this.$emit('input', newVal);
+            },
+            deep: true
+        }
     },
     beforeDestroy() {
         const editor = this.editor;

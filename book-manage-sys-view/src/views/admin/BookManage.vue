@@ -1,6 +1,6 @@
 <template>
-    <el-row style="background-color: #FFFFFF;padding: 20px 0;border-radius: 5px;width: 1200px;margin: 0 auto;">
-        <el-row style="padding: 10px;margin: 0 10px;">
+    <el-row class="book-manage-container">
+        <el-row style="padding: 10px 16px;margin: 0;">
             <el-row>
                 <el-date-picker style="width: 216px;margin-right: 5px;" @change="fetchFreshData" size="small"
                     v-model="searchTime" type="daterange" range-separator="至" start-placeholder="创建开始"
@@ -15,10 +15,10 @@
                 </span>
             </el-row>
         </el-row>
-        <el-row style="margin: 10px 20px;">
-            <el-row>
-                <el-col style="padding: 2px;border: 1px solid rgb(241,241,241);" v-for="(book, index) in tableData"
-                    :key="index" :span="4">
+        <el-row style="margin: 10px 16px;">
+            <el-row :gutter="16">
+                <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" v-for="(book, index) in tableData"
+                    :key="index" class="book-col">
                     <div class="item-book">
                         <div style="display: flex;justify-content: center;">
                             <img style="width: 150px;max-height: 180px;border-radius: 5px;" :src="book.cover" alt="">
@@ -374,6 +374,17 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.book-manage-container {
+    background-color: #FFFFFF;
+    padding: 20px 0;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
+}
+
 .list-cover {
     width: 50px;
     height: 70px;
@@ -394,5 +405,20 @@ export default {
     background-color: rgb(255, 255, 255);
     padding: 10px;
     box-sizing: border-box;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(230, 230, 230, 0.5);
+    height: 100%;
+    
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.book-col {
+    padding: 8px;
+    margin-bottom: 10px;
 }
 </style>

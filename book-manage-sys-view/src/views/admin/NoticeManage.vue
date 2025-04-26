@@ -1,6 +1,6 @@
 <template>
-    <el-row style="background-color: #FFFFFF;padding: 10px 0;border-radius: 5px;">
-        <el-row style="padding: 10px;">
+    <el-row class="common-container">
+        <el-row style="padding: 10px 16px;">
             <el-row>
                 <span class="top-bar">公告标题</span>
                 <el-input size="small" style="width: 188px;" v-model="noticeQueryDto.name" placeholder="输入处" clearable
@@ -18,8 +18,8 @@
                     type="info" @click="addNotice">新增公告</el-button>
             </el-row>
         </el-row>
-        <el-row style="margin: 10px;">
-            <el-table :data="tableData">
+        <el-row style="margin: 10px 16px;">
+            <el-table :data="tableData" class="custom-table">
                 <el-table-column prop="name"  label="公告"></el-table-column>
                 <el-table-column prop="createTime" width="188" label="发布时间"></el-table-column>
                 <el-table-column label="操作" width="120">
@@ -166,4 +166,41 @@ export default {
     },
 };
 </script>
-<style scoped lang="scss"></style>
+
+<style scoped lang="scss">
+.common-container {
+    background-color: #FFFFFF;
+    padding: 20px 0;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
+}
+
+.top-bar {
+    margin-right: 8px;
+    font-size: 14px;
+    color: #606266;
+}
+
+.text-button {
+    color: #409EFF;
+    margin-right: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    
+    &:hover {
+        color: #66b1ff;
+        text-decoration: underline;
+    }
+}
+
+.custom-table {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
-    <el-row style="background-color: #FFFFFF;padding: 20px 0;border-radius: 5px;">
-        <el-row style="padding: 10px;margin: 0 10px;">
+    <el-row class="common-container">
+        <el-row style="padding: 10px 16px;">
             <el-row>
                 <span class="top-bar">订阅时间</span>
                 <el-date-picker size="small" style="width: 220px;" v-model="searchTime" type="daterange"
@@ -11,8 +11,8 @@
                     @click="handleFilter">立即查询</el-button>
             </el-row>
         </el-row>
-        <el-row style="margin: 10px 20px;">
-            <el-table :data="tableData">
+        <el-row style="margin: 10px 16px;">
+            <el-table :data="tableData" class="custom-table">
                 <el-table-column prop="bookName" label="图书"></el-table-column>
                 <el-table-column prop="num" width="68" label="馆藏数"></el-table-column>
                 <el-table-column prop="author" width="118" label="作者"></el-table-column>
@@ -173,7 +173,44 @@ export default {
     },
 };
 </script>
+
 <style scoped lang="scss">
+.common-container {
+    background-color: #FFFFFF;
+    padding: 20px 0;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
+}
+
+.top-bar {
+    margin-right: 8px;
+    font-size: 14px;
+    color: #606266;
+}
+
+.text-button {
+    color: #409EFF;
+    margin-right: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    
+    &:hover {
+        color: #66b1ff;
+        text-decoration: underline;
+    }
+}
+
+.custom-table {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
 .list-cover {
     width: 50px;
     height: 70px;

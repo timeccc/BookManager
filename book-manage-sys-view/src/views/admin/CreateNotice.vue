@@ -1,61 +1,64 @@
 <template>
-    <div style="background-color: rgb(248, 249, 250);">
-        <div style="width: 800px;margin: 0 auto;padding: 30px 0;box-sizing: border-box;min-height: 100vh;">
-            <p style="font-size: 22px;padding: 20px 0;">{{ noticeOperation === 'save' ? '公告新增' : '公告修改' }}</p>
-            <div>
-                <div style="margin: 20px 0;">
-                    <input type="text" placeholder="标题" v-model="notice.name">
-                </div>
-                <div>
-                    <Editor height="calc(100vh - 500px)" :receiveContent="notice.content" @on-receive="receiveData" />
-                </div>
-            </div>
-            <div style="margin: 20px 0;text-align: center;">
-                <span class="operation-btn" @click="operation">
-                    {{ noticeOperation === 'save' ? '立即新增' : '立即修改' }}
-                    <i class="el-icon-right"></i>
+    <el-row class="common-container">
+        <el-row style="padding: 10px 16px;">
+            <el-row>
+                <span style="float: right;" class="edit-button" @click="saveOperation">
+                    {{ isUpdate ? '确认修改' : '确认新增' }}
                 </span>
-            </div>
-        </div>
-    </div>
+                <span style="float: right;margin-right: 10px;" class="channel-button" @click="returnToDo">
+                    取消操作
+                </span>
+            </el-row>
+        </el-row>
+        <el-row style="margin: 10px 16px;">
+            <el-row>
+                <span class="title-label">公告标题</span>
+                <input class="title-input" v-model="data.name" placeholder="请输入公告标题" />
+            </el-row>
+            <el-row style="margin-top: 20px;">
+                <span class="title-label">公告内容</span>
+                <div style="margin-top: 10px;">
+                    <Editor v-model="data.content"></Editor>
+                </div>
+            </el-row>
+        </el-row>
+    </el-row>
 </template>
+
 <script>
 import Editor from "@/components/Editor"
 export default {
     components: { Editor },
     data() {
         return {
-            notice: {},
+            data: {},
             saveApi: '/notice/save',
             updateApi: '/notice/update',
-            noticeOperation: ''
+            isUpdate: false
         }
     },
     created() {
         this.loadOperation();
     },
     methods: {
-        operation() {
-            if (this.noticeOperation === 'save') {
+        saveOperation() {
+            if (this.isUpdate) {
+                this.update();
+            } else {
                 this.save();
-                return;
             }
-            this.update();
         },
         loadOperation() {
             const operation = sessionStorage.getItem('noticeOperation');
             console.log(operation);
             if (operation === 'update') {
                 const notice = sessionStorage.getItem('noticeInfo');
-                this.notice = JSON.parse(notice);
+                this.data = JSON.parse(notice);
+                this.isUpdate = true;
             }
-            this.noticeOperation = sessionStorage.getItem('noticeOperation');
-        },
-        receiveData(html) {
-            this.notice.content = html;
         },
         update() {
-            this.$axios.put(this.updateApi, this.notice).then(response => {
+            this.$axios.put(this.updateApi, this.data).then(response => {
                 if (response.data.code === 200) {
                     this.$swal.fire({
                         title: '公告修改',
@@ -70,7 +73,7 @@ export default {
             });
         },
         save() {
-            this.$axios.post(this.saveApi, this.notice).then(response => {
+            this.$axios.post(this.saveApi, this.data).then(response => {
                 if (response.data.code === 200) {
                     this.$swal.fire({
                         title: '公告新增',
@@ -84,29 +87,72 @@ export default {
                 }
             });
         },
+        returnToDo() {
+            this.$router.go(-1);
+        }
     }
 }
 
 </script>
-<style lang="scss" scoped>
-input {
-    outline: none;
-    border: none;
+
+<style scoped lang="scss">
+.common-container {
+    background-color: #FFFFFF;
+    padding: 20px 0;
+    border-radius: 16px;
     width: 100%;
-    padding: 18px 12px;
-    font-size: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
     box-sizing: border-box;
-    border-radius: 5px;
-    font-weight: bold;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
 }
 
-.operation-btn {
-    padding: 14px 40px;
-    background-color: rgb(235, 237, 245);
-    color: rgb(43, 121, 203);
-    border: none;
-    font-size: 12px;
-    border-radius: 5px;
+.edit-button {
+    display: inline-block;
+    padding: 7px 15px;
+    background-color: #409EFF;
+    color: white;
+    border-radius: 4px;
     cursor: pointer;
+    transition: all 0.3s;
+    
+    &:hover {
+        background-color: #66b1ff;
+    }
+}
+
+.channel-button {
+    display: inline-block;
+    padding: 7px 15px;
+    background-color: #f2f6fc;
+    color: #606266;
+    border-radius: 4px;
+    cursor: pointer;
+    
+    &:hover {
+        background-color: #edf2fc;
+    }
+}
+
+.title-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #606266;
+    font-weight: 500;
+}
+
+.title-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+    
+    &:focus {
+        outline: none;
+        border-color: #409EFF;
+    }
 }
 </style>

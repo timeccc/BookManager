@@ -83,8 +83,8 @@ export default {
             flag: false,
             tag: '可视化',
             bag: 'rgb(248,248,248)',
-            colorLogo: '#1c1c1c',
-            bagMenu: 'rgb(248,248,248)',
+            colorLogo: '#333',
+            bagMenu: 'transparent',
             dialogOperaion: false
         };
     },
@@ -93,6 +93,13 @@ export default {
         this.adminRoutes = menus.children;
         this.tokenCheckLoad();
         this.menuOperationHistory();
+        
+        // 初始化时根据当前路径设置标签名称
+        const currentPath = this.$route.path;
+        const currentRoute = this.adminRoutes.find(route => route.path === currentPath);
+        if (currentRoute) {
+            this.tag = currentRoute.name;
+        }
     },
 
     methods: {
@@ -214,41 +221,49 @@ export default {
     display: flex;
     height: 100vh;
     width: 100%;
-
+    background: linear-gradient(to right, #f5f7fa, #e4e8f1);
 
     .menu-side {
         width: 253px;
-        min-width: 95px;
+        min-width: 253px;
         height: 100vh;
         padding-top: 10px;
         box-sizing: border-box;
         transition: width 0.3s ease;
-        background-color: rgb(248, 248, 248);
+        background-color: transparent;
+        display: flex;
+        flex-direction: column;
     }
 
     .menu-side-narrow {
         width: 115px;
+        min-width: 115px;
     }
 
     .main {
         flex-grow: 1;
         overflow-x: hidden;
+        background-color: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 16px 0 0 16px;
+        margin: 10px 0 10px 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
 
         .header-section {
             max-width: 100%;
-            padding: 0 15px 0 0;
+            padding: 0;
         }
 
         .content-section {
             overflow-x: hidden;
             flex-grow: 1;
-            padding: 0 15px;
+            padding: 0 20px 20px;
             box-sizing: border-box;
             overflow-y: auto;
+            position: relative;
+            height: calc(100vh - 61px); /* 减去header高度 */
         }
     }
-
-
-
 }
 </style>

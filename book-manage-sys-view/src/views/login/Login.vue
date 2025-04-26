@@ -1,27 +1,43 @@
 <template>
     <div class="login-container">
-        <div style="display: flex;justify-content: left;margin: 20px 0;">
-            <img src="/logo.jpg" style="width: 220px;height: 100px;">
+        <!-- 背景动画元素 -->
+        <div class="area">
+            <ul class="circles">
+                <li v-for="i in 10" :key="i"></li>
+            </ul>
         </div>
+        
+        <!-- 登录面板 -->
         <div class="login-panel">
-            <div style="width: 300px;padding: 40px;display: flex;justify-content: center;align-items: center;">
-                <img src="/bag.png" style="width: 350px;" />
+            <!-- 左侧图片 -->
+            <div class="left-image">
+                <img src="/bag.png" alt="装饰图" class="floating">
             </div>
+            
+            <!-- 右侧登录框 -->
             <div class="right-login">
-                <div>
-                    <h2>快登录吧</h2>
+                <div class="login-header">
+                    <h2>欢迎登录</h2>
+                    <p class="login-subtitle">图书管理系统</p>
                 </div>
-                <div class="text">
-                    <input v-model="act" class="act" placeholder="输入账号" />
+                
+                <div class="input-group">
+                    <div class="input-item">
+                        <i class="icon-user"></i>
+                        <input v-model="act" class="input-field" placeholder="请输入账号" />
+                    </div>
+                    <div class="input-item">
+                        <i class="icon-lock"></i>
+                        <input v-model="pwd" class="input-field" type="password" placeholder="请输入密码" />
+                    </div>
                 </div>
-                <div class="text">
-                    <input v-model="pwd" class="pwd" type="password" placeholder="输入密码" />
+                
+                <div class="login-action">
+                    <button class="login-btn pulse" @click="login">登录</button>
                 </div>
-                <div>
-                    <span class="login-btn" @click="login">立即登录</span>
-                </div>
+                
                 <div class="tip">
-                    <p>没有账号？<span class="no-act" @click="toDoRegister">点此注册</span></p>
+                    <p>没有账号？<span class="register-link" @click="toDoRegister">立即注册</span></p>
                 </div>
             </div>
         </div>
@@ -107,122 +123,430 @@ export default {
     user-select: none;
 }
 
+@keyframes float {
+    0% {
+        transform: translateY(0px) scale(1.1);
+    }
+    50% {
+        transform: translateY(-20px) scale(1.15);
+    }
+    100% {
+        transform: translateY(0px) scale(1.1);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+@keyframes animate {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+        border-radius: 0;
+    }
+    100% {
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+        border-radius: 50%;
+    }
+}
+
 .login-container {
     width: 100%;
     min-height: 100vh;
-    background-color: rgb(255,255,255);
+    background: linear-gradient(to right, #ff9a9e, #fad0c4, #fad0c4, #a1c4fd);
+    background-size: 300% 300%;
+    animation: gradientBG 15s ease infinite;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
 
-    .login-panel {
-        display: flex;
-        border-top-left-radius: 10px;
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.area {
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    z-index: 1;
+}
+
+.circles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.circles li {
+    position: absolute;
+    display: block;
+    list-style: none;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    animation: animate 25s linear infinite;
+    bottom: -150px;
+}
+
+.circles li:nth-child(1) {
+    left: 25%;
+    width: 80px;
+    height: 80px;
+    animation-delay: 0s;
+    animation-duration: 20s;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+}
+
+.circles li:nth-child(2) {
+    left: 10%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 2s;
+    animation-duration: 12s;
+    background: rgba(255, 182, 193, 0.3);
+    border-radius: 30%;
+}
+
+.circles li:nth-child(3) {
+    left: 70%;
+    width: 25px;
+    height: 25px;
+    animation-delay: 4s;
+    animation-duration: 15s;
+    background: rgba(173, 216, 230, 0.3);
+    border-radius: 40%;
+}
+
+.circles li:nth-child(4) {
+    left: 40%;
+    width: 60px;
+    height: 60px;
+    animation-delay: 0s;
+    animation-duration: 18s;
+    background: rgba(240, 248, 255, 0.4);
+    border-radius: 60%;
+}
+
+.circles li:nth-child(5) {
+    left: 65%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 0s;
+    animation-duration: 14s;
+    background: rgba(135, 206, 250, 0.3);
+    border-radius: 40%;
+}
+
+.circles li:nth-child(6) {
+    left: 75%;
+    width: 110px;
+    height: 110px;
+    animation-delay: 3s;
+    animation-duration: 25s;
+    background: rgba(255, 192, 203, 0.2);
+    border-radius: 40%;
+}
+
+.circles li:nth-child(7) {
+    left: 35%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 7s;
+    animation-duration: 30s;
+    background: rgba(176, 224, 230, 0.2);
+    border-radius: 50%;
+}
+
+.circles li:nth-child(8) {
+    left: 50%;
+    width: 25px;
+    height: 25px;
+    animation-delay: 15s;
+    animation-duration: 45s;
+    background: rgba(240, 248, 255, 0.3);
+    border-radius: 50%;
+}
+
+.circles li:nth-child(9) {
+    left: 20%;
+    width: 15px;
+    height: 15px;
+    animation-delay: 2s;
+    animation-duration: 35s;
+    background: rgba(255, 192, 203, 0.3);
+    border-radius: 60%;
+}
+
+.circles li:nth-child(10) {
+    left: 85%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 0s;
+    animation-duration: 11s;
+    background: rgba(176, 224, 230, 0.2);
+    border-radius: 40%;
+}
+
+.login-panel {
+    display: flex;
+    border-radius: 24px;
+    width: 840px;
+    height: auto;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+    overflow: hidden;
+    transition: all 0.5s ease;
+    z-index: 2;
+    
+    &:hover {
+        box-shadow: 0 15px 35px rgba(31, 38, 135, 0.25);
+        transform: translateY(-5px);
+    }
+    
+    .left-image {
+        width: 50%;
         padding: 20px;
-        justify-content: space-between;
-        height: auto;
-        border-radius: 6px;
-        border-top-left-radius: 100px;
-        border-bottom-left-radius: 20px;
-        // background-color: rgb(100, 119, 224);
-        background: linear-gradient(to right, rgb(7, 109, 219), rgb(119, 139, 220));
-        //box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
-
-        .right-login {
-            width: 283px;
-            background-color: rgb(253, 253, 253);
-            padding: 30px;
-            border-radius: 5px;
-            // border-top-left-radius: 150px;
-            // border-bottom-left-radius: 5px;
-            // border-top-right-radius: 5px;
-            // border-bottom-right-radius: 5px;
-        }
-
-        .logo {
-            margin: 10px 0 30px 0;
-        }
-
-        .act,
-        .pwd {
-            margin: 8px 0;
-            height: 63px;
-            line-height: 63px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, rgba(161, 196, 253, 0.7), rgba(194, 233, 251, 0.7));
+        overflow: hidden;
+        border-radius: 20px 0 0 20px;
+        
+        img.floating {
             width: 100%;
-            font-size: 20px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: 800;
-            padding: 0 8px;
-            background-color: rgb(248, 248, 248);
-            box-sizing: border-box;
-            border: 2px solid rgb(248, 248, 248);
-            border-radius: 6px;
-            padding: 0 15px;
-            margin-top: 13px;
-        }
-
-        .act:focus,
-        .pwd:focus {
-            outline: none;
-            //border: 2px solid rgb(16, 170, 209);
-            transition: 1.2s;
-            background-color: rgb(244, 244, 244);
-        }
-
-        .role {
-            display: inline-block;
-            color: rgb(30, 102, 147);
-            font-size: 14px;
-            padding-right: 10px;
+            height: auto;
+            max-width: 350px;
+            object-fit: contain;
+            animation: float 6s ease-in-out infinite;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.15));
         }
     }
-    .login-btn:hover{
-        background-color: rgb(39, 106, 208);
+
+    .right-login {
+        width: 50%;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 0 20px 20px 0;
     }
-    .login-btn {
-        display: inline-block;
+    
+    .login-header {
+        margin-bottom: 30px;
         text-align: center;
-        border-radius: 3px;
-        margin-top: 20px;
-        height: 43px;
-        line-height: 43px;
-        width: 100%;
-        background-color: rgb(62, 124, 220);
-        font-size: 14px !important;
-        border: none;
-        color: white;
-        padding: 0 !important;
-        cursor: pointer;
-        user-select: none;
-    }
-
-    .tip {
-        margin: 20px 0;
-
-        p {
-            padding: 3px 0;
-            margin: 0;
-            font-size: 14px;
-            color: #647897;
-
-            i {
-                margin-right: 3px;
-            }
-
-            span {
-                color: #3b3c3e;
-                border-radius: 2px;
-                margin: 0 6px;
-            }
-
-            .no-act:hover {
-                color: #3e77c2;
-                cursor: pointer;
-            }
-
+        
+        h2 {
+            color: #fff;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            letter-spacing: 1px;
+        }
+        
+        .login-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            letter-spacing: 0.5px;
         }
     }
+    
+    .input-group {
+        margin-bottom: 25px;
+    }
+    
+    .input-item {
+        position: relative;
+        margin-bottom: 20px;
+        
+        .icon-user, .icon-lock {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 18px;
+            z-index: 1;
+            &:before {
+                font-family: "element-icons";
+            }
+        }
+        
+        .icon-user:before {
+            content: "\e7ae";
+        }
+        
+        .icon-lock:before {
+            content: "\e709";
+        }
+    }
+    
+    .input-field {
+        width: 100%;
+        height: 55px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 0 20px 0 50px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        color: white;
+        
+        &:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+        
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+    }
+    
+    .login-action {
+        margin-top: 15px;
+    }
+    
+    .login-btn {
+        width: 100%;
+        height: 55px;
+        border-radius: 16px;
+        background: linear-gradient(to right, #a18cd1, #fbc2eb);
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+        
+        &:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        &:hover {
+            background: linear-gradient(to right, #8e78c9, #f9aee5);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(161, 196, 253, 0.4);
+            
+            &:before {
+                left: 100%;
+            }
+        }
+        
+        &:active {
+            transform: translateY(0);
+        }
+        
+        &.pulse {
+            animation: pulse 2s infinite;
+        }
+    }
+    
+    .tip {
+        margin-top: 30px;
+        text-align: center;
+        
+        p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 15px;
+            
+            .register-link {
+                color: #ffffff;
+                margin-left: 5px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-decoration: none;
+                position: relative;
+                padding-bottom: 2px;
+                
+                &:after {
+                    content: '';
+                    position: absolute;
+                    width: 0;
+                    height: 2px;
+                    bottom: 0;
+                    left: 0;
+                    background-color: white;
+                    transition: width 0.3s ease;
+                }
+                
+                &:hover {
+                    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+                    
+                    &:after {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+}
 
+/* 响应式设计 */
+@media screen and (max-width: 850px) {
+    .login-panel {
+        width: 90%;
+        flex-direction: column;
+        
+        .left-image, .right-login {
+            width: 100%;
+            border-radius: 20px;
+        }
+        
+        .left-image {
+            padding: 30px;
+            height: 200px;
+        }
+        
+        .right-login {
+            padding: 30px;
+        }
+    }
 }
 </style>

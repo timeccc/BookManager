@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <span style="margin-left: 20px;">
+        <span class="header-left">
             <span class="operation-span" @click="operation">
                 <i v-if="!showFlag" class="el-icon-s-fold i-folder"></i>
                 <i v-else class="el-icon-s-unfold i-folder"></i>
@@ -69,7 +69,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .main {
-    padding: 26px 30px 26px 0;
+    padding: 20px 20px;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -77,6 +77,12 @@ export default {
     position: relative;
     background-color: rgb(255, 255, 255);
     color: #666;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.02);
+    box-sizing: border-box;
+
+    .header-left {
+        margin-left: 0;
+    }
 
     .operation-span-tag {
         padding: 9px 10px;
@@ -110,7 +116,7 @@ export default {
 
     .user-block {
         position: absolute;
-        right: 50px;
+        right: 20px;
 
         .userName {
             display: inline-block;

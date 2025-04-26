@@ -1,6 +1,6 @@
 <template>
-    <el-row style="background-color: #FFFFFF;padding: 5px 0;border-radius: 5px;">
-        <el-row style="padding: 10px;margin-left: 5px;">
+    <el-row class="common-container">
+        <el-row style="padding: 10px 16px;">
             <el-row>
                 <el-select style="width: 100px;margin-right: 5px;" @change="fetchFreshData" size="small"
                     v-model="userQueryDto.isLogin" placeholder="登录状态">
@@ -25,8 +25,8 @@
                 </span>
             </el-row>
         </el-row>
-        <el-row style="margin: 0 22px;border-top: 1px solid rgb(245,245,245);">
-            <el-table :stripe="true" :data="tableData" style="width: 100%">
+        <el-row style="margin: 10px 16px;border-top: 1px solid rgb(245,245,245);">
+            <el-table :stripe="true" :data="tableData" class="custom-table">
                 <el-table-column prop="userAvatar" width="68" label="头像">
                     <template slot-scope="scope">
                         <el-avatar :size="25" :src="scope.row.userAvatar" style="margin-top: 10px;"></el-avatar>
@@ -371,4 +371,107 @@ export default {
     },
 };
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.common-container {
+    background-color: #FFFFFF;
+    padding: 20px 0;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
+}
+
+.text-button {
+    color: #409EFF;
+    margin-right: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    
+    &:hover {
+        color: #66b1ff;
+        text-decoration: underline;
+    }
+}
+
+.edit-button {
+    display: inline-block;
+    padding: 7px 15px;
+    background-color: #409EFF;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    
+    &:hover {
+        background-color: #66b1ff;
+    }
+}
+
+.channel-button {
+    display: inline-block;
+    padding: 7px 15px;
+    background-color: #f2f6fc;
+    color: #606266;
+    border-radius: 4px;
+    margin-right: 10px;
+    cursor: pointer;
+    
+    &:hover {
+        background-color: #edf2fc;
+    }
+}
+
+.custom-table {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.dialog-input {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 15px;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    box-sizing: border-box;
+    
+    &:focus {
+        outline: none;
+        border-color: #409EFF;
+    }
+}
+
+.dialog-hover {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #606266;
+}
+
+.dialog-avatar {
+    width: 80px;
+    height: 80px;
+    display: block;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.avatar-uploader {
+    margin-bottom: 15px;
+}
+
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    border: 1px dashed #d9d9d9;
+    border-radius: 4px;
+    cursor: pointer;
+}
+</style>

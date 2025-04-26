@@ -1,8 +1,8 @@
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
-import 'element-ui/lib/theme-chalk/index.css';  
-import { provinceAndCityData, regionData } from 'element-china-area-data';  
+import 'element-ui/lib/theme-chalk/index.css';
+import { provinceAndCityData, regionData } from 'element-china-area-data';
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import './assets/css/editor.scss'
