@@ -29,7 +29,7 @@
                     <div class="input-item">
                         <i class="icon-lock"></i>
                         <input v-model="pwd" class="input-field" type="password" placeholder="请输入密码" />
-                    </div>
+                </div>
                 </div>
                 
                 <div class="login-action">
@@ -315,8 +315,8 @@ export default {
     border-radius: 40%;
 }
 
-.login-panel {
-    display: flex;
+    .login-panel {
+        display: flex;
     border-radius: 24px;
     width: 840px;
     height: auto;
@@ -346,7 +346,7 @@ export default {
         
         img.floating {
             width: 100%;
-            height: auto;
+        height: auto;
             max-width: 350px;
             object-fit: contain;
             animation: float 6s ease-in-out infinite;
@@ -354,7 +354,7 @@ export default {
         }
     }
 
-    .right-login {
+        .right-login {
         width: 50%;
         padding: 40px;
         display: flex;
@@ -382,12 +382,12 @@ export default {
             font-size: 16px;
             letter-spacing: 0.5px;
         }
-    }
-    
+        }
+
     .input-group {
         margin-bottom: 25px;
-    }
-    
+        }
+
     .input-item {
         position: relative;
         margin-bottom: 20px;
@@ -432,7 +432,7 @@ export default {
             background-color: rgba(255, 255, 255, 0.2);
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
         }
-        
+
         &::placeholder {
             color: rgba(255, 255, 255, 0.7);
         }
@@ -486,7 +486,7 @@ export default {
             animation: pulse 2s infinite;
         }
     }
-    
+
     .tip {
         margin-top: 30px;
         text-align: center;
@@ -542,8 +542,8 @@ export default {
         .left-image {
             padding: 30px;
             height: 200px;
-        }
-        
+            }
+
         .right-login {
             padding: 30px;
         }

@@ -2,9 +2,9 @@
     <div class="menu-container">
         <div class="menu-side" :class="{ 'menu-side-narrow': flag }">
             <div style="display: flex;align-items: center;">
-                <Logo name="图书后台" style="padding: 0 40px;margin: 15px 0;" :flag="flag" :bag="colorLogo" />
+                <Logo name="图书后台" style="padding: 0 30px;margin: 10px 0;" :flag="flag" :bag="colorLogo" />
             </div>
-            <div style="margin-top: 12px;">
+            <div style="margin-top: 5px;">
                 <AdminMenu :flag="flag" :routes="adminRoutes" :bag="bagMenu" @select="handleRouteSelect" />
             </div>
         </div>
@@ -224,10 +224,12 @@ export default {
     background: linear-gradient(to right, #f5f7fa, #e4e8f1);
 
     .menu-side {
-        width: 253px;
-        min-width: 253px;
+        width: 230px;
+        min-width: 230px;
         height: 100vh;
-        padding-top: 10px;
+        padding-top: 5px;
+        padding-right: 8px;
+        padding-bottom: 20px;
         box-sizing: border-box;
         transition: width 0.3s ease;
         background-color: transparent;
@@ -236,8 +238,8 @@ export default {
     }
 
     .menu-side-narrow {
-        width: 115px;
-        min-width: 115px;
+        width: 100px;
+        min-width: 100px;
     }
 
     .main {
@@ -246,13 +248,14 @@ export default {
         background-color: rgba(255, 255, 255, 0.7);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
-        border-radius: 16px 0 0 16px;
-        margin: 10px 0 10px 0;
+        border-radius: 16px;
+        margin: 25px 10px 10px 5px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
 
         .header-section {
             max-width: 100%;
             padding: 0;
+            margin-top: 0;
         }
 
         .content-section {
@@ -262,7 +265,7 @@ export default {
             box-sizing: border-box;
             overflow-y: auto;
             position: relative;
-            height: calc(100vh - 61px); /* 减去header高度 */
+            height: calc(100vh - 85px); /* 调整高度，考虑到增加的margin-top */
         }
     }
 }

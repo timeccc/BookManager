@@ -63,15 +63,15 @@ export default {
 .glass-menu {
     border-right: none !important;
     width: 100% !important; /* 确保菜单始终占满容器 */
-    max-width: 253px;
-    min-width: 233px; /* 设置最小宽度，避免缩放问题 */
-    padding: 10px 15px;
+    max-width: 220px;
+    min-width: 200px; /* 设置最小宽度，避免缩放问题 */
+    padding: 5px 12px;
     background-color: transparent !important;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border-radius: 16px;
     box-shadow: 0 8px 25px rgba(31, 38, 135, 0.08);
-    margin: 5px;
+    margin: 0 5px 10px 5px;
     transition: all 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-sizing: border-box; /* 确保padding不会影响宽度计算 */
@@ -159,7 +159,7 @@ export default {
 .el-menu-item {
 	height: 50px !important;
 	line-height: 50px !important;
-	margin: 8px 0;
+	margin: 6px 0;
 	border-radius: 12px;
 	padding: 0 15px;
 	position: relative;
@@ -175,7 +175,7 @@ export default {
 /* 折叠模式下的样式优化 */
 .el-menu--collapse {
     width: auto !important;
-    min-width: 80px !important;
+    min-width: 70px !important;
 }
 
 .el-menu--collapse .el-menu-item {

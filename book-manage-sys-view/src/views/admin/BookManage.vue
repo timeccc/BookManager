@@ -10,57 +10,56 @@
                     @clear="handleFilterClear">
                     <el-button slot="append" @click="handleFilter" icon="el-icon-search"></el-button>
                 </el-input>
-                <span style="float: right;" class="edit-button" @click="add()">
-                    新增书籍
+                <span class="edit-button" style="float: right;" @click="add()">
+                    <i class="el-icon-plus" style="margin-right: 5px;"></i>新增书籍
                 </span>
             </el-row>
         </el-row>
         <el-row style="margin: 10px 16px;">
-            <el-row :gutter="16">
-                <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" v-for="(book, index) in tableData"
+            <el-row :gutter="20">
+                <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6" v-for="(book, index) in tableData"
                     :key="index" class="book-col">
                     <div class="item-book">
                         <div style="display: flex;justify-content: center;">
-                            <img style="width: 150px;max-height: 180px;border-radius: 5px;" :src="book.cover" alt="">
+                            <img style="width: 150px;max-height: 180px;border-radius: 8px;box-shadow: 0 4px 12px rgba(0,0,0,0.1);" :src="book.cover" alt="">
                         </div>
-                        <div style="padding: 10px 14px;">
-                            <div style="color: rgb(51,51,51);font-size: 24px;font-weight: bold;margin-block: 4px;">
-                                <el-tooltip class="item" effect="dark" :content="book.name" placement="bottom-end">
-                                    <div class="title">{{ book.name }}</div>
+                        <div style="padding: 15px 14px; text-align: center;">
+                            <div style="color: rgb(51,51,51);font-size: 20px;font-weight: bold;margin-bottom: 10px;">
+                                <el-tooltip class="item" effect="dark" :content="book.name" placement="top">
+                                    <div class="title" style="margin: 0 auto;">{{ book.name }}</div>
                                 </el-tooltip>
                             </div>
-                            <div style="margin-block: 6px;font-size: 12px;color: rgb(51,51,51);margin-block: 4px;">
-                                <div class="title" style="margin-block: 8px;">
+                            <div style="font-size: 13px;color: rgb(51,51,51);margin-bottom: 12px;">
+                                <div class="title" style="margin: 0 auto 10px auto;">
                                     <i v-if="book.isPlanBuy" style="margin-right: 5px;" class="el-icon-warning"></i>
                                     <i v-else style="margin-right: 5px;color: rgb(253, 199, 50);"
                                         class="el-icon-success"></i>
                                     <el-tooltip v-if="book.isPlanBuy" class="item" effect="dark"
-                                        content="计划上架的书籍，为预售书籍。用户可以订阅，书籍上架之后将做通知" placement="bottom-end">
+                                        content="计划上架的书籍，为预售书籍。用户可以订阅，书籍上架之后将做通知" placement="top">
                                         <span
                                             style="text-decoration: underline;text-decoration-style: dashed;">预售书籍</span>
                                     </el-tooltip>
                                     <span v-else>书籍已上架</span>
                                     <span> - {{ book.categoryName }}</span>
                                 </div>
-                                <div style="font-size: 12px;">
+                                <div style="font-size: 13px; margin-bottom: 8px;">
                                     <el-tooltip class="item" effect="dark" :content="book.publisher"
-                                        placement="bottom-end">
-                                        <div class="title">由【{{ book.publisher }}】出版</div>
+                                        placement="top">
+                                        <div class="title" style="margin: 0 auto;">由【{{ book.publisher }}】出版</div>
                                     </el-tooltip>
                                 </div>
-                                <div>
+                                <div style="margin-bottom: 15px;">
                                     <el-tooltip class="item" effect="dark" :content="book.author"
-                                        placement="bottom-end">
-                                        <div class="title" style="margin-block: 10px;">
+                                        placement="top">
+                                        <div class="title" style="margin: 0 auto;">
                                             <span style="margin-right: 5px;">作者：{{ book.author }}</span>
                                             <span>【库存{{ book.num }}本】</span>
                                         </div>
                                     </el-tooltip>
                                 </div>
-                                <div>
-                                    <span @click="handleEdit(book)" class="edit-round">修改</span>
-                                    <span @click="handleDelete(book)" style="margin-left: 4px;"
-                                        class="edit-round">删除</span>
+                                <div class="book-actions">
+                                    <button @click="handleEdit(book)" class="book-btn edit-btn">修改</button>
+                                    <button @click="handleDelete(book)" class="book-btn delete-btn">删除</button>
                                 </div>
                             </div>
                         </div>
@@ -68,7 +67,7 @@
                 </el-col>
             </el-row>
             <el-pagination style="margin: 20px 0;float: right;" @size-change="handleSizeChange"
-                @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[12, 24]"
+                @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[8, 16]"
                 :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
                 :total="totalItems"></el-pagination>
         </el-row>
@@ -172,7 +171,7 @@ export default {
             data: {num: 1},
             currentPage: 1,
             cover: null,
-            pageSize: 12,
+            pageSize: 8,
             totalItems: 0,
             dialogOperation: false, // 开关
             isOperation: false, // 开关-标识新增或修改
@@ -392,33 +391,92 @@ export default {
 }
 
 .title {
-    width: 140px;
+    width: 160px;
     overflow: hidden;
-    /* 隐藏超出部分 */
     text-overflow: ellipsis;
-    /* 使用省略号表示超出部分 */
     white-space: nowrap;
-    /* 禁止换行 */
+    margin: 0 auto;
 }
 
 .item-book {
-    background-color: rgb(255, 255, 255);
-    padding: 10px;
+    background-color: white;
+    padding: 15px;
     box-sizing: border-box;
-    border-radius: 8px;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
     border: 1px solid rgba(230, 230, 230, 0.5);
     height: 100%;
     
     &:hover {
         transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
     }
 }
 
 .book-col {
-    padding: 8px;
-    margin-bottom: 10px;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.book-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.book-btn {
+    padding: 4px 14px;
+    border: none;
+    border-radius: 16px;
+    font-size: 12px !important;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    outline: none;
+    min-width: 50px;
+    height: 26px;
+    line-height: 18px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-btn {
+    background-color: #409EFF;
+    box-shadow: 0 2px 5px rgba(64, 158, 255, 0.2);
+}
+
+.edit-btn:hover {
+    background-color: #66b1ff;
+}
+
+.delete-btn {
+    background-color: #F56C6C;
+    box-shadow: 0 2px 5px rgba(245, 108, 108, 0.2);
+}
+
+.delete-btn:hover {
+    background-color: #f78989;
+}
+
+.edit-button {
+    background-color: #409EFF;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(64, 158, 255, 0.3);
+    font-weight: 500;
+}
+
+.edit-button:hover {
+    background-color: #66b1ff;
+    box-shadow: 0 4px 10px rgba(64, 158, 255, 0.4);
+    transform: translateY(-2px);
 }
 </style>

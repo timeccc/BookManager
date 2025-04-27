@@ -22,15 +22,15 @@
                 <div class="input-item">
                     <i class="icon-profile"></i>
                     <input v-model="name" class="input-field" placeholder="请输入用户名" />
-                </div>
+            </div>
                 <div class="input-item">
                     <i class="icon-lock"></i>
                     <input v-model="pwd" class="input-field" type="password" placeholder="请输入密码" />
-                </div>
+            </div>
                 <div class="input-item">
                     <i class="icon-lock"></i>
                     <input v-model="pwdConfirm" class="input-field" type="password" placeholder="请确认密码" />
-                </div>
+            </div>
             </div>
             
             <div class="register-action">
@@ -317,7 +317,7 @@ export default {
     border-radius: 40%;
 }
 
-.register-panel {
+    .register-panel {
     width: 480px;
     padding: 40px;
     border-radius: 24px;
@@ -332,7 +332,7 @@ export default {
     &:hover {
         box-shadow: 0 15px 35px rgba(31, 38, 135, 0.25);
         transform: translateY(-5px);
-    }
+        }
 
     .register-header {
         margin-bottom: 30px;
@@ -407,7 +407,7 @@ export default {
             background-color: rgba(255, 255, 255, 0.2);
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
         }
-        
+
         &::placeholder {
             color: rgba(255, 255, 255, 0.7);
         }
@@ -416,7 +416,7 @@ export default {
     .register-action {
         margin-top: 15px;
     }
-    
+
     .register-btn {
         width: 100%;
         height: 55px;
@@ -461,11 +461,11 @@ export default {
             animation: pulse 2s infinite;
         }
     }
-    
+
     .tip {
         margin-top: 30px;
         text-align: center;
-        
+
         p {
             color: rgba(255, 255, 255, 0.9);
             font-size: 15px;
@@ -500,8 +500,8 @@ export default {
                 }
             }
         }
+        }
     }
-}
 
 /* 响应式设计 */
 @media screen and (max-width: 520px) {
