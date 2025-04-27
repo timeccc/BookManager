@@ -1,5 +1,5 @@
 <template>
-    <el-row style="margin-top: 20px;">
+    <el-row class="book-operation-container">
         <!-- 条件搜索 -->
         <div class="word-search">
             <div class="item">
@@ -7,103 +7,88 @@
                 <i class="el-icon-search" @click="fetchFreshData"></i>
             </div>
         </div>
-        <div style="width: 1200px;margin: 0 auto;padding-block: 40px;">
-            <span class="category" :style="{
-                fontWeight: categoryItemSelected === categoryItem ? '800' : '',
-                color: categoryItemSelected === categoryItem ? 'rgb(51,51,51)' : '',
-                backgroundColor: categoryItemSelected === categoryItem ? 'rgb(247, 247, 247)' : ''
-            }" @click="categoryChoose(categoryItem)" v-for="(categoryItem, index) in options" :key="index">
+        <div class="category-container">
+            <span class="category" 
+                  :class="{'active-category': categoryItemSelected === categoryItem}"
+                  @click="categoryChoose(categoryItem)" 
+                  v-for="(categoryItem, index) in options" 
+                  :key="index">
                 {{ categoryItem.name }}
             </span>
         </div>
-        <el-row style="margin: 10px 0;box-sizing: border-box;">
+        <div class="books-container">
             <el-row v-if="tableData.length === 0">
                 <el-empty description="暂无书籍"></el-empty>
             </el-row>
-            <el-row v-else style="width: 1200px;margin: 0 auto;">
-                <el-col v-for="(book, index) in tableData" :key="index" :span="4">
+            <el-row v-else class="books-grid">
+                <el-col v-for="(book, index) in tableData" :key="index" :xs="12" :sm="8" :md="6" :lg="4" :xl="4">
                     <div class="item-book">
-                        <div style="display: flex;justify-content: center;padding: 0;">
-                            <img style="width: 140px;height: 140px;object-fit: cover;" :src="book.cover" alt="">
+                        <div class="book-cover">
+                            <img :src="book.cover" alt="">
                         </div>
-                        <div style="padding: 4px 6px;">
-                            <div style="color: rgb(51,51,51);font-size: 16px;font-weight: bold;margin-block: 4px;">
+                        <div class="book-info">
+                            <div class="book-title">
                                 <el-tooltip class="item" effect="dark" :content="book.name" placement="bottom-end">
-                                    <div class="title">{{ book.name }}</div>
+                                    <div class="title-text">{{ book.name }}</div>
                                 </el-tooltip>
                             </div>
-                            <div style="margin-block: 6px;font-size: 12px;color: rgb(51,51,51);">
-                                <div class="title" style="margin-block: 8px;">
-                                    <i v-if="book.isPlanBuy" style="margin-right: 5px;" class="el-icon-warning"></i>
-                                    <i v-else style="margin-right: 5px;color: rgb(253, 199, 50);"
-                                        class="el-icon-success"></i>
-                                    <el-tooltip v-if="book.isPlanBuy" class="item" effect="dark"
-                                        content="计划上架的书籍，为预售书籍。用户可以订阅，书籍上架之后将做通知" placement="bottom-end">
-                                        <span
-                                            style="text-decoration: underline;text-decoration-style: dashed;">预售书籍</span>
-                                    </el-tooltip>
-                                    <span v-else>书籍已上架</span>
-                                    <span> - {{ book.categoryName }}</span>
-                                </div>
-                                <div style="font-size: 12px;">
-                                    <el-tooltip class="item" effect="dark" :content="book.publisher"
-                                        placement="bottom-end">
-                                        <div class="title">由【{{ book.publisher }}】出版</div>
-                                    </el-tooltip>
-                                </div>
-                                <div>
-                                    <el-tooltip class="item" effect="dark" :content="book.author"
-                                        placement="bottom-end">
-                                        <div class="title" style="margin-block: 10px;">
-                                            <span style="margin-right: 5px;">作者：{{ book.author }}</span>
-                                            <span>库存{{ book.num }}本</span>
-                                        </div>
-                                    </el-tooltip>
-                                </div>
-                                <div>
-                                    <span v-if="!book.isPlanBuy">
-                                        <span class="edit-round status" v-if="book.isSave">已收藏该书籍</span>
-                                        <span v-else class="edit-round" style="margin-right: 5px;"
-                                            @click="saveBook(book)">
-                                            <i class="el-icon-star-off"></i>
-                                            收藏
-                                        </span>
-                                        <span style="margin-left: 5px;">
-                                            <!-- 库存不足 -->
-                                            <span v-if="book.num === 0">库存不足</span>
-                                            <span v-else>
-                                                <!-- 没借过书的情况 -->
-                                                <span v-if="book.isReturn === null">
-                                                    <span class="edit-round" style="margin-left: 4px;"
-                                                        @click="handleEdit(book)">借书</span>
-                                                </span>
-                                                <span v-else>
-                                                    <!-- 待归还状态，只做显示 -->
-                                                    <span v-if="!book.isReturn" class="edit-round status">待归还</span>
-                                                    <span v-else class="edit-round" style="margin-left: 4px;"
-                                                        @click="handleEdit(book)">借书</span>
-                                                </span>
-                                            </span>
-                                        </span>
+                            <div class="book-status">
+                                <i v-if="book.isPlanBuy" class="el-icon-warning"></i>
+                                <i v-else class="el-icon-success"></i>
+                                <el-tooltip v-if="book.isPlanBuy" class="item" effect="dark"
+                                    content="计划上架的书籍，为预售书籍。用户可以订阅，书籍上架之后将做通知" placement="bottom-end">
+                                    <span class="status-text">预售书籍</span>
+                                </el-tooltip>
+                                <span v-else>书籍已上架</span>
+                                <span> - {{ book.categoryName }}</span>
+                            </div>
+                            <div class="book-publisher">
+                                <el-tooltip class="item" effect="dark" :content="book.publisher" placement="bottom-end">
+                                    <div class="info-text">由【{{ book.publisher }}】出版</div>
+                                </el-tooltip>
+                            </div>
+                            <div class="book-author">
+                                <el-tooltip class="item" effect="dark" :content="book.author" placement="bottom-end">
+                                    <div class="info-text">
+                                        <span>作者：{{ book.author }}</span>
+                                        <span>库存{{ book.num }}本</span>
+                                    </div>
+                                </el-tooltip>
+                            </div>
+                            <div class="book-actions">
+                                <span v-if="!book.isPlanBuy">
+                                    <span class="edit-round status" v-if="book.isSave">已收藏</span>
+                                    <span v-else class="edit-round" @click="saveBook(book)">
+                                        <i class="el-icon-star-off"></i>
+                                        收藏
                                     </span>
+                                    <span class="action-divider"></span>
+                                    <span v-if="book.num === 0" class="stock-out">库存不足</span>
                                     <span v-else>
-                                        <span class="edit-round status" v-if="book.isRss">已订阅该书籍</span>
-                                        <span v-else class="edit-round" @click="rssBook(book)">订阅</span>
+                                        <span v-if="book.isReturn === null">
+                                            <span class="edit-round" @click="handleEdit(book)">借书</span>
+                                        </span>
+                                        <span v-else>
+                                            <span v-if="!book.isReturn" class="edit-round status">待归还</span>
+                                            <span v-else class="edit-round" @click="handleEdit(book)">借书</span>
+                                        </span>
                                     </span>
-                                </div>
+                                </span>
+                                <span v-else>
+                                    <span class="edit-round status" v-if="book.isRss">已订阅</span>
+                                    <span v-else class="edit-round" @click="rssBook(book)">订阅</span>
+                                </span>
                             </div>
                         </div>
                     </div>
                 </el-col>
             </el-row>
-        </el-row>
+        </div>
         <div class="pager">
-            <div>
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                    :current-page.sync="current" :page-size="size" layout="total, prev, pager, next"
-                    :total="totalCount">
-                </el-pagination>
-            </div>
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                :current-page.sync="current" :page-size="size" layout="total, prev, pager, next"
+                :total="totalCount">
+            </el-pagination>
         </div>
         <el-dialog :show-close="false" :visible.sync="dialogOperation" width="18%">
             <div style="padding:20px 20px 20px 15px;">
@@ -133,13 +118,15 @@
 
 <script>
 export default {
+    components: {
+    },
     data() {
         return {
             deadlineNum: 1,
             data: {},
             current: 1,
             cover: null,
-            size: 7,
+            size: 8,
             totalCount: 0,
             dialogOperation: false, // 开关
             isOperation: false, // 开关-标识新增或修改
@@ -331,99 +318,326 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.item-book {
-    border: 1px solid rgb(235, 235, 235);
-    border-radius: 5px;
-    margin: 5px;
+.book-operation-container {
+    width: 100%;
+    padding: 20px;
     box-sizing: border-box;
-}
-
-.edit-round {
-    background-color: #fff;
-    border: 1px solid #dcdfe6;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all .2s;
-    color: #333;
-}
-
-.edit-round.status {
-    color: rgb(64, 158, 255);
-    cursor: default;
-}
-
-.edit-round:hover {
-    color: #409eff;
-    border-color: #c6e2ff;
-    background-color: #ecf5ff;
-}
-
-.edit-round.status:hover {
-    color: rgb(64, 158, 255);
-    border-color: #dcdfe6;
-    background-color: #fff;
-}
-
-.title {
-    width: 140px;
-    overflow: hidden;
-    /* 隐藏超出部分 */
-    text-overflow: ellipsis;
-    /* 使用省略号表示超出部分 */
-    white-space: nowrap;
-    /* 禁止换行 */
-}
-
-.pager {
-    display: flex;
-    margin-block: 20px;
-    justify-content: center;
-    align-items: center;
-}
-
-.category {
-    font-size: 16px;
-    color: rgb(114, 114, 114);
-    cursor: pointer;
-    display: inline-block;
-    transition: all .2s;
-    padding: 10px 20px;
-    border-radius: 10px;
+    background-color: #fafafa;
 }
 
 .word-search {
     display: flex;
     justify-content: center;
+    margin-bottom: 20px;
 
     .item {
-        padding: 14px;
+        padding: 12px 20px;
         width: 500px;
         background-color: rgb(247, 247, 247);
-        border-radius: 10px;
+        border-radius: 16px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         box-sizing: border-box;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 
         input {
+            flex: 1;
             border: none;
-            background-color: rgb(247, 247, 247);
+            background-color: transparent;
             outline: none;
             font-size: 16px;
+            color: #333;
         }
 
         i {
-            padding: 6px;
-            border-radius: 5px;
+            padding: 8px;
+            border-radius: 8px;
             cursor: pointer;
+            color: #666;
+            transition: all 0.3s ease;
         }
 
         i:hover {
-            background-color: rgb(241, 241, 241);
+            background-color: rgba(255, 87, 34, 0.08);
+            color: #ff5722;
         }
     }
-
 }
-</style>
+
+.category-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 20px;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.category {
+    font-size: 15px;
+    color: #666;
+    cursor: pointer;
+    display: inline-block;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.category:hover {
+    color: #ff5722;
+    background-color: rgba(255, 87, 34, 0.05);
+    transform: translateY(-2px);
+}
+
+.active-category {
+    color: white;
+    background-color: #ff5722;
+    font-weight: 600;
+}
+
+.active-category:hover {
+    color: white;
+    background-color: #ff5722;
+}
+
+.books-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.books-grid {
+    margin: 0 -10px;
+}
+
+.item-book {
+    border-radius: 16px;
+    margin: 10px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-book:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.book-cover {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    background-color: #f9f9f9;
+    
+    img {
+        width: 140px;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 16px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+}
+
+.book-info {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.book-title {
+    .title-text {
+        font-size: 16px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 5px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.book-status {
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    
+    i.el-icon-warning {
+        color: #E6A23C;
+    }
+    
+    i.el-icon-success {
+        color: #67C23A;
+    }
+    
+    .status-text {
+        text-decoration: underline;
+        text-decoration-style: dashed;
+    }
+}
+
+.book-publisher, .book-author {
+    font-size: 13px;
+    color: #666;
+    
+    .info-text {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+.book-actions {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.edit-round {
+    background-color: white;
+    border: 1px solid #dcdfe6;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #333;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.edit-round.status {
+    color: #ff5722;
+    border-color: rgba(255, 87, 34, 0.2);
+    background-color: rgba(255, 87, 34, 0.05);
+    cursor: default;
+}
+
+.edit-round:hover {
+    color: #ff5722;
+    border-color: rgba(255, 87, 34, 0.3);
+    background-color: rgba(255, 87, 34, 0.08);
+}
+
+.edit-round.status:hover {
+    color: #ff5722;
+    border-color: rgba(255, 87, 34, 0.2);
+    background-color: rgba(255, 87, 34, 0.05);
+}
+
+.action-divider {
+    display: inline-block;
+    width: 5px;
+}
+
+.stock-out {
+    color: #F56C6C;
+    font-size: 12px;
+}
+
+.pager {
+    display: flex;
+    margin: 30px 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.point {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.channel-button, .edit-button {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    margin: 0 5px;
+}
+
+.channel-button {
+    background-color: #f4f4f5;
+    color: #606266;
+}
+
+.edit-button {
+    background-color: #ff5722;
+    color: white;
+}
+
+.channel-button:hover {
+    background-color: #e9e9eb;
+}
+
+.edit-button:hover {
+    background-color: #ff7043;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+/* 对话框样式 */
+::v-deep .el-dialog {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+::v-deep .el-dialog__body {
+    padding: 20px;
+}
+
+::v-deep .el-input-number {
+    width: 100%;
+}
+
+::v-deep .el-date-editor {
+    width: 100%;
+}
+
+/* 分页组件样式 */
+::v-deep .el-pagination {
+    padding: 15px 0;
+    text-align: center;
+}
+
+::v-deep .el-pagination .btn-prev,
+::v-deep .el-pagination .btn-next,
+::v-deep .el-pager li {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+::v-deep .el-pager li.active {
+    background-color: #ff5722;
+    color: white;
+}
+
+::v-deep .el-pagination .el-select .el-input {
+    border-radius: 8px;
+}
+</style> 

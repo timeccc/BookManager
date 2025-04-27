@@ -1,108 +1,133 @@
 <template>
-    <el-row style="margin-top: 20px;">
-        <!-- 条件搜索 -->
-        <div class="word-search">
-            <div class="item">
-                <input type="text" placeholder="搜索用户留言" v-model="readerProposalQueryDto.content">
-                <i class="el-icon-search" @click="fetchReaderProposal"></i>
-            </div>
-        </div>
-        <!-- 条件选择 -->
-        <div class="tag">
-            <div class="item">
-                <div>
-                    <span :style="{
-                        fontWeight: tagSelected === tagItem ? '800' : '',
-                        color: tagSelected === tagItem ? 'rgb(51,51,51)' : '',
-                        backgroundColor: tagSelected === tagItem ? 'rgb(247, 247, 247)' : ''
-                    }" @click="condition(tagItem)" v-for="(tagItem, index) in tags" :key="index">
-                        {{ tagItem }}
-                    </span>
-                </div>
-                <div>
-                    <span class="post-word" @click="postWord">
-                        <i class="el-icon-position"></i>
-                        我要留言
-                    </span>
+    <div>
+        <el-row class="page-container">
+            <!-- 搜索框 -->
+            <div class="word-search">
+                <div class="item">
+                    <input type="text" placeholder="搜索用户留言" v-model="readerProposalQueryDto.content">
+                    <i class="el-icon-search" @click="fetchReaderProposal"></i>
                 </div>
             </div>
-        </div>
-        <div class="content">
-            <div>
-                <div v-if="proposals.length === 0">
-                    <el-empty description="留言为空"></el-empty>
-                </div>
-                <div v-else class="content-item" v-for="(proposal, index) in proposals" :key="index">
-                    <div>
-                        <img :src="proposal.userAvatar" alt="">
-                    </div>
-                    <div>
-                        <div class="title">{{ proposal.userName }}</div>
-                        <div class="time">
-                            <span>提出了问题</span>
-                            <span>{{ proposal.createTime }}</span>
-                            <el-popconfirm v-if="myContent(proposal)" title="删除自己的留言？" @confirm="confirmDel(proposal)">
-                                <span slot="reference" class="text-button">删除</span>
-                            </el-popconfirm>
-                        </div>
-                        <div class="detail">{{ proposal.content }}</div>
-                        <div class="reply" v-if="proposal.replyTime !== null">
-                            <div style="margin-bottom: 4px;">
-                                <span>
-                                    回复于
-                                </span>
-                                <span>
-                                    {{ proposal.replyTime }}
-                                </span>
+            
+            <!-- 筛选标签 -->
+            <div class="category-container">
+                <span class="category" 
+                      :class="{'active-category': tagSelected === tagItem}" 
+                      @click="condition(tagItem)" 
+                      v-for="(tagItem, index) in tags" 
+                      :key="index">
+                    {{ tagItem }}
+                </span>
+            </div>
+            
+            <!-- 留言内容区 -->
+            <div class="content-section">
+                <el-empty 
+                    v-if="proposals.length === 0" 
+                    description="暂无留言" 
+                    :image-size="200">
+                </el-empty>
+                
+                <div v-else class="card-list">
+                    <el-card 
+                        v-for="(proposal, index) in proposals" 
+                        :key="index"
+                        shadow="hover" 
+                        class="message-card"
+                        :class="getCardClass(index, proposal)">
+                        
+                        <!-- 卡片头部 -->
+                        <div class="card-header">
+                            <div class="user-info">
+                                <el-avatar :src="proposal.userAvatar" :size="36"></el-avatar>
+                                <div class="user-name">{{ proposal.userName }}</div>
                             </div>
-                            <div>
+                            <div class="message-actions">
+                                <span class="message-time">{{ proposal.createTime }}</span>
+                                <el-popconfirm 
+                                    v-if="myContent(proposal)" 
+                                    title="确定删除这条留言吗？" 
+                                    @confirm="confirmDel(proposal)">
+                                    <el-button slot="reference" type="danger" size="mini" icon="el-icon-delete" circle></el-button>
+                                </el-popconfirm>
+                            </div>
+                        </div>
+                        
+                        <!-- 留言内容 -->
+                        <div class="card-content">
+                            {{ proposal.content }}
+                        </div>
+                        
+                        <!-- 回复内容 -->
+                        <div v-if="proposal.replyTime !== null" class="card-reply">
+                            <div class="reply-header">
+                                <i class="el-icon-chat-dot-square"></i>
+                                <span>管理员回复</span>
+                                <span class="reply-time">{{ proposal.replyTime }}</span>
+                            </div>
+                            <div class="reply-content">
                                 {{ proposal.replyContent }}
                             </div>
                         </div>
-                    </div>
+                    </el-card>
                 </div>
             </div>
-        </div>
-        <div class="pager">
-            <div>
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                    :current-page.sync="current" :page-size="size" layout="total, prev, pager, next"
+            
+            <!-- 分页控件 -->
+            <div class="pager" v-if="proposals.length !== 0">
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page.sync="current"
+                    :page-size="size"
+                    layout="total, prev, pager, next"
                     :total="totalCount">
                 </el-pagination>
             </div>
-        </div>
-        <el-dialog :show-close="false" :visible.sync="dialogWordOperation" width="22%">
-            <div style="padding:30px 20px 20px 20px;">
-                <el-row>
-                    <p>*内容</p>
-                    <el-input type="textarea" :rows="8" placeholder="留言内容，250字以内" v-model="proposal.content">
+        </el-row>
+
+        <!-- 留言对话框 -->
+        <el-dialog 
+            title="发表留言" 
+            :visible.sync="dialogWordOperation"
+            :show-close="false"
+            width="500px">
+            <el-form :model="proposal" ref="proposalForm" label-width="80px">
+                <el-form-item label="留言内容" prop="content" :rules="[
+                    { required: true, message: '请输入留言内容', trigger: 'blur' },
+                    { max: 250, message: '留言内容不能超过250字', trigger: 'blur' }
+                ]">
+                    <el-input 
+                        type="textarea" 
+                        :rows="6" 
+                        placeholder="请输入留言内容，250字以内" 
+                        v-model="proposal.content">
                     </el-input>
-                </el-row>
-                <el-row>
-                    <p>*是否公开</p>
-                    <span class="publish" :style="{
-                        fontWeight: publishItemSelected === publishItem ? '800' : '',
-                        color: publishItemSelected === publishItem ? 'rgb(51,51,51)' : '',
-                        backgroundColor: publishItemSelected === publishItem ? 'rgb(247, 247, 247)' : ''
-                    }" @click="publishChoose(publishItem)" v-for="(publishItem, index) in publishList" :key="index">
-                        {{ publishItem }}
-                    </span>
-                </el-row>
-            </div>
+                </el-form-item>
+                <el-form-item label="是否公开">
+                    <el-radio-group v-model="publishItemSelected">
+                        <el-radio v-for="(item, index) in publishList" :key="index" :label="item">
+                            {{ item }}
+                        </el-radio>
+                    </el-radio-group>
+                </el-form-item>
+            </el-form>
             <span slot="footer" class="dialog-footer">
-                <span class="channel-button" @click="cannel()">
+                <span class="channel-button" @click="cannel">
                     取消操作
                 </span>
-                <span class="edit-button" @click="postProposal()">
-                    确定留言
+                <span class="edit-button" @click="postProposal">
+                    发表留言
                 </span>
             </span>
         </el-dialog>
-    </el-row>
+    </div>
 </template>
 
 <script>
 export default {
+    components: {
+    },
     data() {
         return {
             proposal: {},
@@ -116,36 +141,59 @@ export default {
             queryUser: false,
             publishList: ['公开', '不公开'],
             publishItemSelected: '公开',
-            dialogWordOperation: false
+            dialogWordOperation: false,
+            cardColors: ['blue-card', 'green-card', 'orange-card', 'purple-card', 'cyan-card']
         };
     },
     created() {
         this.fetchReaderProposal();
     },
     methods: {
+        getCardClass(index, proposal) {
+            // 根据索引或其他条件分配不同颜色
+            let baseClass = this.cardColors[index % this.cardColors.length];
+            
+            // 为已回复和未回复的留言添加额外的类
+            if (proposal.replyTime !== null) {
+                return `${baseClass} replied`;
+            }
+            return baseClass;
+        },
         publishChoose(publish) {
             this.publishItemSelected = publish;
         },
         postProposal() {
-            this.$axios.post(`/readerProposal/save`, this.proposal).then(res => {
-                const { data } = res;
-                if (data.code === 200) {
-                    this.$notify({
-                        duration: 1000,
-                        title: '留言',
-                        message: '留言新增成功',
-                        type: 'success'
+            this.$refs.proposalForm.validate(valid => {
+                if (valid) {
+                    this.$axios.post(`/readerProposal/save`, this.proposal).then(res => {
+                        const { data } = res;
+                        if (data.code === 200) {
+                            this.$notify({
+                                duration: 1000,
+                                title: '留言',
+                                message: '留言发表成功',
+                                type: 'success'
+                            });
+                            this.paramCondition('我的发布');
+                            this.cannel();
+                        }
+                    }).catch(error => {
+                        this.$notify({
+                            title: '留言发表',
+                            message: error.message || '发表失败',
+                            type: 'error'
+                        });
+                        console.log("留言发表异常：", error);
                     });
-                    this.paramCondition('我的发布');
-                    this.cannel();
                 }
-            }).catch(error => {
-                console.log("查询用户留言异常：", error);
             });
         },
         cannel() {
             this.dialogWordOperation = false;
             this.proposal = {};
+            if (this.$refs.proposalForm) {
+                this.$refs.proposalForm.resetFields();
+            }
         },
         postWord() {
             this.dialogWordOperation = true;
@@ -168,7 +216,12 @@ export default {
                     this.fetchReaderProposal();
                 }
             }).catch(error => {
-                console.log("查询用户留言异常：", error);
+                this.$notify({
+                    title: '留言删除',
+                    message: error.message || '删除失败',
+                    type: 'error'
+                });
+                console.log("删除留言异常：", error);
             });
         },
         handleSizeChange(size) {
@@ -219,141 +272,304 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.publish {
-    font-size: 16px;
-    color: rgb(114, 114, 114);
-    cursor: pointer;
-    display: inline-block;
-    transition: all .2s;
-    padding: 10px 20px;
-    border-radius: 10px;
-}
-
-.pager {
-    display: flex;
-    margin-block: 20px;
-    justify-content: center;
-    align-items: center;
-}
-
-.content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .content-item {
-        width: 800px;
-        display: flex;
-        justify-content: left;
-        align-items: center;
-        gap: 20px;
-        margin-block: 10px;
-        padding-block: 8px;
-        padding-left: 24px;
-
-        img {
-            width: 50px;
-            height: 50px;
-            border-radius: 25px;
-        }
-
-        .title {
-            font-size: 16px;
-            font-weight: 800;
-            margin-bottom: 4px;
-        }
-
-        .time {
-            display: flex;
-            justify-content: left;
-            gap: 8px;
-            color: rgb(170, 170, 170);
-            font-size: 14px;
-
-        }
-
-        .detail {
-            margin-block: 8px;
-            font-size: 14px;
-            color: rgb(51, 51, 51);
-        }
-
-        .reply {
-            background-color: rgb(250, 250, 250);
-            padding: 12px;
-            border-radius: 5px;
-            font-size: 12px;
-        }
-
-    }
-}
-
-.tag {
-    .item {
-        width: 800px;
-        padding-block: 10px;
-        margin-block: 20px;
-        display: flex;
-        justify-content: space-between;
-        gap: 4px;
-
-        span {
-            font-size: 16px;
-            color: rgb(114, 114, 114);
-            cursor: pointer;
-            display: inline-block;
-            transition: all .2s;
-            padding: 10px 20px;
-            border-radius: 10px;
-        }
-
-        .post-word {
-            background-color: rgb(6, 174, 251);
-            color: rgb(245, 245, 245);
-        }
-
-        .post-word:hover {
-            background-color: rgb(15, 171, 243);
-        }
-
-    }
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.page-container {
+    background-color: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    margin-bottom: 20px;
 }
 
 .word-search {
-    display: flex;
-    justify-content: center;
-
+    flex: 1;
+    max-width: 500px;
+    margin: 20px auto;
+    
     .item {
-        padding: 14px;
-        width: 800px;
-        background-color: rgb(247, 247, 247);
-        border-radius: 10px;
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        box-sizing: border-box;
-
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 8px 16px;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
         input {
+            flex: 1;
             border: none;
-            background-color: rgb(247, 247, 247);
             outline: none;
+            background: transparent;
+            padding: 8px 0;
             font-size: 16px;
+            color: #333;
+            
+            &::placeholder {
+                color: #999;
+            }
         }
-
+        
         i {
-            padding: 6px;
-            border-radius: 5px;
+            font-size: 18px;
+            color: #666;
             cursor: pointer;
-        }
-
-        i:hover {
-            background-color: rgb(241, 241, 241);
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            
+            &:hover {
+                background-color: rgba(255, 87, 34, 0.08);
+                color: #ff5722;
+            }
         }
     }
+}
 
+.category-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.category {
+    padding: 8px 16px;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    color: #606266;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+        background-color: rgba(255, 87, 34, 0.08);
+        color: #ff5722;
+        transform: translateY(-2px);
+    }
+    
+    &.active-category {
+        background-color: rgba(255, 87, 34, 0.1);
+        color: #ff5722;
+        font-weight: 500;
+    }
+}
+
+.content-section {
+    min-height: 300px;
+}
+
+.card-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.message-card {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    
+    &.blue-card {
+        border-left: 4px solid #409EFF;
+    }
+    
+    &.green-card {
+        border-left: 4px solid #67C23A;
+    }
+    
+    &.orange-card {
+        border-left: 4px solid #ff5722;
+    }
+    
+    &.purple-card {
+        border-left: 4px solid #915EFB;
+    }
+    
+    &.cyan-card {
+        border-left: 4px solid #5ECBFB;
+    }
+    
+    &.replied {
+        position: relative;
+        
+        &::after {
+            content: '已回复';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 8px;
+            background-color: rgba(103, 194, 58, 0.1);
+            color: #67C23A;
+        }
+    }
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        
+        .user-name {
+            font-weight: 500;
+            color: #333;
+        }
+    }
+    
+    .message-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        
+        .message-time {
+            color: #999;
+            font-size: 12px;
+        }
+    }
+}
+
+.card-content {
+    margin-bottom: 15px;
+    line-height: 1.6;
+    color: #333;
+}
+
+.card-reply {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 12px;
+    
+    .reply-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        color: #409EFF;
+        font-weight: 500;
+        
+        i {
+            font-size: 16px;
+        }
+        
+        .reply-time {
+            font-size: 12px;
+            color: #999;
+            margin-left: auto;
+        }
+    }
+    
+    .reply-content {
+        color: #555;
+        line-height: 1.6;
+    }
+}
+
+.pager {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.channel-button, .edit-button {
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.channel-button {
+    background-color: #f0f2f5;
+    color: #606266;
+    
+    &:hover {
+        background-color: #e0e2e5;
+        transform: translateY(-2px);
+    }
+}
+
+.edit-button {
+    background-color: #ff5722;
+    color: white;
+    
+    &:hover {
+        background-color: #ff7043;
+        transform: translateY(-2px);
+    }
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* 对话框样式 */
+::v-deep .el-dialog {
+    border-radius: 16px;
+    overflow: hidden;
+    
+    .el-dialog__header {
+        padding: 16px 20px;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .el-dialog__title {
+        font-weight: 500;
+        font-size: 16px;
+        color: #333;
+    }
+}
+
+/* 分页组件样式 */
+::v-deep .el-pagination {
+    padding: 15px 0;
+    
+    .btn-prev, .btn-next, .el-pager li {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .el-pager li.active {
+        background-color: #ff5722;
+        color: white;
+    }
+}
+
+::v-deep .el-card__body {
+    padding: 16px;
+}
+
+::v-deep .el-textarea__inner {
+    border-radius: 10px;
+    
+    &:focus {
+        border-color: #ff5722;
+    }
+}
+
+::v-deep .el-radio__input.is-checked .el-radio__inner {
+    background-color: #ff5722;
+    border-color: #ff5722;
+}
+
+::v-deep .el-radio__input.is-checked + .el-radio__label {
+    color: #ff5722;
 }
 </style>

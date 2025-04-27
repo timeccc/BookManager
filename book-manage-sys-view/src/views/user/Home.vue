@@ -1,29 +1,39 @@
 <template>
     <div class="menu-container">
-        <div class="menu-side" :class="{ 'menu-side-narrow': flag }">
-            <div style="display: flex;align-items: center;justify-content: center;">
-                <!-- <Logo name="图书管理" style="padding: 0 40px;margin: 15px 0;" :flag="flag" :bag="colorLogo" /> -->
-                <img src="/logo.jpg" style="width: 220px;height: 100px;">
-            </div>
-            <div>
-                <div v-if="route.show" :style="{
-                    fontWeight: nowRoute.name === route.name ? '800' : '',
-                    backgroundColor: nowRoute.name === route.name ? 'rgb(247, 247, 247)' : ''
-                }" class="item-route" @click="routerClick(route)" v-for="(route, index) in userRoutes" :key="index">
-                    <i :style="{ fontWeight: nowRoute.name === route.name ? '800' : '' }" :class="route.icon"></i>
-                    {{ route.name }}
+        <UserNavigation 
+            :routes="userRoutes" 
+            :current-route-name="nowRoute.name" 
+            :user-info="userInfo" 
+            :is-collapsed="flag"
+            :user-center-path="selfPath"
+            @route-click="routerClick"
+            @toggle-collapse="toggleSidebar"
+            @logout="loginOut"
+        />
+        <div class="main" :class="{'main-expanded': flag}">
+            <div class="page-header">
+                <div class="header-title">
+                    <i :class="nowRoute.icon" v-if="nowRoute.icon"></i>
+                    <span>{{ nowRoute.name || '首页' }}</span>
                 </div>
-                <div class="item-route">
-                    <div class="info" @click="routerClickSelf">
-                        <img :src="userInfo.url">
-                        {{ userInfo.name }}
-                    </div>
+                <div class="header-actions">
+                    <!-- 根据不同页面显示不同操作按钮 -->
+                    <template v-if="nowRoute.path === '/main'">
+                        <el-tooltip content="添加留言" placement="bottom" effect="light">
+                            <div class="action-btn" @click="handleAction('add')">
+                                <i class="el-icon-edit"></i>
+                            </div>
+                        </el-tooltip>
+                    </template>
+                    <el-tooltip content="刷新页面" placement="bottom" effect="light">
+                        <div class="action-btn" @click="refreshPage">
+                            <i class="el-icon-refresh"></i>
+                        </div>
+                    </el-tooltip>
                 </div>
             </div>
-        </div>
-        <div class="main">
             <div class="content-section">
-                <router-view></router-view>
+                <router-view ref="currentView"></router-view>
             </div>
         </div>
     </div>
@@ -32,21 +42,17 @@
 import request from "@/utils/request.js";
 import router from "@/router/index";
 import { clearToken } from "@/utils/storage"
-import AdminMenu from '@/components/VerticalMenu.vue';
-import Logo from '@/components/Logo.vue';
-import LevelHeader from '@/components/LevelHeader.vue';
+import UserNavigation from '@/components/UserNavigation.vue';
+
 export default {
-    name: "Admin",
+    name: "UserHome",
     components: {
-        Logo,
-        LevelHeader,
-        AdminMenu
+        UserNavigation
     },
     data() {
         return {
             selfPath: { name: '个人中心', path: '/mySelf' },
             userRoutes: [],
-            activeIndex: '',
             userInfo: {
                 id: null,
                 url: '',
@@ -55,12 +61,7 @@ export default {
                 email: ''
             },
             flag: false,
-            nowRoute: {},
-            tag: '留言板',
-            bag: 'rgb(255, 255, 255)',
-            colorLogo: '#1c1c1c',
-            bagMenu: 'rgb(255, 255, 255)',
-            dialogOperaion: false
+            nowRoute: {}
         };
     },
     created() {
@@ -69,72 +70,73 @@ export default {
 
         this.tokenCheckLoad();
         this.menuOperationHistory();
-        this.routerClick(this.userRoutes[0]);
+        
+        // 初始化路由，如果当前路由不匹配任何菜单项，则使用第一个路由
+        if (!this.updateCurrentRoute() && this.userRoutes.length > 0) {
+            this.routerClick(this.userRoutes[0]);
+        }
+    },
+    
+    watch: {
+        // 监听路由变化，自动更新标题
+        '$route'() {
+            this.updateCurrentRoute();
+        }
     },
 
     methods: {
-        routerClickSelf(){
-            this.routerClick(this.selfPath);
-        },
-        routerClick(route) {
-            console.log(route);
-            
-            this.handleRouteSelect(route);
-        },
-        async updateUserInfo() {
-            try {
-                const userUpdateDTO = {
-                    userAvatar: this.userInfo.url,
-                    userName: this.userInfo.name,
-                    userEmail: this.userInfo.email
+        // 根据当前页面处理特定操作
+        handleAction(action) {
+            // 根据不同页面执行不同操作
+            if (this.nowRoute.path === '/main' && action === 'add') {
+                // 调用留言页面的发表留言方法
+                if (this.$refs.currentView && this.$refs.currentView.postWord) {
+                    this.$refs.currentView.postWord();
                 }
-                const resposne = await this.$axios.put(`/user/update`, userUpdateDTO);
-                const { data } = resposne;
-                if (data.code === 200) {
-                    this.dialogOperaion = false;
-                    this.tokenCheckLoad();
-                    this.$swal.fire({
-                        title: '修改个人信息',
-                        text: data.msg,
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 1000,
+            } else if (action === 'refresh') {
+                // 可以添加更多页面特定操作
+                if (this.$refs.currentView && this.$refs.currentView.fetchFreshData) {
+                    this.$refs.currentView.fetchFreshData();
+                } else if (this.$refs.currentView && this.$refs.currentView.fetchReaderProposal) {
+                    this.$refs.currentView.fetchReaderProposal();
+                }
+            }
+        },
+        toggleSidebar() {
+            this.flag = !this.flag;
+            sessionStorage.setItem('flag', this.flag);
+        },
+        refreshPage() {
+            // 尝试调用子组件的刷新方法
+            if (this.$refs.currentView) {
+                if (this.$refs.currentView.fetchFreshData) {
+                    this.$refs.currentView.fetchFreshData();
+                } else if (this.$refs.currentView.fetchReaderProposal) {
+                    this.$refs.currentView.fetchReaderProposal();
+                } else {
+                    // 如果子组件没有刷新方法，才进行路由刷新
+                    const currentRoute = this.$route;
+                    this.$router.replace('/refresh');
+                    this.$nextTick(() => {
+                        this.$router.replace(currentRoute.fullPath);
                     });
                 }
-            } catch (e) {
-                this.dialogOperaion = false;
-                this.$swal.fire({
-                    title: '修改个人信息异常',
-                    text: e,
-                    icon: 'error',
-                    showConfirmButton: false,
-                    timer: 2000,
+            } else {
+                // 如果没有获取到子组件，进行路由刷新
+                const currentRoute = this.$route;
+                this.$router.replace('/refresh');
+                this.$nextTick(() => {
+                    this.$router.replace(currentRoute.fullPath);
                 });
-                console.error(`修改个人信息异常:${e}`);
             }
         },
-        handleAvatarSuccess(res, file) {
-            if (res.code !== 200) {
-                this.$message.error(`头像上传异常`);
-                return;
-            }
-            this.$message.success(`头像上传成功`);
-            this.userInfo.url = res.data;
-        },
-        eventListener(event) {
-            // 个人中心
-            if (event === 'center') {
-                this.dialogOperaion = true;
-            }
-            // 退出登录
-            if (event === 'loginOut') {
-                this.loginOut();
-            }
+        routerClick(route) {
+            this.handleRouteSelect(route);
         },
         async loginOut() {
             const confirmed = await this.$swalConfirm({
                 title: '退出登录？',
-                text: `推出后需重新登录？`,
+                text: `退出后需重新登录？`,
                 icon: 'warning',
             });
             if (confirmed) {
@@ -153,9 +155,6 @@ export default {
         },
         menuOperationHistory() {
             this.flag = sessionStorage.getItem('flag') === 'true';
-        },
-        selectOperation(flag) {
-            this.flag = flag;
         },
         handleRouteSelect(route) {
             if (this.nowRoute.name !== route.name) {
@@ -191,6 +190,16 @@ export default {
                 this.$message.error('认证信息加载失败，请重试！');
             }
         },
+        // 根据当前路由路径更新 nowRoute 对象
+        updateCurrentRoute() {
+            const currentPath = this.$route.path;
+            const matchedRoute = this.userRoutes.find(route => route.path === currentPath);
+            if (matchedRoute) {
+                this.nowRoute = matchedRoute;
+                return true;
+            }
+            return false;
+        }
     }
 };
 </script>
@@ -199,75 +208,102 @@ export default {
     display: flex;
     height: 100vh;
     width: 100%;
+    background-color: #f8f9fa;
+    overflow: hidden;
+}
 
-    .item-route {
+.main {
+    flex-grow: 1;
+    overflow-x: hidden;
+    background-color: #f8f9fa;
+    border-radius: 16px 0 0 16px;
+    margin-left: -16px;
+    padding-left: 16px;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-width: 0; /* 确保main区域不会超出窗口 */
+    
+    .content-section {
+        overflow-x: hidden;
+        flex-grow: 1;
         padding: 20px;
-        margin-inline: 20px;
-        border-radius: 10px;
-        cursor: pointer;
-        margin-block: 4px;
-        display: flex;
-        justify-content: left;
-        align-items: center;
-        gap: 6px;
-
-        i {
-            font-size: 20px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        width: 100%; /* 确保内容宽度充满 */
+        
+        &::-webkit-scrollbar {
+            width: 4px;
         }
+  
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+  
+        &::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+    }
+}
 
-        .info {
+.main-expanded {
+    margin-left: 0;
+    border-radius: 0;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px 0 20px;
+    
+    .header-title {
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        
+        i {
+            margin-right: 10px;
+            font-size: 20px;
+            color: #ff5722;
+        }
+    }
+    
+    .header-actions {
+        display: flex;
+        gap: 10px;
+        
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background-color: white;
             display: flex;
-            justify-content: left;
             align-items: center;
-            gap: 6px;
-            font-weight: 800;
-
-            img {
-                width: 30px;
-                height: 30px;
-                border-radius: 50%;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            
+            i {
+                font-size: 16px;
+                color: #606266;
+            }
+            
+            &:hover {
+                background-color: rgba(255, 87, 34, 0.08);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                
+                i {
+                    color: #ff5722;
+                }
             }
         }
-
     }
-
-    .item-route:hover {
-        background-color: rgb(247, 247, 247);
-    }
-
-    .menu-side {
-        width: 253px;
-        min-width: 95px;
-        height: 100vh;
-        padding-top: 10px;
-        box-sizing: border-box;
-        transition: width 0.3s ease;
-        border-right: 1px solid rgb(245, 245, 245);
-    }
-
-    .menu-side-narrow {
-        width: 115px;
-    }
-
-    .main {
-        flex-grow: 1;
-        overflow-x: hidden;
-
-        .header-section {
-            max-width: 100%;
-            padding: 0 15px 0 0;
-        }
-
-        .content-section {
-            overflow-x: hidden;
-            flex-grow: 1;
-            padding: 0 15px;
-            box-sizing: border-box;
-            overflow-y: auto;
-        }
-    }
-
-
-
 }
 </style>

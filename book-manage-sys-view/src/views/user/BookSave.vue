@@ -74,6 +74,8 @@
 
 <script>
 export default {
+    components: {
+    },
     data() {
         return {
             data: {},
@@ -303,7 +305,6 @@ export default {
     justify-content: center;
     align-items: center;
 }
-
 
 .save-book:hover {
     background-color: rgb(248, 248, 248);

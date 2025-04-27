@@ -19,6 +19,17 @@ html, body {
   overflow: hidden; /* 防止app容器层级出现滚动条 */
 }
 
+/* 在这里对导航栏做全局样式保证 */
+.menu-side {
+  width: 230px !important;
+  flex-shrink: 0 !important;
+}
+
+.menu-side-narrow {
+  width: 120px !important;
+  flex-shrink: 0 !important;
+}
+
 /* 全局隐藏所有滚动条 */
 ::-webkit-scrollbar {
   display: none !important; /* Chrome, Safari */

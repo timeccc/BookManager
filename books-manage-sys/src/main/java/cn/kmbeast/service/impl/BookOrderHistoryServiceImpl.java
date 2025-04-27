@@ -16,6 +16,7 @@ import cn.kmbeast.service.BookOrderHistoryService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,6 +39,17 @@ public class BookOrderHistoryServiceImpl implements BookOrderHistoryService {
      */
     @Override
     public Result<Void> save(BookOrderHistory bookOrderHistory) {
+        if (bookOrderHistory.getDeadlineNum() == null){
+            return ApiResult.error("请输入本数");
+        }
+        if(bookOrderHistory.getReturnTime() == null){
+            return ApiResult.error("请选择归还日期");
+        }
+        LocalDate returnTime = bookOrderHistory.getReturnTime();
+        LocalDate nowDate = LocalDate.now();
+        if (returnTime.isBefore(nowDate)){
+            return ApiResult.error("时间不可倒流哦!");
+        }
         // 是不是已经借了这本书
         BookOrderHistoryQueryDto dto = new BookOrderHistoryQueryDto();
         dto.setUserId(LocalThreadHolder.getUserId());
@@ -99,7 +111,7 @@ public class BookOrderHistoryServiceImpl implements BookOrderHistoryService {
         List<BookOrderHistoryVO> bookOrderHistoryVOS = bookOrderHistoryMapper.query(queryDto);
         // 将书籍的库存加回去
         BookQueryDto bookQueryDto = new BookQueryDto();
-        bookQueryDto.setId(bookOrderHistory.getBookId());
+        bookQueryDto.setId(bookOrderHistoryVOS.get(0).getBookId());
         List<BookVO> bookVOS = bookMapper.query(bookQueryDto);
         BookVO bookVO = bookVOS.get(0);
         Book book = new Book();

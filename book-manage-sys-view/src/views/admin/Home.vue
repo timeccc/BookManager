@@ -101,6 +101,17 @@ export default {
             this.tag = currentRoute.name;
         }
     },
+    
+    watch: {
+        // 监听路由变化，自动更新标题
+        '$route'(to) {
+            // 根据路由路径查找对应的路由对象
+            const currentRoute = this.adminRoutes.find(route => route.path === to.path);
+            if (currentRoute) {
+                this.tag = currentRoute.name;
+            }
+        }
+    },
 
     methods: {
         async updateUserInfo() {
