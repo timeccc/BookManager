@@ -15,22 +15,23 @@
                 </span>
             </el-row>
         </el-row>
-        <el-row style="margin: 10px 16px;">
-            <el-row :gutter="20">
-                <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="6" v-for="(book, index) in tableData"
-                    :key="index" class="book-col">
+        <el-row style="margin: 8px 12px;">
+            <div class="flex-row-container">
+                <div v-for="(book, index) in tableData" :key="index" class="flex-col-5">
                     <div class="item-book">
+                        <!-- 书籍卡片内容 -->
                         <div style="display: flex;justify-content: center;">
-                            <img style="width: 150px;max-height: 180px;border-radius: 8px;box-shadow: 0 4px 12px rgba(0,0,0,0.1);" :src="book.cover" alt="">
+                            <img style="width: 120px;max-height: 140px;border-radius: 8px;box-shadow: 0 4px 12px rgba(0,0,0,0.1);" :src="book.cover" alt="">
                         </div>
-                        <div style="padding: 15px 14px; text-align: center;">
-                            <div style="color: rgb(51,51,51);font-size: 20px;font-weight: bold;margin-bottom: 10px;">
+                        <!-- 其余卡片内容 -->
+                        <div style="padding: 10px 10px; text-align: center;">
+                            <div style="color: rgb(51,51,51);font-size: 16px;font-weight: bold;margin-bottom: 5px;">
                                 <el-tooltip class="item" effect="dark" :content="book.name" placement="top">
                                     <div class="title" style="margin: 0 auto;">{{ book.name }}</div>
                                 </el-tooltip>
                             </div>
-                            <div style="font-size: 13px;color: rgb(51,51,51);margin-bottom: 12px;">
-                                <div class="title" style="margin: 0 auto 10px auto;">
+                            <div style="font-size: 12px;color: rgb(51,51,51);margin-bottom: 8px;">
+                                <div class="title" style="margin: 0 auto 5px auto;">
                                     <i v-if="book.isPlanBuy" style="margin-right: 5px;" class="el-icon-warning"></i>
                                     <i v-else style="margin-right: 5px;color: rgb(253, 199, 50);"
                                         class="el-icon-success"></i>
@@ -42,121 +43,117 @@
                                     <span v-else>书籍已上架</span>
                                     <span> - {{ book.categoryName }}</span>
                                 </div>
-                                <div style="font-size: 13px; margin-bottom: 8px;">
+                                <div style="font-size: 12px; margin-bottom: 4px;">
                                     <el-tooltip class="item" effect="dark" :content="book.publisher"
                                         placement="top">
                                         <div class="title" style="margin: 0 auto;">由【{{ book.publisher }}】出版</div>
                                     </el-tooltip>
                                 </div>
-                                <div style="margin-bottom: 15px;">
+                                <div style="margin-bottom: 8px;">
                                     <el-tooltip class="item" effect="dark" :content="book.author"
                                         placement="top">
                                         <div class="title" style="margin: 0 auto;">
-                                            <span style="margin-right: 5px;">作者：{{ book.author }}</span>
+                                            <span style="margin-right: 4px;">作者：{{ book.author }}</span>
                                             <span>【库存{{ book.num }}本】</span>
                                         </div>
                                     </el-tooltip>
                                 </div>
-                                <div class="book-actions">
+                                <div class="book-actions" style="gap: 14px;">
                                     <button @click="handleEdit(book)" class="book-btn edit-btn">修改</button>
                                     <button @click="handleDelete(book)" class="book-btn delete-btn">删除</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </el-col>
-            </el-row>
+                </div>
+            </div>
             <el-pagination style="margin: 20px 0;float: right;" @size-change="handleSizeChange"
-                @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[8, 16]"
+                @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20]"
                 :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
                 :total="totalItems"></el-pagination>
         </el-row>
-        <el-dialog :show-close="false" :visible.sync="dialogOperation" width="40%">
-            <div slot="title">
+        <el-dialog :show-close="false" :visible.sync="dialogOperation" width="32%" :top="'5vh'">
+            <div slot="title" style="padding: 10px 0 0 15px;">
                 <p class="dialog-title">{{ !isOperation ? '新增书籍' : '修改书籍' }}</p>
             </div>
-            <div style="padding:0 20px 40px 15px;">
-                <el-row>
-                    <el-col :span="8">
+            <div style="padding:0 12px 20px 12px;">
+                <el-row :gutter="10">
+                    <el-col :span="9">
                         <div class="point">书籍封面</div>
                         <el-upload class="avatar-uploader" action="/api/book-manage-sys-api/v1.0/file/upload"
                             :show-file-list="false" :on-success="handleBookCoverSuccess">
                             <img v-if="cover" :src="cover" class="dialog-cover">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <div style="margin-bottom: 8px;">
+                        <div style="margin-bottom: 5px;">
                             <div class="point">*书架</div>
-                            <el-select v-model="data.bookShelfId" placeholder="请选择">
+                            <el-select v-model="data.bookShelfId" placeholder="请选择" size="mini" style="width: 100%;">
                                 <el-option v-for="(item, index) in bookshelfOptions" :key="index"
                                     :label="bookshelfConfig(item)" :value="item.id">
                                 </el-option>
                             </el-select>
                         </div>
-                        <div style="margin-bottom: 8px;">
+                        <div style="margin-bottom: 5px;">
                             <div class="point">*书籍类别</div>
-                            <el-select v-model="data.categoryId" placeholder="请选择">
+                            <el-select v-model="data.categoryId" placeholder="请选择" size="mini" style="width: 100%;">
                                 <el-option v-for="(item, index) in options" :key="index" :label="item.name"
                                     :value="item.id">
                                 </el-option>
                             </el-select>
                         </div>
-                        <div v-if="!isOperation || data.isPlanBuy">
-                            <p>上线只需要设置为未预售即可</p>
-                            <div style="margin-bottom: 8px;">
-                                <div class="point">*是否为预售书籍(预售才选)</div>
-                                <el-switch v-model="data.isPlanBuy" active-color="#13ce66"
-                                    inactive-color="rgb(245, 245, 245)">
-                                </el-switch>
-                            </div>
-                            <div style="margin-bottom: 8px;">
-                                <div class="point">*计划上架时间(预售才选)</div>
-                                <el-date-picker v-model="data.planBuyTime" type="date" placeholder="计划上架时间">
-                                </el-date-picker>
-                            </div>
-                        </div>
-                        <div style="margin-bottom: 8px;">
+                        <div style="margin-bottom: 5px;">
                             <div class="point">馆藏数目</div>
-                            <el-input-number size="small" v-model="data.num" :min="1" :max="100"
-                                label=""></el-input-number>
+                            <el-input-number size="mini" v-model="data.num" :min="1" :max="100"
+                                label="" style="width: 100%;"></el-input-number>
                         </div>
                     </el-col>
-                    <el-col :span="16">
-                        <div style="margin-left: 40px;">
-                            <div style="margin-bottom: 8px;">
+                    <el-col :span="15">
+                        <div style="margin-left: 20px;">
+                            <div style="margin-bottom: 5px;">
                                 <div class="point">书籍名称</div>
                                 <input class="dialog-input" v-model="data.name" placeholder="输入" />
                             </div>
-                            <div style="margin-bottom: 8px;">
+                            <div style="margin-bottom: 5px;">
                                 <div class="point">出版商</div>
                                 <input class="dialog-input" v-model="data.publisher" placeholder="输入" />
                             </div>
-                            <div style="margin-bottom: 8px;">
+                            <div style="margin-bottom: 5px;">
                                 <div class="point">作者</div>
                                 <input class="dialog-input" v-model="data.author" placeholder="输入" />
                             </div>
-                            <div style="margin-bottom: 8px;">
+                            <div style="margin-bottom: 5px;">
                                 <div class="point">国际标准书号(ISBN)</div>
                                 <input class="dialog-input" v-model="data.isbn" placeholder="输入" />
                             </div>
                             <div>
                                 <div class="point">书籍简介</div>
-                                <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" placeholder="书籍简介"
-                                    v-model="data.detail">
+                                <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 2 }" placeholder="书籍简介"
+                                    v-model="data.detail" size="mini">
                                 </el-input>
+                            </div>
+                            <div v-if="!isOperation || data.isPlanBuy" style="margin-top: 5px;">
+                                <div class="point">*是否为预售书籍</div>
+                                <div style="display: flex; align-items: center;">
+                                    <el-switch v-model="data.isPlanBuy" active-color="#13ce66"
+                                        inactive-color="rgb(245, 245, 245)" style="margin-right: 10px;">
+                                    </el-switch>
+                                    <el-date-picker v-if="data.isPlanBuy" v-model="data.planBuyTime" type="date" 
+                                        placeholder="计划上架时间" size="mini" style="width: 150px;">
+                                    </el-date-picker>
+                                </div>
                             </div>
                         </div>
                     </el-col>
                 </el-row>
-
             </div>
             <span slot="footer" class="dialog-footer">
-                <span class="channel-button" @click="cannel()">
+                <span class="dialog-btn cancel-btn" @click="cannel()">
                     取消操作
                 </span>
-                <span class="edit-button" v-if="!isOperation" @click="addOperation()">
+                <span class="dialog-btn confirm-btn" v-if="!isOperation" @click="addOperation()">
                     确定新增
                 </span>
-                <span class="edit-button" v-else @click="updateOperation()">
+                <span class="dialog-btn confirm-btn" v-else @click="updateOperation()">
                     确定修改
                 </span>
             </span>
@@ -171,7 +168,7 @@ export default {
             data: {num: 1},
             currentPage: 1,
             cover: null,
-            pageSize: 8,
+            pageSize: 10,
             totalItems: 0,
             dialogOperation: false, // 开关
             isOperation: false, // 开关-标识新增或修改
@@ -400,46 +397,44 @@ export default {
 
 .item-book {
     background-color: white;
-    padding: 15px;
+    padding: 12px;
     box-sizing: border-box;
     border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
     transition: all 0.3s ease;
     border: 1px solid rgba(230, 230, 230, 0.5);
     height: 100%;
     
     &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     }
 }
 
 .book-col {
-    padding: 10px;
-    margin-bottom: 15px;
+    padding: 8px;
+    margin-bottom: 10px;
 }
 
 .book-actions {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin-top: 10px;
+    gap: 8px;
+    margin-top: 8px;
 }
 
 .book-btn {
-    padding: 4px 14px;
+    padding: 1px 8px;
     border: none;
-    border-radius: 16px;
-    font-size: 12px !important;
-    font-weight: 400;
+    border-radius: 12px;
+    font-size: 11px !important;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
     color: white;
     outline: none;
-    min-width: 50px;
-    height: 26px;
-    line-height: 18px;
-    text-align: center;
+    min-width: 32px;
+    height: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -447,7 +442,7 @@ export default {
 
 .edit-btn {
     background-color: #409EFF;
-    box-shadow: 0 2px 5px rgba(64, 158, 255, 0.2);
+    box-shadow: 0 1px 2px rgba(64, 158, 255, 0.2);
 }
 
 .edit-btn:hover {
@@ -456,7 +451,7 @@ export default {
 
 .delete-btn {
     background-color: #F56C6C;
-    box-shadow: 0 2px 5px rgba(245, 108, 108, 0.2);
+    box-shadow: 0 1px 2px rgba(245, 108, 108, 0.2);
 }
 
 .delete-btn:hover {
@@ -478,5 +473,121 @@ export default {
     background-color: #66b1ff;
     box-shadow: 0 4px 10px rgba(64, 158, 255, 0.4);
     transform: translateY(-2px);
+}
+
+.dialog-input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #DCDFE6;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 12px;
+    font-weight: 400;
+    color: #606266;
+}
+
+.dialog-input:focus {
+    border-color: #409EFF;
+    outline: none;
+}
+
+.point {
+    font-size: 12px;
+    color: #606266;
+    margin-bottom: 3px;
+    font-weight: 400;
+}
+
+.dialog-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #303133;
+    margin: 0;
+    padding: 8px 0;
+    position: relative;
+    display: inline-block;
+}
+
+.dialog-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background: #409EFF;
+    border-radius: 2px;
+}
+
+.dialog-btn {
+    display: inline-block;
+    padding: 6px 15px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 12px;
+    font-weight: 400;
+    margin-left: 10px;
+}
+
+.cancel-btn {
+    background-color: #F5F7FA;
+    color: #606266;
+    border: 1px solid #DCDFE6;
+}
+
+.cancel-btn:hover {
+    color: #409EFF;
+    border-color: #c6e2ff;
+    background-color: #ECF5FF;
+}
+
+.confirm-btn {
+    background-color: #409EFF;
+    color: white;
+    border: none;
+    box-shadow: 0 2px 6px rgba(64, 158, 255, 0.2);
+}
+
+.confirm-btn:hover {
+    background-color: #66b1ff;
+}
+
+.avatar-uploader {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 120px;
+    height: 120px;
+    line-height: 120px;
+    text-align: center;
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.dialog-cover {
+    width: 120px;
+    height: 120px;
+    display: block;
+    border-radius: 6px;
+    object-fit: cover;
+}
+.flex-row-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -8px; /* 抵消子元素的padding */
+}
+
+.flex-col-5 {
+    width: 20%;
+    padding: 8px;
+    box-sizing: border-box;
 }
 </style>

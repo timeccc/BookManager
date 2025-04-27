@@ -77,39 +77,60 @@
                 :total="totalItems"></el-pagination>
         </el-row>
         <!-- 操作面板 -->
-        <el-dialog :show-close="false" :visible.sync="dialogUserOperaion" width="25%">
-            <div style="padding:16px 20px;">
-                <el-row>
-                    <p>用户头像</p>
-                    <el-upload class="avatar-uploader"
-                        action="http://localhost:21090/api/book-manage-sys-api/v1.0/file/upload" :show-file-list="false"
-                        :on-success="handleAvatarSuccess">
-                        <img v-if="userAvatar" :src="userAvatar" class="dialog-avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                </el-row>
-                <el-row>
-                    <span class="dialog-hover">用户名</span>
-                    <input class="dialog-input" v-model="data.userName" placeholder="用户名" />
-                    <span class="dialog-hover">账号</span>
-                    <input class="dialog-input" v-model="data.userAccount" placeholder="账号" />
-                    <span class="dialog-hover">邮箱</span>
-                    <input class="dialog-input" v-model="data.userEmail" placeholder="邮箱" />
-                    <span class="dialog-hover">密码</span>
-                    <input class="dialog-input" v-model="userPwd" type="password" placeholder="密码" />
+        <el-dialog :show-close="false" :visible.sync="dialogUserOperaion" width="38%" custom-class="user-dialog">
+            <div class="dialog-content">
+                <h3 class="dialog-title">用户信息</h3>
+                <el-row :gutter="24" type="flex">
+                    <el-col :span="8">
+                        <p class="point">用户头像</p>
+                        <el-upload 
+                            class="avatar-uploader"
+                            action="http://localhost:21090/api/book-manage-sys-api/v1.0/file/upload" 
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess">
+                            <template v-if="userAvatar">
+                                <img :src="userAvatar" class="dialog-avatar">
+                            </template>
+                            <template v-else>
+                                <el-button icon="el-icon-plus" class="custom-upload-btn" size="large"></el-button>
+                            </template>
+                        </el-upload>
+                    </el-col>
+                    <el-col :span="16">
+                        <el-row :gutter="16">
+                            <el-col :span="12" class="form-col">
+                                <span class="point">用户名</span>
+                                <input class="dialog-input" v-model="data.userName" placeholder="请输入用户名" />
+                            </el-col>
+                            <el-col :span="12" class="form-col">
+                                <span class="point">账号</span>
+                                <input class="dialog-input" v-model="data.userAccount" placeholder="请输入账号" />
+                            </el-col>
+                        </el-row>
+                        <el-row :gutter="16">
+                            <el-col :span="12" class="form-col">
+                                <span class="point">邮箱</span>
+                                <input class="dialog-input" v-model="data.userEmail" placeholder="请输入邮箱" />
+                            </el-col>
+                            <el-col :span="12" class="form-col">
+                                <span class="point">密码</span>
+                                <input class="dialog-input" v-model="userPwd" type="password" placeholder="请输入密码" />
+                            </el-col>
+                        </el-row>
+                    </el-col>
                 </el-row>
             </div>
-            <span slot="footer" class="dialog-footer" style="margin-top: 10px;">
-                <span class="channel-button" @click="cannel()">
+            <div class="dialog-footer">
+                <span class="dialog-btn cancel-btn" @click="cannel()">
                     取消操作
                 </span>
-                <span v-if="!isOperation" class="edit-button" @click="addOperation()">
+                <span v-if="!isOperation" class="dialog-btn confirm-btn" @click="addOperation()">
                     确定新增
                 </span>
-                <span v-else class="edit-button" @click="updateOperation()">
+                <span v-else class="dialog-btn confirm-btn" @click="updateOperation()">
                     确定修改
                 </span>
-            </span>
+            </div>
         </el-dialog>
         <el-dialog :show-close="false" :visible.sync="dialogStatusOperation" width="18%">
             <div style="padding:30px 20px 0 20px;">
@@ -430,48 +451,149 @@ export default {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
+.user-dialog {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.dialog-content {
+    padding: 24px 28px 10px;
+}
+
+.dialog-footer {
+    padding: 10px 28px 20px;
+    text-align: right;
+}
+
+.dialog-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #303133;
+    margin: 0 0 20px 0;
+    padding-bottom: 10px;
+    position: relative;
+    display: inline-block;
+}
+
+.dialog-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background: #409EFF;
+    border-radius: 2px;
+}
+
 .dialog-input {
     width: 100%;
-    padding: 8px 10px;
-    margin-bottom: 15px;
+    padding: 9px 12px;
+    margin-bottom: 20px;
     border: 1px solid #dcdfe6;
     border-radius: 4px;
     box-sizing: border-box;
+    font-size: 13px;
+    transition: all 0.2s;
     
     &:focus {
         outline: none;
         border-color: #409EFF;
+        box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
     }
 }
 
-.dialog-hover {
+.point {
     display: block;
-    margin-bottom: 5px;
-    font-size: 14px;
+    margin-bottom: 8px;
+    font-size: 13px;
     color: #606266;
+    font-weight: 500;
+}
+
+.dialog-btn {
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 13px;
+    margin-left: 12px;
+}
+
+.cancel-btn {
+    background-color: #F5F7FA;
+    color: #606266;
+    border: 1px solid #DCDFE6;
+}
+
+.cancel-btn:hover {
+    color: #409EFF;
+    border-color: #c6e2ff;
+    background-color: #ECF5FF;
+}
+
+.confirm-btn {
+    background-color: #409EFF;
+    color: white;
+    border: none;
+    box-shadow: 0 2px 6px rgba(64, 158, 255, 0.2);
+}
+
+.confirm-btn:hover {
+    background-color: #66b1ff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
+}
+
+.avatar-container {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 18px;
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .dialog-avatar {
-    width: 80px;
-    height: 80px;
+    width: 120px;
+    height: 120px;
     display: block;
-    margin-bottom: 15px;
-    border-radius: 4px;
+    margin: 0 auto;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .avatar-uploader {
-    margin-bottom: 15px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 80px;
-    height: 80px;
-    line-height: 80px;
-    text-align: center;
+.custom-upload-btn {
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    color: #c0c4cc;
     border: 1px dashed #d9d9d9;
-    border-radius: 4px;
-    cursor: pointer;
+    border-radius: 8px;
+    background-color: #fafafa;
+    transition: all 0.3s;
+
+    &:hover {
+        color: #409EFF;
+        border-color: #409EFF;
+        background-color: #f0f9ff;
+        transform: translateY(-2px);
+        box-shadow: 0 2px 12px rgba(64, 158, 255, 0.2);
+    }
+}
+
+.form-col {
+    padding: 0 8px;
 }
 </style>

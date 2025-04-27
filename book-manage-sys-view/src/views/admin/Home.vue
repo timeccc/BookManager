@@ -2,9 +2,9 @@
     <div class="menu-container">
         <div class="menu-side" :class="{ 'menu-side-narrow': flag }">
             <div style="display: flex;align-items: center;">
-                <Logo name="图书后台" style="padding: 0 30px;margin: 10px 0;" :flag="flag" :bag="colorLogo" />
+                <Logo name="书海智控台" style="padding: 0 20px 0 15px;margin: 18px 15px 15px 15px;" :flag="flag" :bag="colorLogo" />
             </div>
-            <div style="margin-top: 5px;">
+            <div style="margin-top: 18px;">
                 <AdminMenu :flag="flag" :routes="adminRoutes" :bag="bagMenu" @select="handleRouteSelect" />
             </div>
         </div>
@@ -228,7 +228,7 @@ export default {
         min-width: 230px;
         height: 100vh;
         padding-top: 5px;
-        padding-right: 8px;
+        padding-right: 0;
         padding-bottom: 20px;
         box-sizing: border-box;
         transition: width 0.3s ease;

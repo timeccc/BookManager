@@ -71,7 +71,7 @@ export default {
     -webkit-backdrop-filter: blur(5px);
     border-radius: 16px;
     box-shadow: 0 8px 25px rgba(31, 38, 135, 0.08);
-    margin: 0 5px 10px 5px;
+    margin: 15px 0 10px 5px; /* 增加上边距让导航栏下移 */
     transition: all 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-sizing: border-box; /* 确保padding不会影响宽度计算 */
