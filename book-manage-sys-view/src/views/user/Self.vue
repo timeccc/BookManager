@@ -5,7 +5,7 @@
             <el-form-item label="头像" prop="userAvatar">
                 <el-upload 
                     class="avatar-uploader" 
-                    action="http://localhost:21090/api/book-manage-sys-api/v1.0/file/upload" 
+                    action="http://localhost:2025/api/book-manage-sys-api/v1.0/file/upload" 
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess">
                     <img v-if="userAvatar" :src="userAvatar" class="avatar-image">
@@ -75,7 +75,11 @@
             
             <!-- 提交按钮 -->
             <el-form-item>
-                <el-button type="primary" @click="postInfo" :loading="loading">保存修改</el-button>
+                <button class="save-button" @click="postInfo" :disabled="loading">
+                    <i class="el-icon-check"></i>
+                    <span>{{ loading ? '保存中...' : '保存修改' }}</span>
+                    <span class="button-loader" v-if="loading"></span>
+                </button>
             </el-form-item>
         </el-form>
     </div>
@@ -193,6 +197,7 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+        box-sizing: border-box;
         
         &:hover {
             border-color: #ff5722;
@@ -202,6 +207,9 @@ export default {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
+            margin: 0;
+            border: none;
         }
         
         .avatar-uploader-icon {
@@ -274,6 +282,93 @@ export default {
     ::v-deep .el-button {
         border-radius: 8px;
         padding: 12px 20px;
+    }
+    
+    ::v-deep .el-upload {
+        width: 100%;
+        height: 100%;
+        display: block;
+        
+        .el-upload-dragger {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+    }
+}
+
+.save-button {
+    background: linear-gradient(45deg, #ff7043, #ff5722);
+    border: none;
+    font-size: 13px;
+    padding: 8px 18px;
+    border-radius: 30px;
+    box-shadow: 0 2px 8px rgba(255, 87, 34, 0.2);
+    transition: all 0.3s ease;
+    color: white;
+    height: auto;
+    line-height: 1.5;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    outline: none;
+    
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+        border-radius: 30px;
+    }
+    
+    i {
+        font-size: 14px;
+    }
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 87, 34, 0.35);
+        background: linear-gradient(45deg, #ff8a65, #ff7043);
+    }
+    
+    &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(255, 87, 34, 0.2);
+    }
+    
+    &:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+    
+    .button-loader {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 0.8s linear infinite;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
     }
 }
 </style>

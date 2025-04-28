@@ -130,10 +130,6 @@ export default {
         healthDataRecord() {
             this.$emit('eventListener', 'healthDataRecord');
         },
-        // 退出登录，传回父组件处理
-        loginOut() {
-            this.$emit('eventListener', 'loginOut');
-        },
         async loadMsgCount() {
             const userInfo = sessionStorage.getItem('userInfo');
             const userInfoEntity = JSON.parse(userInfo);
@@ -159,29 +155,6 @@ export default {
         messageCenter() {
             this.selectedIndex = null;
             this.pathToDo(this.messagePath);
-        },
-        // 退出登录
-        async out() {
-            const confirmed = await this.$swalConfirm({
-                title: '是否退出登录',
-                text: `退出后将重新登录，才能使用系统功能`,
-                icon: 'warning',
-            });
-            if (confirmed) {
-                this.$swal.fire({
-                    title: '退出登录',
-                    text: '您已成功退出登录。',
-                    icon: 'success', // 使用'success'图标表示操作成功
-                    showConfirmButton: false, // 隐藏确认按钮，使得弹窗只展示信息后自动关闭
-                    timer: 1300, // 自动关闭弹窗的延迟时间，这里是2秒
-                });
-                setTimeout(() => {
-                    clearToken();
-                    this.$router.push('/loginPath');
-                }, 1300)
-            } else {
-                console.log('用户取消了退出操作');
-            }
         },
     }
 }

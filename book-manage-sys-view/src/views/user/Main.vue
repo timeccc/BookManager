@@ -2,10 +2,13 @@
     <div>
         <el-row class="page-container">
             <!-- 搜索框 -->
-            <div class="word-search">
-                <div class="item">
-                    <input type="text" placeholder="搜索用户留言" v-model="readerProposalQueryDto.content">
-                    <i class="el-icon-search" @click="fetchReaderProposal"></i>
+            <div class="search-wrapper">
+                <div class="search-input">
+                    <div class="custom-input">
+                        <i class="el-icon-search"></i>
+                        <input type="text" placeholder="搜索用户留言" v-model="readerProposalQueryDto.content">
+                        <span class="search-text" @click="fetchReaderProposal">搜索</span>
+                    </div>
                 </div>
             </div>
             
@@ -280,49 +283,63 @@ export default {
     margin-bottom: 20px;
 }
 
-.word-search {
-    flex: 1;
-    max-width: 500px;
-    margin: 20px auto;
+.search-wrapper {
+    margin-bottom: 15px;
+    margin-top: -5px;
     
-    .item {
+    .search-input {
         display: flex;
-        align-items: center;
-        background-color: #f8f9fa;
-        border-radius: 10px;
-        padding: 8px 16px;
-        transition: all 0.3s ease;
+        max-width: 500px;
+        margin: 0 auto;
         
-        &:hover {
-            background-color: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        
-        input {
-            flex: 1;
-            border: none;
-            outline: none;
-            background: transparent;
-            padding: 8px 0;
-            font-size: 16px;
-            color: #333;
-            
-            &::placeholder {
-                color: #999;
-            }
-        }
-        
-        i {
-            font-size: 18px;
-            color: #666;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
+        .custom-input {
+            display: flex;
+            width: 100%;
+            background-color: white;
+            border-radius: 40px;
+            align-items: center;
+            box-sizing: border-box;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #eee;
             transition: all 0.3s ease;
+            padding: 10px 20px;
             
-            &:hover {
-                background-color: rgba(255, 87, 34, 0.08);
+            &:hover, &:focus-within {
+                box-shadow: 0 6px 16px rgba(255, 87, 34, 0.12);
+                border-color: rgba(255, 87, 34, 0.2);
+            }
+            
+            i {
+                font-size: 18px;
                 color: #ff5722;
+            }
+            
+            input {
+                flex: 1;
+                border: none;
+                background-color: transparent;
+                outline: none;
+                font-size: 16px;
+                color: #333;
+                margin: 0 15px;
+                height: 24px;
+            }
+            
+            .search-text {
+                display: inline-block;
+                padding: 6px 16px;
+                border-radius: 20px;
+                background-color: #ff5722;
+                color: white;
+                font-size: 14px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-align: center;
+                
+                &:hover {
+                    background-color: #f4511e;
+                    transform: translateY(-1px);
+                }
             }
         }
     }
@@ -362,9 +379,9 @@ export default {
 }
 
 .card-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .message-card {
@@ -372,6 +389,8 @@ export default {
     overflow: hidden;
     transition: all 0.3s ease;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    width: 100%;
+    position: relative;
     
     &:hover {
         transform: translateY(-3px);
@@ -399,18 +418,18 @@ export default {
     }
     
     &.replied {
-        position: relative;
-        
         &::after {
             content: '已回复';
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 6px;
+            right: 12px;
             font-size: 12px;
-            padding: 2px 8px;
-            border-radius: 8px;
+            padding: 3px 10px;
+            border-radius: 12px;
             background-color: rgba(103, 194, 58, 0.1);
             color: #67C23A;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(103, 194, 58, 0.1);
         }
     }
 }
@@ -420,6 +439,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    padding-top: 10px;
     
     .user-info {
         display: flex;
@@ -440,6 +460,7 @@ export default {
         .message-time {
             color: #999;
             font-size: 12px;
+            margin-right: 10px;
         }
     }
 }

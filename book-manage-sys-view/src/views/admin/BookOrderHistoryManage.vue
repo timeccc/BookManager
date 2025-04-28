@@ -72,14 +72,33 @@ export default {
                 title: '删除借阅记录数据',
                 text: `删除后不可恢复，是否继续？`,
                 icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '确认删除',
+                cancelButtonText: '取消',
+                confirmButtonColor: '#f56c6c',
+                cancelButtonColor: '#909399',
+                customClass: {
+                    popup: 'custom-delete-popup',
+                    confirmButton: 'custom-delete-confirm-button',
+                    cancelButton: 'custom-delete-cancel-button',
+                    title: 'custom-delete-title',
+                    content: 'custom-delete-content',
+                    icon: 'custom-delete-icon'
+                },
+                buttonsStyling: true,
+                iconColor: '#f56c6c',
+                backdrop: `rgba(0,0,0,0.4)`,
+                heightAuto: false,
+                padding: '2em'
             });
+            
             if (confirmed) {
                 try {
                     let ids = this.selectedRows.map(entity => entity.id);
                     const response = await this.$axios.post(`bookOrderHistory/batchDelete`, ids);
                     if (response.data.code === 200) {
                         this.$swal.fire({
-                            title: '删除提示',
+                            title: '删除成功',
                             text: response.data.msg,
                             icon: 'success',
                             showConfirmButton: false,

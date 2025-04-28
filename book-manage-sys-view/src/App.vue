@@ -46,4 +46,60 @@ html, body {
 * {
   -ms-overflow-style: none !important;
 }
+
+/* 删除确认对话框全局样式 */
+.custom-delete-popup {
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+  overflow: hidden !important;
+}
+
+.custom-delete-title {
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: #303133 !important;
+}
+
+.custom-delete-content {
+  font-size: 14px !important;
+  color: #606266 !important;
+  margin-top: 8px !important;
+}
+
+.custom-delete-icon {
+  border: 2px solid #f56c6c !important;
+  border-radius: 50% !important;
+  padding: 10px !important;
+  margin-bottom: 15px !important;
+}
+
+.custom-delete-confirm-button {
+  padding: 10px 20px !important;
+  border-radius: 20px !important;
+  font-weight: 500 !important;
+  transition: all 0.3s !important;
+  font-size: 14px !important;
+}
+
+.custom-delete-confirm-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 5px 15px rgba(245, 108, 108, 0.4) !important;
+}
+
+.custom-delete-confirm-button:active {
+  transform: translateY(0) !important;
+}
+
+.custom-delete-cancel-button {
+  padding: 10px 20px !important;
+  border-radius: 20px !important;
+  font-weight: 500 !important;
+  transition: all 0.3s !important;
+  font-size: 14px !important;
+}
+
+.custom-delete-cancel-button:hover {
+  background-color: #f5f7fa !important;
+  color: #606266 !important;
+}
 </style>

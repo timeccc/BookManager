@@ -27,8 +27,7 @@
             v-if="isCollapsed" 
             :content="route.name" 
             placement="right" 
-            :open-delay="300"
-            popper-class="nav-tooltip">
+            :open-delay="300">
             <span class="tooltip-trigger"></span>
           </el-tooltip>
         </div>
@@ -39,7 +38,7 @@
         <div class="divider"></div>
         <div class="item-route user-info-item" @click="goToUserCenter">
           <div class="item-content">
-            <img :src="userInfo.url || '/default-avatar.png'" class="user-avatar">
+            <img :src="userInfo.url || '/assets/default-avatar.png'" class="user-avatar">
             <div class="user-details">
               <span class="username">{{ userInfo.name || '用户' }}</span>
               <span class="user-role">{{ userInfo.role === 1 ? '管理员' : '读者' }}</span>
@@ -49,8 +48,7 @@
             v-if="isCollapsed" 
             :content="userInfo.name || '用户'" 
             placement="right"
-            :open-delay="300"
-            popper-class="nav-tooltip">
+            :open-delay="300">
             <span class="tooltip-trigger"></span>
           </el-tooltip>
         </div>
@@ -63,8 +61,7 @@
             v-if="isCollapsed" 
             content="退出登录" 
             placement="right"
-            :open-delay="300"
-            popper-class="nav-tooltip">
+            :open-delay="300">
             <span class="tooltip-trigger"></span>
           </el-tooltip>
         </div>
@@ -77,22 +74,13 @@
 export default {
   name: 'UserNavigation',
   props: {
-    routes: {
-      type: Array,
-      required: true
-    },
+    routes: Array,
     currentRouteName: {
       type: String,
       default: ''
     },
-    userInfo: {
-      type: Object,
-      required: true
-    },
-    isCollapsed: {
-      type: Boolean,
-      default: false
-    },
+    userInfo: Object,
+    isCollapsed: Boolean,
     userCenterPath: {
       type: Object,
       default: () => ({ name: '个人中心', path: '/mySelf' })
@@ -109,32 +97,17 @@ export default {
       this.$emit('toggle-collapse');
     },
     handleLogout() {
-      this.$confirm('确定要退出登录吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        // 发送退出登录事件
-        this.$emit('logout');
-      }).catch(() => {});
+      this.$emit('logout');
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-@font-face {
-  font-family: 'DouyinMeihao';
-  src: url('//at.alicdn.com/wf/webfont/3v7eP8O5185d/9HFd3DHWqKcG.woff2') format('woff2'),
-       url('//at.alicdn.com/wf/webfont/3v7eP8O5185d/QYoAYRpn4CRP.woff') format('woff');
-  font-display: swap;
-}
-
 .menu-side {
   width: 230px !important;
   min-width: 120px !important;
   height: 100vh;
-  padding-top: 0;
   box-sizing: border-box;
   transition: width 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
   border-right: 1px solid rgba(0,0,0,0.05);
@@ -164,8 +137,6 @@ export default {
     box-shadow: 0 4px 12px rgba(255, 87, 34, 0.2);
     transition: transform 0.3s ease;
     object-fit: cover;
-    position: relative;
-    z-index: 2;
     
     &:hover {
       transform: scale(1.05);
@@ -175,15 +146,14 @@ export default {
   
   .logo-text {
     margin-left: 12px;
-    font-family: '抖音美好体','微软雅黑',sans-serif !important;
     font-size: 20px;
     color: #ff5722;
     font-weight: 600;
     letter-spacing: 1px;
-    transition: none;
     flex: 1;
     white-space: nowrap;
     overflow: hidden;
+    font-family: '抖音美好体', '微软雅黑', sans-serif;
   }
   
   .collapse-btn {
@@ -234,6 +204,7 @@ export default {
 .nav-group {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .item-route {
@@ -242,18 +213,22 @@ export default {
   margin: 4px 0;
   border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  overflow: hidden;
+  transition: background-color 0.3s ease;
   height: 48px;
   box-sizing: border-box;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: center;
   
   .item-content {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: center;
+    gap: 6px;
     position: relative;
     z-index: 2;
-    transition: none;
+    width: 100%;
   }
   
   &::after {
@@ -284,6 +259,8 @@ export default {
     font-size: 18px;
     color: #606266;
     transition: color 0.3s ease;
+    display: inline-block;
+    text-align: center;
   }
 
   .route-text {
@@ -291,10 +268,11 @@ export default {
     color: #606266;
     font-weight: 500;
     transition: color 0.3s ease;
-    flex: 1;
+    flex: 0 1 auto;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: center;
   }
   
   .tooltip-trigger {
@@ -337,6 +315,7 @@ export default {
   margin-top: auto;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .divider {
@@ -348,9 +327,13 @@ export default {
 
 .user-info-item {
   background-color: rgba(0, 0, 0, 0.02);
+  height: auto !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
   
   .item-content {
     width: 100%;
+    align-items: center;
   }
   
   .user-avatar {
@@ -360,7 +343,6 @@ export default {
     object-fit: cover;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     border: 2px solid #fff;
-    transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   .user-details {
@@ -372,6 +354,7 @@ export default {
       font-size: 14px;
       color: #303133;
       line-height: 1.2;
+      margin-bottom: 2px;
     }
     
     .user-role {
@@ -401,12 +384,10 @@ export default {
 
 .menu-side-narrow {
   width: 120px !important;
-  flex-shrink: 0;
 
   .logo-container {
     justify-content: center;
     padding: 20px 0;
-    position: relative;
     
     .logo-text {
       width: 0;
@@ -425,18 +406,11 @@ export default {
       right: 15px;
       width: 28px;
       height: 28px;
-      z-index: 10;
     }
   }
 
   .item-route {
     padding: 12px 0;
-    display: flex;
-    justify-content: center;
-    
-    .item-content {
-      justify-content: center;
-    }
     
     i {
       margin: 0 auto;
@@ -473,17 +447,5 @@ export default {
   border-radius: 8px;
   background-color: rgba(48, 49, 51, 0.9);
   border: none;
-}
-
-::v-deep .el-tooltip__popper.nav-tooltip {
-  font-size: 14px;
-  font-weight: 500;
-}
-
-@keyframes ripple {
-  to {
-    transform: translate(-50%, -50%) scale(2.5);
-    opacity: 0;
-  }
 }
 </style> 

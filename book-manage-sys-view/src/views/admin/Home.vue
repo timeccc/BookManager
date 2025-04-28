@@ -167,8 +167,26 @@ export default {
         async loginOut() {
             const confirmed = await this.$swalConfirm({
                 title: '退出登录？',
-                text: `推出后需重新登录？`,
+                text: '退出后需重新登录',
                 icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '确认退出',
+                cancelButtonText: '取消',
+                confirmButtonColor: '#ff5722',
+                cancelButtonColor: '#909399',
+                customClass: {
+                    popup: 'custom-delete-popup',
+                    confirmButton: 'custom-delete-confirm-button',
+                    cancelButton: 'custom-delete-cancel-button',
+                    title: 'custom-delete-title',
+                    content: 'custom-delete-content',
+                    icon: 'custom-delete-icon'
+                },
+                buttonsStyling: true,
+                iconColor: '#ff5722',
+                backdrop: `rgba(0,0,0,0.4)`,
+                heightAuto: false,
+                padding: '2em'
             });
             if (confirmed) {
                 this.$swal.fire({

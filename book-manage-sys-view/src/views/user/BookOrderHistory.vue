@@ -1,10 +1,11 @@
 <template>
-    <el-row style="margin-top: 20px;">
+    <el-row style="margin-top: 10px;">
         <!-- 条件搜索 -->
         <div class="word-search">
             <div class="item">
+                <i class="el-icon-search"></i>
                 <input type="text" placeholder="书籍ID" v-model="bookQueryDto.bookId">
-                <i class="el-icon-search" @click="fetchFreshData"></i>
+                <span class="search-text" @click="fetchFreshData">搜索</span>
             </div>
         </div>
         <el-row style="margin: 10px 0;">
@@ -236,34 +237,59 @@ export default {
 .word-search {
     display: flex;
     justify-content: center;
+    margin-bottom: 15px;
+    margin-top: -5px;
 
     .item {
-        padding: 14px;
+        padding: 10px 20px;
         width: 500px;
-        background-color: rgb(247, 247, 247);
-        border-radius: 10px;
+        background-color: white;
+        border-radius: 40px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         box-sizing: border-box;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        border: 1px solid #eee;
+        transition: all 0.3s ease;
+
+        &:hover, &:focus-within {
+            box-shadow: 0 6px 16px rgba(255, 87, 34, 0.12);
+            border-color: rgba(255, 87, 34, 0.2);
+        }
 
         input {
+            flex: 1;
             border: none;
-            background-color: rgb(247, 247, 247);
+            background-color: transparent;
             outline: none;
             font-size: 16px;
+            color: #333;
+            margin: 0 15px;
+            height: 24px;
         }
 
         i {
-            padding: 6px;
-            border-radius: 5px;
-            cursor: pointer;
+            font-size: 18px;
+            color: #ff5722;
         }
 
-        i:hover {
-            background-color: rgb(241, 241, 241);
+        .search-text {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background-color: #ff5722;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            
+            &:hover {
+                background-color: #f4511e;
+                transform: translateY(-1px);
         }
     }
-
+    }
 }
 </style>

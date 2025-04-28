@@ -1,6 +1,7 @@
 <template>
     <div class="notice-detail-container">
         <el-card class="notice-card">
+            <div class="card-decoration"></div>
             <div class="notice-header">
                 <div class="return-btn" @click="returnPage">
                     <i class="el-icon-back"></i>
@@ -15,7 +16,9 @@
                 </div>
             </div>
             
-            <el-divider></el-divider>
+            <div class="custom-divider">
+                <span></span>
+            </div>
             
             <div class="notice-content">
                 <div v-html="notice.content" class="rich-content"></div>
@@ -53,8 +56,26 @@ export default {
     
     .notice-card {
         border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 20px rgba(255, 87, 34, 0.08);
         background-color: #fff;
+        position: relative;
+        overflow: hidden;
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 87, 34, 0.15);
+        }
+        
+        .card-decoration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff5722, #ff9800);
+        }
         
         ::v-deep .el-card__body {
             padding: 25px;
@@ -68,31 +89,45 @@ export default {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 12px;
-            border-radius: 6px;
-            background-color: #f5f7fa;
-            color: #606266;
+            padding: 8px 14px;
+            border-radius: 20px;
+            background-color: rgba(255, 87, 34, 0.08);
+            color: #ff5722;
             cursor: pointer;
             transition: all 0.2s ease;
             margin-bottom: 20px;
+            font-weight: 500;
             
             i {
                 font-size: 14px;
             }
             
             &:hover {
-                background-color: #e6f1fc;
-                color: #409EFF;
+                background-color: rgba(255, 87, 34, 0.15);
                 transform: translateX(-3px);
+                box-shadow: 0 3px 10px rgba(255, 87, 34, 0.1);
             }
         }
         
         .notice-title {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 600;
-            color: #303133;
+            color: #333;
             margin-bottom: 15px;
             line-height: 1.4;
+            position: relative;
+            padding-left: 12px;
+            
+            &:before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 5px;
+                bottom: 5px;
+                width: 4px;
+                background: linear-gradient(to bottom, #ff5722, #ff9800);
+                border-radius: 4px;
+            }
         }
         
         .notice-meta {
@@ -107,20 +142,40 @@ export default {
                 
                 i {
                     font-size: 14px;
+                    color: #ff9800;
                 }
             }
         }
     }
     
+    .custom-divider {
+        height: 1px;
+        background: #f0f0f0;
+        margin: 20px 0;
+        position: relative;
+        
+        span {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100px;
+            height: 100%;
+            background: linear-gradient(90deg, #ff5722, rgba(255, 87, 34, 0));
+        }
+    }
+    
     .notice-content {
-        padding: 10px 0;
+        padding: 20px;
         line-height: 1.8;
-        color: #303133;
+        color: #333;
+        background-color: #fafafa;
+        border-radius: 8px;
         
         .rich-content {
             ::v-deep img {
                 max-width: 100%;
-                border-radius: 4px;
+                border-radius: 8px;
+                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
             }
             
             ::v-deep p {
@@ -128,10 +183,12 @@ export default {
             }
             
             ::v-deep a {
-                color: #409EFF;
+                color: #ff5722;
                 text-decoration: none;
+                transition: color 0.2s;
                 
                 &:hover {
+                    color: #ff9800;
                     text-decoration: underline;
                 }
             }
@@ -139,6 +196,19 @@ export default {
             ::v-deep ul, ::v-deep ol {
                 padding-left: 20px;
                 margin-bottom: 15px;
+            }
+            
+            ::v-deep h1, ::v-deep h2, ::v-deep h3, ::v-deep h4 {
+                color: #ff5722;
+                margin: 20px 0 15px;
+            }
+            
+            ::v-deep blockquote {
+                border-left: 4px solid #ff9800;
+                padding: 10px 15px;
+                margin: 15px 0;
+                background-color: rgba(255, 152, 0, 0.05);
+                border-radius: 0 4px 4px 0;
             }
         }
     }
@@ -158,6 +228,10 @@ export default {
             .notice-title {
                 font-size: 20px;
             }
+        }
+        
+        .notice-content {
+            padding: 15px;
         }
     }
 }

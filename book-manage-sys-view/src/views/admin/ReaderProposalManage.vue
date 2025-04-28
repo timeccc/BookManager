@@ -6,7 +6,7 @@
                 <el-input size="small" style="width: 188px;margin-right: 10px;"
                     v-model="readingProposalQueryDto.content" placeholder="问题" clearable @clear="handleFilterClear">
                 </el-input>
-                <el-button size="small" class="search-btn" @click="handleFilter">立即查询</el-button>
+                <el-button size="mini" class="search-btn" @click="handleFilter">立即查询</el-button>
             </el-row>
         </el-row>
         
@@ -141,14 +141,33 @@ export default {
                 title: '删除反馈数据',
                 text: `删除后不可恢复，是否继续？`,
                 icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '确认删除',
+                cancelButtonText: '取消',
+                confirmButtonColor: '#f56c6c',
+                cancelButtonColor: '#909399',
+                customClass: {
+                    popup: 'custom-delete-popup',
+                    confirmButton: 'custom-delete-confirm-button',
+                    cancelButton: 'custom-delete-cancel-button',
+                    title: 'custom-delete-title',
+                    content: 'custom-delete-content',
+                    icon: 'custom-delete-icon'
+                },
+                buttonsStyling: true,
+                iconColor: '#f56c6c',
+                backdrop: `rgba(0,0,0,0.4)`,
+                heightAuto: false,
+                padding: '2em'
             });
+            
             if (confirmed) {
                 try {
                     let ids = this.selectedRows.map(entity => entity.id);
                     const response = await this.$axios.post(`/readerProposal/batchDelete`, ids);
                     if (response.data.code === 200) {
                         this.$swal.fire({
-                            title: '删除提示',
+                            title: '删除成功',
                             text: response.data.msg,
                             icon: 'success',
                             showConfirmButton: false,
@@ -295,16 +314,37 @@ export default {
 }
 
 .search-btn {
-    background-color: #8e9aeb;
+    background-color: #64B5F6;
     color: white;
     border: none;
     border-radius: 4px;
-    transition: all 0.3s;
+    padding: 7px 12px;
+    font-size: 12px;
+    transition: all 0.2s;
     
     &:hover {
-        background-color: #7986cb;
-        transform: translateY(-1px);
+        background-color: #42A5F5;
     }
+}
+
+// 修复按钮图标问题
+::v-deep .search-btn {
+    i {
+        display: none !important;
+    }
+    
+    .el-button-icon {
+        display: none !important;
+    }
+    
+    .el-icon-search {
+        display: none !important;
+    }
+    
+    // 确保文本居中
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }
 
 // 卡片容器
@@ -323,14 +363,14 @@ export default {
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     background: #fff;
     position: relative;
     height: 100%;
     
     &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
     }
     
     &.card-red {
@@ -529,52 +569,10 @@ export default {
 }
 
 .action-btn {
-    padding: 6px 12px;
-    font-size: 12px;
-}
-
-.card-red .action-btn.reply-btn {
-    color: #fff;
-    background-color: #ff6b6b;
-    border-color: #ff6b6b;
-    
-    &:hover {
-        background-color: #ff5252;
-        border-color: #ff5252;
-    }
-}
-
-.card-yellow .action-btn.reply-btn {
-    color: #fff;
-    background-color: #feca57;
-    border-color: #feca57;
-    
-    &:hover {
-        background-color: #ffbe2e;
-        border-color: #ffbe2e;
-    }
-}
-
-.card-green .action-btn.reply-btn {
-    color: #fff;
-    background-color: #1dd1a1;
-    border-color: #1dd1a1;
-    
-    &:hover {
-        background-color: #10ac84;
-        border-color: #10ac84;
-    }
-}
-
-.card-blue .action-btn.reply-btn {
-    color: #fff;
-    background-color: #54a0ff;
-    border-color: #54a0ff;
-    
-    &:hover {
-        background-color: #2e86de;
-        border-color: #2e86de;
-    }
+    padding: 4px 8px;
+    font-size: 10px;
+    border-radius: 12px;
+    transition: all 0.2s;
 }
 
 .pagination {
@@ -644,12 +642,13 @@ export default {
 }
 
 .confirm-btn {
-    background-color: #8e9aeb;
-    border-color: #8e9aeb;
+    background-color: #64B5F6;
+    border-color: #64B5F6;
+    transition: all 0.2s;
     
     &:hover {
-        background-color: #7986cb;
-        border-color: #7986cb;
+        background-color: #42A5F5;
+        border-color: #42A5F5;
     }
 }
 
@@ -657,10 +656,24 @@ export default {
     background-color: #f5f5f5;
     border-color: #e0e0e0;
     color: #606266;
+    transition: all 0.2s;
     
     &:hover {
         background-color: #e0e0e0;
         color: #303133;
     }
+}
+
+// 特别为删除按钮添加样式
+::v-deep .el-button.action-btn[type="danger"] {
+    padding: 3px 8px;
+    font-size: 10px !important;
+    border-radius: 12px;
+    height: auto;
+    line-height: 1.5;
+}
+
+::v-deep .el-button--mini {
+    font-size: 10px;
 }
 </style>

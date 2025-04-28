@@ -3,8 +3,9 @@
         <!-- 条件搜索 -->
         <div class="word-search">
             <div class="item">
+                <i class="el-icon-search"></i>
                 <input type="text" placeholder="搜索书籍" v-model="bookQueryDto.name">
-                <i class="el-icon-search" @click="fetchFreshData"></i>
+                <span class="search-text" @click="fetchFreshData">搜索</span>
             </div>
         </div>
         <div class="category-container">
@@ -35,49 +36,49 @@
                             <div class="book-status">
                                 <i v-if="book.isPlanBuy" class="el-icon-warning"></i>
                                 <i v-else class="el-icon-success"></i>
-                                <el-tooltip v-if="book.isPlanBuy" class="item" effect="dark"
-                                    content="计划上架的书籍，为预售书籍。用户可以订阅，书籍上架之后将做通知" placement="bottom-end">
+                                    <el-tooltip v-if="book.isPlanBuy" class="item" effect="dark"
+                                        content="计划上架的书籍，为预售书籍。用户可以订阅，书籍上架之后将做通知" placement="bottom-end">
                                     <span class="status-text">预售书籍</span>
-                                </el-tooltip>
-                                <span v-else>书籍已上架</span>
-                                <span> - {{ book.categoryName }}</span>
-                            </div>
+                                    </el-tooltip>
+                                    <span v-else>书籍已上架</span>
+                                    <span> - {{ book.categoryName }}</span>
+                                </div>
                             <div class="book-publisher">
                                 <el-tooltip class="item" effect="dark" :content="book.publisher" placement="bottom-end">
                                     <div class="info-text">由【{{ book.publisher }}】出版</div>
-                                </el-tooltip>
-                            </div>
+                                    </el-tooltip>
+                                </div>
                             <div class="book-author">
                                 <el-tooltip class="item" effect="dark" :content="book.author" placement="bottom-end">
                                     <div class="info-text">
                                         <span>作者：{{ book.author }}</span>
-                                        <span>库存{{ book.num }}本</span>
-                                    </div>
-                                </el-tooltip>
-                            </div>
+                                            <span>库存{{ book.num }}本</span>
+                                        </div>
+                                    </el-tooltip>
+                                </div>
                             <div class="book-actions">
-                                <span v-if="!book.isPlanBuy">
+                                    <span v-if="!book.isPlanBuy">
                                     <span class="edit-round status" v-if="book.isSave">已收藏</span>
                                     <span v-else class="edit-round" @click="saveBook(book)">
-                                        <i class="el-icon-star-off"></i>
-                                        收藏
-                                    </span>
+                                            <i class="el-icon-star-off"></i>
+                                            收藏
+                                        </span>
                                     <span class="action-divider"></span>
                                     <span v-if="book.num === 0" class="stock-out">库存不足</span>
-                                    <span v-else>
-                                        <span v-if="book.isReturn === null">
+                                            <span v-else>
+                                                <span v-if="book.isReturn === null">
                                             <span class="edit-round" @click="handleEdit(book)">借书</span>
-                                        </span>
-                                        <span v-else>
-                                            <span v-if="!book.isReturn" class="edit-round status">待归还</span>
+                                                </span>
+                                                <span v-else>
+                                                    <span v-if="!book.isReturn" class="edit-round status">待归还</span>
                                             <span v-else class="edit-round" @click="handleEdit(book)">借书</span>
+                                            </span>
                                         </span>
                                     </span>
-                                </span>
-                                <span v-else>
+                                    <span v-else>
                                     <span class="edit-round status" v-if="book.isRss">已订阅</span>
-                                    <span v-else class="edit-round" @click="rssBook(book)">订阅</span>
-                                </span>
+                                        <span v-else class="edit-round" @click="rssBook(book)">订阅</span>
+                                    </span>
                             </div>
                         </div>
                     </div>
@@ -85,10 +86,10 @@
             </el-row>
         </div>
         <div class="pager">
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                :current-page.sync="current" :page-size="size" layout="total, prev, pager, next"
-                :total="totalCount">
-            </el-pagination>
+                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                    :current-page.sync="current" :page-size="size" layout="total, prev, pager, next"
+                    :total="totalCount">
+                </el-pagination>
         </div>
         <el-dialog :show-close="false" :visible.sync="dialogOperation" width="18%">
             <div style="padding:20px 20px 20px 15px;">
@@ -320,7 +321,7 @@ export default {
 <style scoped lang="scss">
 .book-operation-container {
     width: 100%;
-    padding: 20px;
+    padding: 10px 20px 20px 20px;
     box-sizing: border-box;
     background-color: #fafafa;
 }
@@ -328,18 +329,26 @@ export default {
 .word-search {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    margin-top: -5px;
 
     .item {
-        padding: 12px 20px;
+        padding: 10px 20px;
         width: 500px;
-        background-color: rgb(247, 247, 247);
-        border-radius: 16px;
+        background-color: white;
+        border-radius: 40px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         box-sizing: border-box;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        border: 1px solid #eee;
+        transition: all 0.3s ease;
+
+        &:hover, &:focus-within {
+            box-shadow: 0 6px 16px rgba(255, 87, 34, 0.12);
+            border-color: rgba(255, 87, 34, 0.2);
+        }
 
         input {
             flex: 1;
@@ -348,19 +357,34 @@ export default {
             outline: none;
             font-size: 16px;
             color: #333;
+            margin: 0 15px;
+            height: 24px;
         }
 
         i {
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            color: #666;
-            transition: all 0.3s ease;
+            font-size: 18px;
+            color: #ff5722;
         }
 
-        i:hover {
-            background-color: rgba(255, 87, 34, 0.08);
-            color: #ff5722;
+        .search-text {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background-color: #ff5722;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            
+            &:hover {
+                background-color: #f4511e;
+                transform: translateY(-1px);
+            }
+        }
+
+        .search-btn {
+            display: none;
         }
     }
 }
@@ -368,12 +392,12 @@ export default {
 .category-container {
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto 20px;
-    padding: 20px;
+    margin: 0 auto 15px;
+    padding: 10px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .category {
@@ -382,7 +406,7 @@ export default {
     cursor: pointer;
     display: inline-block;
     transition: all 0.3s ease;
-    padding: 8px 16px;
+    padding: 6px 14px;
     border-radius: 20px;
     background-color: white;
     box-shadow: 0 2px 8px rgba(0,0,0,0.03);
@@ -630,14 +654,14 @@ export default {
 ::v-deep .el-pager li {
     border-radius: 8px;
     transition: all 0.3s ease;
-}
+        }
 
 ::v-deep .el-pager li.active {
     background-color: #ff5722;
     color: white;
-}
+        }
 
 ::v-deep .el-pagination .el-select .el-input {
     border-radius: 8px;
 }
-</style> 
+</style>

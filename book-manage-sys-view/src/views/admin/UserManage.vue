@@ -1,29 +1,27 @@
 <template>
     <el-row class="common-container">
-        <el-row style="padding: 10px 16px;">
-            <el-row>
-                <el-select style="width: 100px;margin-right: 5px;" @change="fetchFreshData" size="small"
+        <el-row class="filter-row">
+            <el-select style="width: 120px; margin-right: 10px;" @change="fetchFreshData" size="small"
                     v-model="userQueryDto.isLogin" placeholder="登录状态">
                     <el-option v-for="item in loginStatuList" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
-                <el-select style="width: 100px;margin-right: 5px;" @change="fetchFreshData" size="small"
+            <el-select style="width: 120px; margin-right: 10px;" @change="fetchFreshData" size="small"
                     v-model="userQueryDto.isWord" placeholder="禁言状态">
                     <el-option v-for="item in wordStatuList" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
-                <el-date-picker style="width: 216px;margin-right: 5px;" @change="fetchFreshData" size="small"
+            <el-date-picker style="width: 240px; margin-right: 10px;" @change="fetchFreshData" size="small"
                     v-model="searchTime" type="daterange" range-separator="至" start-placeholder="注册开始"
                     end-placeholder="注册结束">
                 </el-date-picker>
-                <el-input size="small" style="width: 166px;" v-model="userQueryDto.userName" placeholder="用户名" clearable
+            <el-input size="small" style="width: 180px;" v-model="userQueryDto.userName" placeholder="用户名" clearable
                     @clear="handleFilterClear">
                     <el-button slot="append" @click="handleFilter" icon="el-icon-search"></el-button>
                 </el-input>
-                <span style="float: right;" class="edit-button" @click="add()">
+            <span class="new-user-btn" @click="add()">
                     新增用户
                 </span>
-            </el-row>
         </el-row>
         <el-row style="margin: 10px 16px;border-top: 1px solid rgb(245,245,245);">
             <el-table :stripe="true" :data="tableData" class="custom-table">
@@ -85,7 +83,7 @@
                         <p class="point">用户头像</p>
                         <el-upload 
                             class="avatar-uploader"
-                            action="http://localhost:21090/api/book-manage-sys-api/v1.0/file/upload" 
+                            action="http://localhost:2025/api/book-manage-sys-api/v1.0/file/upload" 
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess">
                             <template v-if="userAvatar">
@@ -251,7 +249,26 @@ export default {
                 title: '删除用户数据',
                 text: `删除后不可恢复，是否继续？`,
                 icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '确认删除',
+                cancelButtonText: '取消',
+                confirmButtonColor: '#f56c6c',
+                cancelButtonColor: '#909399',
+                customClass: {
+                    popup: 'custom-delete-popup',
+                    confirmButton: 'custom-delete-confirm-button',
+                    cancelButton: 'custom-delete-cancel-button',
+                    title: 'custom-delete-title',
+                    content: 'custom-delete-content',
+                    icon: 'custom-delete-icon'
+                },
+                buttonsStyling: true,
+                iconColor: '#f56c6c',
+                backdrop: `rgba(0,0,0,0.4)`,
+                heightAuto: false,
+                padding: '2em'
             });
+            
             if (confirmed) {
                 try {
                     let ids = this.selectedRows.map(entity => entity.id);
@@ -395,20 +412,39 @@ export default {
 <style scoped lang="scss">
 .common-container {
     background-color: #FFFFFF;
-    padding: 20px 0;
-    border-radius: 16px;
+    padding: 20px;
+    border-radius: 8px;
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    box-sizing: border-box;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+}
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    margin-bottom: 15px;
+}
+
+.new-user-btn {
+    display: inline-block;
+    padding: 7px 20px;
+    background-color: #409EFF;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-left: auto;
+    font-size: 14px;
+    
+    &:hover {
+        background-color: #66b1ff;
+    }
 }
 
 .text-button {
     color: #409EFF;
-    margin-right: 8px;
+    margin-right: 10px;
     cursor: pointer;
-    font-size: 14px;
     
     &:hover {
         color: #66b1ff;
@@ -416,53 +452,19 @@ export default {
     }
 }
 
-.edit-button {
-    display: inline-block;
-    padding: 7px 15px;
-    background-color: #409EFF;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s;
-    
-    &:hover {
-        background-color: #66b1ff;
-    }
-}
-
-.channel-button {
-    display: inline-block;
-    padding: 7px 15px;
-    background-color: #f2f6fc;
-    color: #606266;
-    border-radius: 4px;
-    margin-right: 10px;
-    cursor: pointer;
-    
-    &:hover {
-        background-color: #edf2fc;
-    }
-}
-
 .custom-table {
-    border-radius: 8px;
-    overflow: hidden;
     margin-bottom: 20px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-}
-
-.user-dialog {
-    border-radius: 8px;
-    overflow: hidden;
 }
 
 .dialog-content {
-    padding: 24px 28px 10px;
+    padding: 20px;
 }
 
 .dialog-footer {
-    padding: 10px 28px 20px;
     text-align: right;
+    padding: 10px 20px 20px;
+    border-top: 1px solid #ebeef5;
+    margin-top: 10px;
 }
 
 .dialog-title {
@@ -473,127 +475,109 @@ export default {
     padding-bottom: 10px;
     position: relative;
     display: inline-block;
-}
-
-.dialog-title::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 40px;
-    height: 3px;
-    background: #409EFF;
-    border-radius: 2px;
+    border-bottom: 2px solid #409EFF;
 }
 
 .dialog-input {
     width: 100%;
-    padding: 9px 12px;
-    margin-bottom: 20px;
+    padding: 8px 10px;
+    margin-bottom: 15px;
     border: 1px solid #dcdfe6;
     border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 13px;
-    transition: all 0.2s;
+    font-size: 14px;
+    font-weight: normal;
+    color: #606266;
     
     &:focus {
         outline: none;
         border-color: #409EFF;
-        box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
+    }
+    
+    &::placeholder {
+        color: #c0c4cc;
+        font-size: 14px;
+        font-weight: normal;
     }
 }
 
 .point {
-    display: block;
     margin-bottom: 8px;
-    font-size: 13px;
+    font-size: 14px;
     color: #606266;
-    font-weight: 500;
+    display: block;
+}
+
+.form-col {
+    padding: 0 5px;
+    margin-bottom: 5px;
+}
+
+.user-dialog {
+    border-radius: 4px;
+    overflow: hidden;
 }
 
 .dialog-btn {
     display: inline-block;
-    padding: 8px 20px;
+    padding: 8px 15px;
     border-radius: 4px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 13px;
-    margin-left: 12px;
+    margin-left: 10px;
+    font-size: 14px;
 }
 
 .cancel-btn {
-    background-color: #F5F7FA;
+    background-color: #f5f7fa;
     color: #606266;
-    border: 1px solid #DCDFE6;
-}
+    border: 1px solid #dcdfe6;
 
-.cancel-btn:hover {
+    &:hover {
     color: #409EFF;
     border-color: #c6e2ff;
-    background-color: #ECF5FF;
+        background-color: #ecf5ff;
+    }
 }
 
 .confirm-btn {
     background-color: #409EFF;
     color: white;
     border: none;
-    box-shadow: 0 2px 6px rgba(64, 158, 255, 0.2);
-}
 
-.confirm-btn:hover {
+    &:hover {
     background-color: #66b1ff;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
-}
-
-.avatar-container {
-    width: 140px;
-    height: 140px;
-    margin: 0 auto 18px;
-    position: relative;
-    border-radius: 8px;
-    overflow: hidden;
+    }
 }
 
 .dialog-avatar {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     display: block;
     margin: 0 auto;
-    border-radius: 8px;
+    border-radius: 4px;
     object-fit: cover;
-    border: 1px solid #eaeaea;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #ebeef5;
 }
 
 .avatar-uploader {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .custom-upload-btn {
-    width: 120px;
-    height: 120px;
+    width: 100px;
+    height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 36px;
+    font-size: 28px;
     color: #c0c4cc;
     border: 1px dashed #d9d9d9;
-    border-radius: 8px;
+    border-radius: 4px;
     background-color: #fafafa;
-    transition: all 0.3s;
 
     &:hover {
-        color: #409EFF;
         border-color: #409EFF;
-        background-color: #f0f9ff;
-        transform: translateY(-2px);
-        box-shadow: 0 2px 12px rgba(64, 158, 255, 0.2);
+        color: #409EFF;
     }
-}
-
-.form-col {
-    padding: 0 8px;
 }
 </style>

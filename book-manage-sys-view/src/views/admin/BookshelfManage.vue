@@ -93,17 +93,36 @@ export default {
                 return;
             }
             const confirmed = await this.$swalConfirm({
-                title: '删除书架书架数据',
+                title: '删除书架数据',
                 text: `删除后不可恢复，是否继续？`,
                 icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '确认删除',
+                cancelButtonText: '取消',
+                confirmButtonColor: '#f56c6c',
+                cancelButtonColor: '#909399',
+                customClass: {
+                    popup: 'custom-delete-popup',
+                    confirmButton: 'custom-delete-confirm-button',
+                    cancelButton: 'custom-delete-cancel-button',
+                    title: 'custom-delete-title',
+                    content: 'custom-delete-content',
+                    icon: 'custom-delete-icon'
+                },
+                buttonsStyling: true,
+                iconColor: '#f56c6c',
+                backdrop: `rgba(0,0,0,0.4)`,
+                heightAuto: false,
+                padding: '2em'
             });
+            
             if (confirmed) {
                 try {
                     let ids = this.selectedRows.map(entity => entity.id);
-                    const response = await this.$axios.post(`/bookshelf/batchDelete`, ids);
+                    const response = await this.$axios.post(`bookshelf/batchDelete`, ids);
                     if (response.data.code === 200) {
                         this.$swal.fire({
-                            title: '删除提示',
+                            title: '删除成功',
                             text: response.data.msg,
                             icon: 'success',
                             showConfirmButton: false,
@@ -120,7 +139,7 @@ export default {
                         showConfirmButton: false,
                         timer: 2000,
                     });
-                    console.error(`书架书架信息删除异常：`, e);
+                    console.error(`书架信息删除异常：`, e);
                 }
             }
         },
@@ -134,7 +153,7 @@ export default {
                 this.data.cover = this.cover;
                 const response = await this.$axios.put('/bookshelf/update', this.data);
                 this.$swal.fire({
-                    title: '书架书架信息修改',
+                    title: '书架信息修改',
                     text: response.data.msg,
                     icon: response.data.code === 200 ? 'success' : 'error',
                     showConfirmButton: false,
@@ -196,7 +215,7 @@ export default {
                 this.tableData = data.data;
                 this.totalItems = data.total;
             } catch (error) {
-                console.error('查询书架书架信息异常:', error);
+                console.error('查询书架信息异常:', error);
             }
         },
         add() {

@@ -2,9 +2,9 @@ module.exports = {
     lintOnSave: false,
     devServer: {
         host: "localhost",
-        port: 21091,
+        port: 2025,
         https: false,
-        proxy: "http://localhost:21090",
+        proxy: "http://localhost:2024",
         overlay: {
             warning: false,
             errors: false

@@ -1,0 +1,29 @@
+/* 自定义SweetAlert样式 */
+.custom-popup {
+    border-radius: 12px !important;
+}
+
+.custom-confirm-button,
+.custom-cancel-button {
+    border-radius: 20px !important;
+    padding: 8px 24px !important;
+}
+
+.custom-confirm-button {
+    background-color: #ff5722 !important;
+    border: none !important;
+}
+
+.custom-cancel-button {
+    background-color: #f8f9fa !important;
+    color: #606266 !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.swal2-title {
+    font-size: 20px !important;
+}
+
+.swal2-backdrop-show {
+    background: rgba(0, 0, 0, 0.4) !important;
+}

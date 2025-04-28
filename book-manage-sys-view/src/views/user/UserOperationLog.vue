@@ -3,14 +3,11 @@
         <!-- 条件搜索 -->
         <div class="search-wrapper" v-if="tableData.length !== 0">
             <div class="search-input">
-                <el-input 
-                    placeholder="搜索操作内容" 
-                    v-model="userOperationLogQueryDto.content"
-                    prefix-icon="el-icon-search"
-                    @keyup.enter.native="fetchFreshData"
-                    clearable>
-                </el-input>
-                <el-button type="primary" icon="el-icon-search" @click="fetchFreshData">搜索</el-button>
+                <div class="custom-input">
+                    <i class="el-icon-search"></i>
+                    <input type="text" placeholder="搜索操作内容" v-model="userOperationLogQueryDto.content" @keyup.enter="fetchFreshData">
+                    <span class="search-text" @click="fetchFreshData">搜索</span>
+                </div>
             </div>
         </div>
 
@@ -208,50 +205,80 @@ export default {
 
 <style scoped lang="scss">
 .operation-log-container {
-    padding: 0;
+    padding: 10px 20px;
     height: 100%;
     
     .search-wrapper {
-        margin-bottom: 24px;
+        margin-bottom: 15px;
+        margin-top: -5px;
         
         .search-input {
             display: flex;
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 auto;
             
-            .el-input {
-                margin-right: 12px;
+            .custom-input {
+    display: flex;
+                width: 100%;
+                background-color: white;
+                border-radius: 40px;
+    align-items: center;
+                box-sizing: border-box;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                border: 1px solid #eee;
+                transition: all 0.3s ease;
+                padding: 10px 20px;
                 
-                ::v-deep .el-input__inner {
-                    border-radius: 8px;
-                    height: 42px;
-                    transition: all 0.3s;
+                &:hover, &:focus-within {
+                    box-shadow: 0 6px 16px rgba(255, 87, 34, 0.12);
+                    border-color: rgba(255, 87, 34, 0.2);
+                }
+                
+                i {
+                    font-size: 18px;
+                    color: #ff5722;
+                }
+                
+                input {
+                    flex: 1;
+                    border: none;
+                    background-color: transparent;
+                    outline: none;
+                    font-size: 16px;
+                    color: #333;
+                    margin: 0 15px;
+                    height: 24px;
+                }
+                
+                .search-text {
+                    display: inline-block;
+                    padding: 6px 16px;
+                    border-radius: 20px;
+                    background-color: #ff5722;
+                    color: white;
+                    font-size: 14px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    text-align: center;
                     
-                    &:focus {
-                        box-shadow: 0 0 8px rgba(64, 158, 255, 0.2);
+                    &:hover {
+                        background-color: #f4511e;
+                        transform: translateY(-1px);
                     }
                 }
-            }
-            
-            ::v-deep .el-button {
-                border-radius: 8px;
-                height: 42px;
-                padding: 0 20px;
-                transition: all 0.3s;
                 
-                &:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
+                .search-btn {
+                    display: none;
                 }
             }
         }
-    }
-    
+}
+
     .content-wrapper {
         background-color: transparent;
         min-height: calc(100vh - 260px);
-        display: flex;
-        justify-content: center;
+    display: flex;
+    justify-content: center;
         align-items: flex-start;
         
         .log-card {
@@ -286,7 +313,7 @@ export default {
                         transform: translateY(-50%);
                         width: 4px;
                         height: 18px;
-                        background: #409EFF;
+                        background: #ff5722;
                         border-radius: 2px;
                     }
                 }
@@ -316,7 +343,7 @@ export default {
                     transition: all 0.2s;
                     
                     &:hover {
-                        background-color: #f0f7ff !important;
+                        background-color: rgba(255, 87, 34, 0.05) !important;
                     }
                 }
             }
@@ -360,8 +387,8 @@ export default {
                 transition: all 0.2s;
                 
                 &:hover {
-                    background-color: #ecf5ff;
-                }
+                    background-color: rgba(255, 87, 34, 0.1);
+        }
             }
             
             .el-pager li {
@@ -369,11 +396,11 @@ export default {
                 transition: all 0.2s;
                 
                 &:hover:not(.active) {
-                    background-color: #ecf5ff;
-                }
+                    background-color: rgba(255, 87, 34, 0.1);
+        }
                 
                 &.active {
-                    background-color: #409EFF;
+                    background-color: #ff5722;
                     color: #fff;
                     font-weight: bold;
                 }

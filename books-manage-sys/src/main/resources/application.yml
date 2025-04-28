@@ -1,6 +1,6 @@
 # 服务配置
 server:
-  port: 21090
+  port: 2024
   servlet:
     context-path: /api/book-manage-sys-api/v1.0
 # API地址前缀，用于接口拦截放行

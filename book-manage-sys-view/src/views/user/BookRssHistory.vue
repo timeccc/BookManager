@@ -1,17 +1,18 @@
 <template>
-    <el-row style="margin-top: 20px;">
+    <el-row style="margin-top: 10px;">
         <div class="word-search" v-if="tableData.length !== 0">
             <div class="item">
+                <i class="el-icon-search"></i>
                 <input type="text" placeholder="书籍ID" v-model="bookRssHistoryQueryDto.bookId">
-                <i class="el-icon-search" @click="fetchFreshData"></i>
+                <span class="search-text" @click="fetchFreshData">搜索</span>
             </div>
         </div>
         <el-row v-if="tableData.length === 0">
             <el-empty description="暂无订阅书籍"></el-empty>
         </el-row>
-        <div v-else style="display: flex;justify-content: center;align-items: center;margin-block: 20px;">
-            <div>
-                <div class="save-book">
+        <div v-else class="book-rss-container">
+            <div class="book-rss-table">
+                <div class="save-book header">
                     <div class="title">书籍名</div>
                     <div class="title">作者</div>
                     <div class="title">馆藏数</div>
@@ -31,8 +32,8 @@
                     <div>
                         {{ parseLocation(save) }}
                     </div>
-                    <div>
-                        <span class="text-button" @click="handleDelete(save)">取消订阅</span>
+                    <div class="action-buttons">
+                        <span class="action-btn cancel" @click="handleDelete(save)">取消订阅</span>
                     </div>
                 </div>
             </div>
@@ -265,64 +266,170 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.pager {
-    display: flex;
-    margin-block: 20px;
-    justify-content: center;
-    align-items: center;
-}
-
-
-.save-book:hover {
-    background-color: rgb(248, 248, 248);
-}
-
-.save-book {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-
-    div {
-        min-width: 150px;
-        padding: 30px;
-    }
-
-    .title {
-        background-color: rgb(248, 248, 248);
-    }
-}
-
 .word-search {
     display: flex;
     justify-content: center;
+    margin-bottom: 15px;
+    margin-top: -5px;
 
     .item {
-        padding: 14px;
+        padding: 10px 20px;
         width: 500px;
-        background-color: rgb(247, 247, 247);
-        border-radius: 10px;
+        background-color: white;
+        border-radius: 40px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         box-sizing: border-box;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        border: 1px solid #eee;
+        transition: all 0.3s ease;
+
+        &:hover, &:focus-within {
+            box-shadow: 0 6px 16px rgba(255, 87, 34, 0.12);
+            border-color: rgba(255, 87, 34, 0.2);
+        }
 
         input {
+            flex: 1;
             border: none;
-            background-color: rgb(247, 247, 247);
+            background-color: transparent;
             outline: none;
             font-size: 16px;
+            color: #333;
+            margin: 0 15px;
+            height: 24px;
         }
 
         i {
-            padding: 6px;
-            border-radius: 5px;
-            cursor: pointer;
+            font-size: 18px;
+            color: #ff5722;
         }
 
-        i:hover {
-            background-color: rgb(241, 241, 241);
+        .search-text {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background-color: #ff5722;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            
+            &:hover {
+                background-color: #f4511e;
+                transform: translateY(-1px);
+            }
+        }
+        
+        .search-btn {
+            display: none;
         }
     }
+}
 
+.book-rss-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.book-rss-table {
+    width: 90%;
+    max-width: 1200px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.save-book {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.3s ease;
+    
+    &:last-child {
+        border-bottom: none;
+    }
+
+    div {
+        padding: 16px 20px;
+        flex: 1;
+        min-width: 120px;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .title {
+        font-weight: 600;
+        color: #555;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-start;
+    }
+
+    .action-btn {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        
+        &.cancel {
+            background-color: rgba(103, 58, 183, 0.08);
+            color: #673ab7;
+            border: 1px solid rgba(103, 58, 183, 0.2);
+            
+            &:hover {
+                background-color: rgba(103, 58, 183, 0.12);
+                transform: translateY(-1px);
+            }
+        }
+    }
+}
+
+.save-book:hover {
+    background-color: #f9f9f9;
+}
+
+.save-book.header {
+    background-color: #f5f7fa;
+    border-bottom: 1px solid #ebeef5;
+    
+    &:hover {
+        background-color: #f5f7fa;
+    }
+}
+
+.pager {
+    display: flex;
+    margin: 30px 0;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 分页组件样式 */
+::v-deep .el-pagination {
+    padding: 15px 0;
+    text-align: center;
+}
+
+::v-deep .el-pagination .btn-prev,
+::v-deep .el-pagination .btn-next,
+::v-deep .el-pager li {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+::v-deep .el-pager li.active {
+    background-color: #ff5722;
+    color: white;
 }
 </style>

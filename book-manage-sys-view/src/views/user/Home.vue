@@ -17,7 +17,6 @@
                     <span>{{ nowRoute.name || '首页' }}</span>
                 </div>
                 <div class="header-actions">
-                    <!-- 根据不同页面显示不同操作按钮 -->
                     <template v-if="nowRoute.path === '/main'">
                         <el-tooltip content="添加留言" placement="bottom" effect="light">
                             <div class="action-btn" @click="handleAction('add')">
@@ -25,11 +24,6 @@
                             </div>
                         </el-tooltip>
                     </template>
-                    <el-tooltip content="刷新页面" placement="bottom" effect="light">
-                        <div class="action-btn" @click="refreshPage">
-                            <i class="el-icon-refresh"></i>
-                        </div>
-                    </el-tooltip>
                 </div>
             </div>
             <div class="content-section">
@@ -67,38 +61,25 @@ export default {
     created() {
         let menus = router.options.routes.filter(route => route.path == '/user')[0];
         this.userRoutes = menus.children;
-
         this.tokenCheckLoad();
         this.menuOperationHistory();
         
-        // 初始化路由，如果当前路由不匹配任何菜单项，则使用第一个路由
         if (!this.updateCurrentRoute() && this.userRoutes.length > 0) {
             this.routerClick(this.userRoutes[0]);
         }
     },
     
     watch: {
-        // 监听路由变化，自动更新标题
         '$route'() {
             this.updateCurrentRoute();
         }
     },
 
     methods: {
-        // 根据当前页面处理特定操作
         handleAction(action) {
-            // 根据不同页面执行不同操作
             if (this.nowRoute.path === '/main' && action === 'add') {
-                // 调用留言页面的发表留言方法
                 if (this.$refs.currentView && this.$refs.currentView.postWord) {
                     this.$refs.currentView.postWord();
-                }
-            } else if (action === 'refresh') {
-                // 可以添加更多页面特定操作
-                if (this.$refs.currentView && this.$refs.currentView.fetchFreshData) {
-                    this.$refs.currentView.fetchFreshData();
-                } else if (this.$refs.currentView && this.$refs.currentView.fetchReaderProposal) {
-                    this.$refs.currentView.fetchReaderProposal();
                 }
             }
         },
@@ -106,38 +87,19 @@ export default {
             this.flag = !this.flag;
             sessionStorage.setItem('flag', this.flag);
         },
-        refreshPage() {
-            // 尝试调用子组件的刷新方法
-            if (this.$refs.currentView) {
-                if (this.$refs.currentView.fetchFreshData) {
-                    this.$refs.currentView.fetchFreshData();
-                } else if (this.$refs.currentView.fetchReaderProposal) {
-                    this.$refs.currentView.fetchReaderProposal();
-                } else {
-                    // 如果子组件没有刷新方法，才进行路由刷新
-                    const currentRoute = this.$route;
-                    this.$router.replace('/refresh');
-                    this.$nextTick(() => {
-                        this.$router.replace(currentRoute.fullPath);
-                    });
-                }
-            } else {
-                // 如果没有获取到子组件，进行路由刷新
-                const currentRoute = this.$route;
-                this.$router.replace('/refresh');
-                this.$nextTick(() => {
-                    this.$router.replace(currentRoute.fullPath);
-                });
-            }
-        },
         routerClick(route) {
             this.handleRouteSelect(route);
         },
         async loginOut() {
             const confirmed = await this.$swalConfirm({
                 title: '退出登录？',
-                text: `退出后需重新登录？`,
+                text: '退出后需重新登录',
                 icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '确认',
+                cancelButtonText: '取消',
+                confirmButtonColor: '#ff5722',
+                cancelButtonColor: '#909399'
             });
             if (confirmed) {
                 this.$swal.fire({
@@ -162,35 +124,29 @@ export default {
                 this.$router.push(route.path);
             }
         },
-        // Token检验
         async tokenCheckLoad() {
             try {
                 const res = await request.get('user/auth');
-                // 错误处理
                 if (res.data.code === 400) {
                     this.$message.error(res.data.msg);
                     this.$router.push('/login');
                     return;
                 }
-                // 用户信息赋值
                 const { id, userAvatar: url, userName: name, userRole: role, userEmail: email } = res.data.data;
                 this.userInfo = { id, url, name, role, email };
                 sessionStorage.setItem('userInfo', JSON.stringify(this.userInfo));
                 sessionStorage.setItem('userId', this.userInfo.id);
-                // 根据角色解析路由
+                
                 const rolePath = role === 1 ? '/admin' : '/user';
                 const targetMenu = router.options.routes.find(route => route.path === rolePath);
                 if (targetMenu) {
                     this.routers = targetMenu.children;
-                } else {
-                    console.warn(`未找到与角色对应的路由：${rolePath}`);
                 }
             } catch (error) {
                 console.error('获取用户认证信息时发生错误:', error);
                 this.$message.error('认证信息加载失败，请重试！');
             }
         },
-        // 根据当前路由路径更新 nowRoute 对象
         updateCurrentRoute() {
             const currentPath = this.$route.path;
             const matchedRoute = this.userRoutes.find(route => route.path === currentPath);
@@ -223,7 +179,7 @@ export default {
     display: flex;
     flex-direction: column;
     position: relative;
-    min-width: 0; /* 确保main区域不会超出窗口 */
+    min-width: 0;
     
     .content-section {
         overflow-x: hidden;
@@ -231,7 +187,7 @@ export default {
         padding: 20px;
         box-sizing: border-box;
         overflow-y: auto;
-        width: 100%; /* 确保内容宽度充满 */
+        width: 100%;
         
         &::-webkit-scrollbar {
             width: 4px;

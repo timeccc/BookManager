@@ -11,6 +11,7 @@ import './assets/css/elementui-cover.scss'
 import './assets/css/basic.scss'
 import './assets/css/dialog.scss'
 import './assets/css/input.scss'
+import './assets/styles/custom-sweetalert.scss'
 import request from '@/utils/request'
 import md5 from 'js-md5';
 

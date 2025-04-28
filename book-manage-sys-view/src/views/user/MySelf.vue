@@ -3,7 +3,7 @@
         <el-card class="page-header-card">
             <div class="page-header">
                 <div class="return-btn" @click="returnPage">
-                    <i class="el-icon-back"></i>
+                <i class="el-icon-back"></i>
                     <span>返回</span>
                 </div>
                 <div class="page-title">个人中心</div>
@@ -17,19 +17,22 @@
             </el-tabs>
             
             <div class="tab-content">
-                <div v-if="tagSelected === '修改资料'">
-                    <Self />
-                </div>
-                <div v-else-if="tagSelected === '修改密码'">
-                    <ResetPwd />
-                </div>
-                <div v-else-if="tagSelected === '退出登录'">
+        <div v-if="tagSelected === '修改资料'">
+            <Self />
+        </div>
+        <div v-else-if="tagSelected === '修改密码'">
+            <ResetPwd />
+        </div>
+        <div v-else-if="tagSelected === '退出登录'">
                     <el-result icon="warning" title="退出登录" subTitle="退出后将重新登录">
-                        <template slot="extra">
-                            <el-button type="danger" @click="loginout">确认退出</el-button>
-                        </template>
-                    </el-result>
-                </div>
+                <template slot="extra">
+                            <button class="logout-button" @click="loginout">
+                                <i class="el-icon-switch-button"></i>
+                                <span>确认退出</span>
+                            </button>
+                </template>
+            </el-result>
+        </div>
             </div>
         </el-card>
     </div>
@@ -90,7 +93,7 @@ export default {
         display: flex;
         align-items: center;
         gap: 16px;
-        
+
         .return-btn {
             display: inline-flex;
             align-items: center;
@@ -157,6 +160,55 @@ export default {
 @media screen and (max-width: 768px) {
     .myself-container {
         padding: 10px;
+    }
+}
+
+.logout-button {
+    background: linear-gradient(45deg, #ff7676, #f56c6c);
+    border: none;
+    font-size: 11px;
+    padding: 6px 16px;
+    border-radius: 30px;
+    box-shadow: 0 2px 12px rgba(245, 108, 108, 0.25);
+    transition: all 0.3s ease;
+    color: white;
+    height: auto;
+    line-height: 1.3;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    overflow: hidden;
+    
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+        border-radius: 30px;
+    }
+    
+    i {
+        font-size: 12px;
+    }
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(245, 108, 108, 0.35);
+        background: linear-gradient(45deg, #ff8989, #ff6c6c);
+    }
+    
+    &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(245, 108, 108, 0.2);
     }
 }
 </style>

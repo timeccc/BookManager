@@ -11,13 +11,13 @@
             </el-row>
         </el-row>
         <el-row style="margin: 10px 16px;">
-            <el-row>
-                <span class="title-label">公告标题</span>
-                <input class="title-input" v-model="data.name" placeholder="请输入公告标题" />
+            <el-row class="form-item">
+                <span class="title-label"><i class="el-icon-edit"></i> 公告标题</span>
+                <el-input class="title-input" v-model="data.name" placeholder="请输入公告标题" :maxlength="50" show-word-limit></el-input>
             </el-row>
-            <el-row style="margin-top: 20px;">
-                <span class="title-label">公告内容</span>
-                <div style="margin-top: 10px;">
+            <el-row class="form-item">
+                <span class="title-label"><i class="el-icon-document"></i> 公告内容</span>
+                <div class="editor-container">
                     <Editor v-model="data.content"></Editor>
                 </div>
             </el-row>
@@ -104,7 +104,7 @@ export default {
     max-width: 1200px;
     margin: 0 auto;
     box-sizing: border-box;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
 }
 
 .edit-button {
@@ -134,25 +134,33 @@ export default {
     }
 }
 
+.form-item {
+    margin-bottom: 20px;
+}
+
 .title-label {
-    display: block;
+    display: flex;
+    align-items: center;
     margin-bottom: 10px;
     font-size: 14px;
     color: #606266;
     font-weight: 500;
+    
+    i {
+        margin-right: 5px;
+        color: #409EFF;
+    }
 }
 
 .title-input {
     width: 100%;
-    padding: 10px;
+    font-size: 14px;
+}
+
+.editor-container {
+    margin-top: 10px;
     border: 1px solid #dcdfe6;
     border-radius: 4px;
-    font-size: 14px;
-    box-sizing: border-box;
-    
-    &:focus {
-        outline: none;
-        border-color: #409EFF;
-    }
+    overflow: hidden;
 }
 </style>
