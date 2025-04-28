@@ -3,9 +3,12 @@
         <!-- 条件搜索 -->
         <div class="word-search" v-if="tableData.length !== 0">
             <div class="item">
+                <i class="el-icon-search"></i>
                 <input type="text" placeholder="消息体" v-model="rssNotificationQueryDto.content">
-                <i class="el-icon-search" @click="fetchFreshData"></i>
+                <span class="search-text" @click="fetchFreshData">搜索</span>
             </div>
+        </div>
+        <div class="read-bar" v-if="tableData.length !== 0">
             <div class="read" @click="readDeal">
                 全部已读
             </div>
@@ -14,9 +17,9 @@
             <el-row v-if="tableData.length === 0">
                 <el-empty description="暂无通知" style="margin-top: 200px;"></el-empty>
             </el-row>
-            <div v-else style="display: flex;justify-content: center;align-items: center;margin-block: 20px;">
-                <div>
-                    <div class="save-book">
+            <div v-else class="notification-container">
+                <div class="notification-table">
+                    <div class="save-book header">
                         <div class="title">消息体</div>
                         <div class="title">是否已读</div>
                         <div class="title">推送时间</div>
@@ -27,13 +30,15 @@
                             {{ rss.content }}
                         </div>
                         <div>
-                            {{ rss.isRead ? '已读' : '未读' }}
+                            <span :class="['status-tag', rss.isRead ? 'read' : 'unread']">
+                                {{ rss.isRead ? '已读' : '未读' }}
+                            </span>
                         </div>
                         <div>
                             {{ rss.createTime }}
                         </div>
-                        <div>
-                            <span class="text-button" @click="handleDelete(rss)">删除</span>
+                        <div class="action-buttons">
+                            <span class="action-btn delete" @click="handleDelete(rss)">删除</span>
                         </div>
                     </div>
                 </div>
@@ -175,80 +180,221 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.read {
-    background-color: rgb(247, 247, 247);
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-inline: 26px;
-    margin-left: 10px;
-    cursor: pointer;
-}
-
-.read:hover {
-    background-color: rgb(242, 242, 242);
-}
-
-.save-book:hover {
-    background-color: rgb(248, 248, 248);
-}
-
-.save-book {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-
-    div {
-        width: 200px;
-        padding: 30px;
-    }
-
-    .title {
-        background-color: rgb(248, 248, 248);
-        width: 200px;
-    }
-
-}
-
-.pager {
-    display: flex;
-    margin-block: 20px;
-    justify-content: center;
-    align-items: center;
-}
-
 .word-search {
     display: flex;
     justify-content: center;
-
+    margin-bottom: 15px;
+    margin-top: 10px;
     .item {
-        padding: 14px;
+        padding: 10px 20px;
         width: 500px;
-        background-color: rgb(247, 247, 247);
-        border-radius: 10px;
+        background-color: white;
+        border-radius: 40px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         box-sizing: border-box;
-
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        border: 1px solid #eee;
+        transition: all 0.3s ease;
+        &:hover, &:focus-within {
+            box-shadow: 0 6px 16px rgba(255, 87, 34, 0.12);
+            border-color: rgba(255, 87, 34, 0.2);
+        }
         input {
+            flex: 1;
             border: none;
-            background-color: rgb(247, 247, 247);
+            background-color: transparent;
             outline: none;
             font-size: 16px;
+            color: #333;
+            margin: 0 15px;
+            height: 24px;
         }
-
         i {
-            padding: 6px;
-            border-radius: 5px;
-            cursor: pointer;
+            font-size: 18px;
+            color: #ff5722;
         }
-
-        i:hover {
-            background-color: rgb(241, 241, 241);
+        .search-text {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background-color: #ff5722;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            &:hover {
+                background-color: #f4511e;
+                transform: translateY(-1px);
+            }
         }
     }
+}
+.read-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+.read {
+    background: linear-gradient(90deg, #36d1c4 0%, #5b86e5 100%);
+    color: #fff;
+    border-radius: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 28px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(91,134,229,0.10);
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.read:hover {
+    background: linear-gradient(90deg, #2bc0b6 0%, #3a7bd5 100%);
+    box-shadow: 0 6px 24px rgba(91,134,229,0.16);
+    transform: translateY(-2px) scale(1.04);
+}
 
+.notification-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.notification-table {
+    width: 92%;
+    max-width: 1200px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(91,134,229,0.08);
+    background: #fff;
+}
+
+.save-book {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f0f4fa;
+    transition: all 0.3s ease;
+    &:last-child {
+        border-bottom: none;
+    }
+    div {
+        padding: 18px 24px;
+        flex: 1;
+        min-width: 120px;
+        color: #333;
+        font-size: 15px;
+    }
+    .title {
+        font-weight: 700;
+        color: #2d3a4a;
+        font-size: 15px;
+    }
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-start;
+    }
+    .action-btn {
+        display: inline-block;
+        padding: 7px 20px;
+        border-radius: 20px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-weight: 600;
+        &.delete {
+            background: linear-gradient(90deg, #ff758c 0%, #ff7eb3 100%);
+            color: #fff;
+            border: none;
+            box-shadow: 0 2px 8px rgba(255,117,140,0.10);
+            &:hover {
+                background: linear-gradient(90deg, #ff5e62 0%, #ff9966 100%);
+                transform: scale(1.06);
+            }
+        }
+    }
+}
+.save-book:hover {
+    background-color: #f6faff;
+}
+.save-book.header {
+    background-color: #f0f6ff;
+    border-bottom: 1.5px solid #dbeafe;
+    &:hover {
+        background-color: #f0f6ff;
+    }
+}
+
+.status-tag {
+    display: inline-block;
+    min-width: 48px;
+    padding: 4px 16px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(91,134,229,0.06);
+    letter-spacing: 1px;
+}
+.status-tag.unread {
+    background: linear-gradient(90deg, #36d1c4 0%, #5b86e5 100%);
+    color: #fff;
+}
+.status-tag.read {
+    background: #f2f6fc;
+    color: #5b86e5;
+    border: 1px solid #dbeafe;
+}
+
+.pager {
+    display: flex;
+    margin: 36px 0 0 0;
+    justify-content: center;
+    align-items: center;
+    ::v-deep .el-pagination {
+        padding: 10px 20px;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 2px 12px rgba(91,134,229,0.06);
+        .el-pagination__sizes .el-input .el-input__inner {
+            border-radius: 8px;
+        }
+        button, .btn-prev, .btn-next {
+            border-radius: 8px;
+            transition: all 0.2s;
+            &:hover {
+                background-color: rgba(91,134,229,0.10);
+            }
+        }
+        .el-pager li {
+            border-radius: 8px;
+            transition: all 0.2s;
+            &:hover:not(.active) {
+                background-color: rgba(91,134,229,0.10);
+            }
+            &.active {
+                background: linear-gradient(90deg, #36d1c4 0%, #5b86e5 100%);
+                color: #fff;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.el-empty {
+    margin: 100px 0;
+    transition: all 0.3s;
+    ::v-deep .el-empty__image {
+        opacity: 0.8;
+    }
+    ::v-deep .el-empty__description {
+        color: #909399;
+        font-size: 16px;
+    }
 }
 </style>
