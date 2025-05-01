@@ -18,40 +18,43 @@
             </div>
         </div>
         <!-- 个人中心 -->
-        <el-dialog :show-close="false" :visible.sync="dialogOperaion" width="26%">
-            <div slot="title" style="padding: 25px 0 0 20px;">
-                <span style="font-size: 18px;font-weight: 800;">个人中心</span>
+        <el-dialog :show-close="false" :visible.sync="dialogOperaion" width="360px" custom-class="user-center-dialog">
+            <div slot="title" class="user-center-title">
+                <span>个人中心</span>
             </div>
-            <el-row style="padding: 10px 20px 20px 20px;">
-                <el-row>
-                    <p style="font-size: 12px;padding: 3px 0;margin-bottom: 10px;">
-                        <span class="modelName">*头像</span>
+            <div class="user-center-content">
+                <div class="form-item">
+                    <p class="form-label">
+                        <i class="el-icon-user-solid"></i>
+                        <span>头像</span>
                     </p>
+                    <div class="avatar-wrapper">
                     <el-upload class="avatar-uploader" action="/api/book-manage-sys-api/v1.0/file/upload"
                         :show-file-list="false" :on-success="handleAvatarSuccess">
-                        <img v-if="userInfo.url" :src="userInfo.url" style="width: 80px;height: 80px;">
+                            <img v-if="userInfo.url" :src="userInfo.url">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
-                </el-row>
-                <el-row>
-                    <p style="font-size: 12px;padding: 3px 0;">
-                        <span class="modelName">*用户名</span>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <p class="form-label">
+                        <i class="el-icon-user"></i>
+                        <span>用户名</span>
                     </p>
-                    <input class="input-title" v-model="userInfo.name" placeholder="用户名">
-                </el-row>
-                <el-row>
-                    <p style="font-size: 12px;padding: 3px 0;">
-                        <span class="modelName">*用户邮箱</span>
+                    <input class="input-title user-input" v-model="userInfo.name" placeholder="请输入用户名">
+                </div>
+                <div class="form-item">
+                    <p class="form-label">
+                        <i class="el-icon-message"></i>
+                        <span>邮箱</span>
                     </p>
-                    <input class="input-title" v-model="userInfo.email" placeholder="用户邮箱">
-                </el-row>
-            </el-row>
-            <span slot="footer" class="dialog-footer">
-                <el-button class="customer" size="small" style="background-color: rgb(241, 241, 241);border: none;"
-                    @click="dialogOperaion = false">取 消</el-button>
-                <el-button size="small" style="background-color: #15559a;border: none;" class="customer" type="info"
-                    @click="updateUserInfo">修改</el-button>
-            </span>
+                    <input class="input-title user-input" v-model="userInfo.email" placeholder="请输入邮箱">
+                </div>
+            </div>
+            <div slot="footer" class="user-center-footer">
+                <el-button class="el-button--default" size="small" @click="dialogOperaion = false">取 消</el-button>
+                <el-button class="el-button--primary" size="small" type="primary" @click="updateUserInfo">确认修改</el-button>
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -297,5 +300,110 @@ export default {
             height: calc(100vh - 85px); /* 调整高度，考虑到增加的margin-top */
         }
     }
+}
+
+/* 个人中心对话框样式 */
+::v-deep .user-center-dialog {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+    .el-dialog__header {
+        padding: 0 !important;
+    }
+
+    .el-dialog__body {
+        padding: 0 !important;
+    }
+
+    .el-dialog__headerbtn {
+        top: 15px;
+        right: 15px;
+    }
+}
+
+.user-center-title {
+    background: linear-gradient(to right, #f5f7fa, #e4e8f1);
+    padding: 16px 20px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #eaedf2;
+
+    span {
+        font-size: 17px;
+        font-weight: 600;
+        color: #333;
+        position: relative;
+        padding-left: 12px;
+
+        &:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 16px;
+            background-color: #409EFF;
+            border-radius: 4px;
+        }
+    }
+}
+
+.user-center-content {
+    padding: 10px 25px 15px;
+}
+
+.form-item {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    
+    i {
+        color: #409EFF;
+        margin-right: 6px;
+        font-size: 15px;
+    }
+    
+    span {
+        font-size: 14px;
+        color: #409EFF;
+        font-weight: 500;
+    }
+}
+
+.avatar-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 5px 0 15px;
+}
+
+.user-input {
+    width: 90%;
+    height: 36px;
+    border: 1px solid #dcdfe6;
+    border-radius: 8px;
+    padding: 0 15px;
+    font-size: 14px;
+    transition: all 0.3s;
+    margin: 0 auto;
+    display: block;
+
+    &:focus {
+        outline: none;
+        border-color: #409EFF;
+        box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+    }
+}
+
+.user-center-footer {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0 15px;
+    border-top: 1px solid #f0f0f0;
+    margin-top: 10px;
 }
 </style>

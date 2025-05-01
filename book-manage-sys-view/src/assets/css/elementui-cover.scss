@@ -9,6 +9,14 @@
 
 .el-dialog {
   border-radius: 8px !important;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1) !important;
+}
+
+.el-dialog__title {
+  font-weight: 600;
+  font-size: 16px;
+  color: #303133;
 }
 
 .el-slider__bar {
@@ -23,17 +31,37 @@
 }
 
 
-.el-switch.is-checked .el-switch__core{
+.el-switch.is-checked .el-switch__core {
   border-color: rgb(43, 121, 203) !important;
   background-color: rgb(43, 121, 203) !important;
 }
 
 .avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
+  border: 1px dashed #d0d0d0;
+  border-radius: 50%;
+  /* 改为圆形 */
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 88px;
+  height: 88px;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* 修复头像白边问题 */
+.avatar-uploader img {
+  width: 88px;
+  height: 88px;
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+  /* 改为圆形 */
+  transition: all 0.3s ease;
 }
 
 /* 标签栏 */
@@ -51,6 +79,8 @@
 
 .avatar-uploader .el-upload:hover {
   border-color: #409EFF;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .avatar-uploader-icon {
@@ -60,6 +90,7 @@
   height: 88px !important;
   line-height: 88px !important;
   text-align: center;
+  transition: all 0.3s ease;
 }
 
 .el-timeline {
@@ -143,7 +174,7 @@
   padding: 0 10px !important;
 }
 
-/* 代码高亮插入后，会出现 “=” 背景色，这里去掉 */
+/* 代码高亮插入后，会出现 "=" 背景色，这里去掉 */
 .token.operator,
 .token.entity,
 .token.url,
@@ -175,4 +206,123 @@
   .el-dropdown-item:hover {
     background-color: #ffffff !important;
   }
+}
+
+/* 输入框获得焦点时的效果 */
+.el-input__inner:focus {
+  border-color: #409EFF !important;
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.15);
+}
+
+/* 全局按钮样式覆盖 */
+// 小型按钮（常用于对话框）
+.el-button--small {
+  height: auto !important;
+  padding: 6px 12px !important;
+  font-size: 12px !important;
+  border-radius: 16px !important;
+  font-weight: normal !important;
+  line-height: 1 !important;
+}
+
+// 正常按钮
+.el-button {
+  height: auto !important;
+  padding: 8px 16px !important;
+  font-size: 13px !important;
+  border-radius: 18px !important;
+  font-weight: normal !important;
+  line-height: 1 !important;
+}
+
+// 按钮内部的文本
+.el-button span {
+  font-size: inherit !important;
+  padding: 0 !important;
+}
+
+// 主要按钮（蓝色）
+.el-button--primary {
+  background-color: #409EFF !important;
+  border-color: #409EFF !important;
+  box-shadow: 0 2px 5px rgba(64, 158, 255, 0.2) !important;
+}
+
+.el-button--primary:hover,
+.el-button--primary:focus {
+  background-color: #66b1ff !important;
+  border-color: #66b1ff !important;
+  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.3) !important;
+}
+
+// 取消按钮/默认按钮
+.el-button--default {
+  background-color: #f7f7f8 !important;
+  border-color: #f2f2f2 !important;
+  color: #606266 !important;
+}
+
+.el-button--default:hover,
+.el-button--default:focus {
+  background-color: #f2f2f2 !important;
+  border-color: #e8e8e8 !important;
+  color: #606266 !important;
+}
+
+// 危险按钮
+.el-button--danger {
+  border-radius: 20px !important;
+}
+
+// 按钮之间的间距
+.el-button+.el-button {
+  margin-left: 8px !important;
+}
+
+/* 全局输入框样式 */
+.el-input__inner {
+  border-radius: 8px !important;
+  transition: all 0.3s !important;
+  padding: 0 15px !important;
+}
+
+.el-input.is-active .el-input__inner,
+.el-input__inner:focus {
+  border-color: #409EFF !important;
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2) !important;
+}
+
+/* 表单项间距 */
+.el-form-item {
+  margin-bottom: 20px !important;
+}
+
+/* 修复对话框遮罩层问题 */
+.v-modal {
+  opacity: 0.5 !important;
+  z-index: 1999 !important;
+}
+
+/* 确保只有一个遮罩层可见 */
+body>.v-modal:not(:first-of-type) {
+  display: none !important;
+}
+
+.el-dialog__wrapper {
+  overflow: hidden !important;
+}
+
+/* 排除特定页面中的特殊按钮 */
+.book-btn,
+.dialog-btn,
+.edit-button,
+button.book-btn {
+  /* 重置全局按钮样式的影响 */
+  height: auto !important;
+  padding: initial !important;
+  font-size: initial !important;
+  border-radius: initial !important;
+  line-height: initial !important;
+  /* 使用组件内部定义的样式 */
+  width: auto !important;
 }

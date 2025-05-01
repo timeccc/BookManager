@@ -16,14 +16,12 @@
             </el-row>
         </el-row>
         <el-row style="margin: 8px 12px;">
-            <div class="flex-row-container">
-                <div v-for="(book, index) in tableData" :key="index" class="flex-col-5">
+            <div class="book-grid">
+                <div v-for="(book, index) in tableData" :key="index" class="book-col">
                     <div class="item-book">
-                        <!-- 书籍卡片内容 -->
                         <div style="display: flex;justify-content: center;">
                             <img style="width: 120px;max-height: 140px;border-radius: 8px;box-shadow: 0 4px 12px rgba(0,0,0,0.1);" :src="book.cover" alt="">
                         </div>
-                        <!-- 其余卡片内容 -->
                         <div style="padding: 10px 10px; text-align: center;">
                             <div style="color: rgb(51,51,51);font-size: 16px;font-weight: bold;margin-bottom: 5px;">
                                 <el-tooltip class="item" effect="dark" :content="book.name" placement="top">
@@ -58,7 +56,7 @@
                                         </div>
                                     </el-tooltip>
                                 </div>
-                                <div class="book-actions" style="gap: 14px;">
+                                <div class="book-actions" style="gap: 8px;">
                                     <button @click="handleEdit(book)" class="book-btn edit-btn">修改</button>
                                     <button @click="handleDelete(book)" class="book-btn delete-btn">删除</button>
                                 </div>
@@ -72,91 +70,88 @@
                 :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
                 :total="totalItems"></el-pagination>
         </el-row>
-        <el-dialog :show-close="false" :visible.sync="dialogOperation" width="32%" :top="'5vh'">
-            <div slot="title" style="padding: 10px 0 0 15px;">
-                <p class="dialog-title">{{ !isOperation ? '新增书籍' : '修改书籍' }}</p>
+        <el-dialog :show-close="false" :visible.sync="dialogOperation" width="600px" :top="'8vh'" custom-class="book-dialog">
+            <div class="dialog-header">
+                <h3 class="dialog-title">{{ !isOperation ? '新增书籍' : '修改书籍' }}</h3>
             </div>
-            <div style="padding:0 12px 20px 12px;">
-                <el-row :gutter="10">
+            <div class="dialog-content">
+                <el-row :gutter="20">
                     <el-col :span="9">
-                        <div class="point">书籍封面</div>
-                        <el-upload class="avatar-uploader" action="/api/book-manage-sys-api/v1.0/file/upload"
-                            :show-file-list="false" :on-success="handleBookCoverSuccess">
-                            <img v-if="cover" :src="cover" class="dialog-cover">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                        <div style="margin-bottom: 5px;">
-                            <div class="point">*书架</div>
-                            <el-select v-model="data.bookShelfId" placeholder="请选择" size="mini" style="width: 100%;">
+                        <div class="form-group">
+                            <label class="form-label"><i class="el-icon-picture-outline"></i> 书籍封面</label>
+                            <el-upload class="book-cover-uploader" action="/api/book-manage-sys-api/v1.0/file/upload"
+                                :show-file-list="false" :on-success="handleBookCoverSuccess">
+                                <img v-if="cover" :src="cover" class="book-cover-image">
+                                <div v-else class="book-cover-placeholder">
+                                    <i class="el-icon-plus"></i>
+                                </div>
+                            </el-upload>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="el-icon-s-grid"></i> 书架位置 <span class="required">*</span></label>
+                            <el-select v-model="data.bookShelfId" placeholder="请选择" size="small" style="width: 100%;">
                                 <el-option v-for="(item, index) in bookshelfOptions" :key="index"
                                     :label="bookshelfConfig(item)" :value="item.id">
                                 </el-option>
                             </el-select>
                         </div>
-                        <div style="margin-bottom: 5px;">
-                            <div class="point">*书籍类别</div>
-                            <el-select v-model="data.categoryId" placeholder="请选择" size="mini" style="width: 100%;">
+                        <div class="form-group">
+                            <label class="form-label"><i class="el-icon-collection-tag"></i> 书籍类别 <span class="required">*</span></label>
+                            <el-select v-model="data.categoryId" placeholder="请选择" size="small" style="width: 100%;">
                                 <el-option v-for="(item, index) in options" :key="index" :label="item.name"
                                     :value="item.id">
                                 </el-option>
                             </el-select>
                         </div>
-                        <div style="margin-bottom: 5px;">
-                            <div class="point">馆藏数目</div>
-                            <el-input-number size="mini" v-model="data.num" :min="1" :max="100"
-                                label="" style="width: 100%;"></el-input-number>
+                        <div class="form-group">
+                            <label class="form-label"><i class="el-icon-goods"></i> 馆藏数目</label>
+                            <el-input-number size="small" v-model="data.num" :min="1" :max="100"
+                                style="width: 100%;"></el-input-number>
                         </div>
                     </el-col>
                     <el-col :span="15">
-                        <div style="margin-left: 20px;">
-                            <div style="margin-bottom: 5px;">
-                                <div class="point">书籍名称</div>
-                                <input class="dialog-input" v-model="data.name" placeholder="输入" />
-                            </div>
-                            <div style="margin-bottom: 5px;">
-                                <div class="point">出版商</div>
-                                <input class="dialog-input" v-model="data.publisher" placeholder="输入" />
-                            </div>
-                            <div style="margin-bottom: 5px;">
-                                <div class="point">作者</div>
-                                <input class="dialog-input" v-model="data.author" placeholder="输入" />
-                            </div>
-                            <div style="margin-bottom: 5px;">
-                                <div class="point">国际标准书号(ISBN)</div>
-                                <input class="dialog-input" v-model="data.isbn" placeholder="输入" />
-                            </div>
-                            <div>
-                                <div class="point">书籍简介</div>
-                                <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 2 }" placeholder="书籍简介"
-                                    v-model="data.detail" size="mini">
-                                </el-input>
-                            </div>
-                            <div v-if="!isOperation || data.isPlanBuy" style="margin-top: 5px;">
-                                <div class="point">*是否为预售书籍</div>
-                                <div style="display: flex; align-items: center;">
-                                    <el-switch v-model="data.isPlanBuy" active-color="#13ce66"
-                                        inactive-color="rgb(245, 245, 245)" style="margin-right: 10px;">
-                                    </el-switch>
-                                    <el-date-picker v-if="data.isPlanBuy" v-model="data.planBuyTime" type="date" 
-                                        placeholder="计划上架时间" size="mini" style="width: 150px;">
-                                    </el-date-picker>
-                                </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="el-icon-reading"></i> 书籍名称</label>
+                            <input class="dialog-input" v-model="data.name" placeholder="请输入书籍名称" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="el-icon-office-building"></i> 出版商</label>
+                            <input class="dialog-input" v-model="data.publisher" placeholder="请输入出版商" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="el-icon-user"></i> 作者</label>
+                            <input class="dialog-input" v-model="data.author" placeholder="请输入作者" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="el-icon-document"></i> 国际标准书号(ISBN)</label>
+                            <input class="dialog-input" v-model="data.isbn" placeholder="请输入ISBN" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label"><i class="el-icon-notebook-2"></i> 书籍简介</label>
+                            <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 3 }" placeholder="请输入书籍简介"
+                                v-model="data.detail" size="small">
+                            </el-input>
+                        </div>
+                        <div class="form-group" v-if="!isOperation || data.isPlanBuy">
+                            <label class="form-label"><i class="el-icon-time"></i> 预售设置 <span class="required">*</span></label>
+                            <div class="presale-group">
+                                <el-switch v-model="data.isPlanBuy" active-color="#13ce66"
+                                    inactive-color="#dcdfe6">
+                                </el-switch>
+                                <span class="switch-label">{{ data.isPlanBuy ? '预售书籍' : '立即上架' }}</span>
+                                <el-date-picker v-if="data.isPlanBuy" v-model="data.planBuyTime" type="date" 
+                                    placeholder="计划上架时间" size="small" style="width: 140px; margin-left: 10px;">
+                                </el-date-picker>
                             </div>
                         </div>
                     </el-col>
                 </el-row>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <span class="dialog-btn cancel-btn" @click="cannel()">
-                    取消操作
-                </span>
-                <span class="dialog-btn confirm-btn" v-if="!isOperation" @click="addOperation()">
-                    确定新增
-                </span>
-                <span class="dialog-btn confirm-btn" v-else @click="updateOperation()">
-                    确定修改
-                </span>
-            </span>
+            <div class="dialog-footer">
+                <el-button class="cancel-btn" size="small" @click="cannel()">取消操作</el-button>
+                <el-button v-if="!isOperation" class="confirm-btn" type="primary" size="small" @click="addOperation()">确定新增</el-button>
+                <el-button v-else class="confirm-btn" type="primary" size="small" @click="updateOperation()">确定修改</el-button>
+            </div>
         </el-dialog>
     </el-row>
 </template>
@@ -191,6 +186,15 @@ export default {
             this.isOperation = false;
             this.cover = '';
             this.data = {};
+            // 清理多余的遮罩层
+            this.$nextTick(() => {
+                const modals = document.querySelectorAll('.v-modal');
+                if (modals.length > 1) {
+                    for (let i = 1; i < modals.length; i++) {
+                        modals[i].parentNode.removeChild(modals[i]);
+                    }
+                }
+            });
         },
         bookshelfConfig(item) {
             return item.floor + "-" + item.area + "-" + item.frame;
@@ -228,36 +232,17 @@ export default {
                 return;
             }
             const confirmed = await this.$swalConfirm({
-                title: '删除书籍数据',
+                title: '删除书籍书籍数据',
                 text: `删除后不可恢复，是否继续？`,
                 icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: '确认删除',
-                cancelButtonText: '取消',
-                confirmButtonColor: '#f56c6c',
-                cancelButtonColor: '#909399',
-                customClass: {
-                    popup: 'custom-delete-popup',
-                    confirmButton: 'custom-delete-confirm-button',
-                    cancelButton: 'custom-delete-cancel-button',
-                    title: 'custom-delete-title',
-                    content: 'custom-delete-content',
-                    icon: 'custom-delete-icon'
-                },
-                buttonsStyling: true,
-                iconColor: '#f56c6c',
-                backdrop: `rgba(0,0,0,0.4)`,
-                heightAuto: false,
-                padding: '2em'
             });
-            
             if (confirmed) {
                 try {
                     let ids = this.delectedRows.map(entity => entity.id);
                     const response = await this.$axios.post(`/book/batchDelete`, ids);
                     if (response.data.code === 200) {
                         this.$swal.fire({
-                            title: '删除成功',
+                            title: '删除提示',
                             text: response.data.msg,
                             icon: 'success',
                             showConfirmButton: false,
@@ -274,7 +259,7 @@ export default {
                         showConfirmButton: false,
                         timer: 2000,
                     });
-                    console.error(`书籍信息删除异常：`, e);
+                    console.error(`书籍书籍信息删除异常：`, e);
                 }
             }
         },
@@ -430,11 +415,6 @@ export default {
     }
 }
 
-.book-col {
-    padding: 8px;
-    margin-bottom: 10px;
-}
-
 .book-actions {
     display: flex;
     justify-content: center;
@@ -443,55 +423,56 @@ export default {
 }
 
 .book-btn {
-    padding: 1px 8px;
-    border: none;
-    border-radius: 12px;
-    font-size: 11px !important;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: white;
-    outline: none;
-    min-width: 32px;
-    height: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 2px 10px !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-size: 9px !important;
+    font-weight: 400 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    color: white !important;
+    outline: none !important;
+    min-width: 36px !important;
+    height: 18px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 .edit-btn {
-    background-color: #409EFF;
-    box-shadow: 0 1px 2px rgba(64, 158, 255, 0.2);
+    background-color: #409EFF !important;
+    box-shadow: 0 1px 3px rgba(64, 158, 255, 0.2) !important;
 }
 
 .edit-btn:hover {
-    background-color: #66b1ff;
+    background-color: #66b1ff !important;
 }
 
 .delete-btn {
-    background-color: #F56C6C;
-    box-shadow: 0 1px 2px rgba(245, 108, 108, 0.2);
+    background-color: #F56C6C !important;
+    box-shadow: 0 1px 3px rgba(245, 108, 108, 0.2) !important;
 }
 
 .delete-btn:hover {
-    background-color: #f78989;
+    background-color: #f78989 !important;
 }
 
 .edit-button {
-    background-color: #409EFF;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(64, 158, 255, 0.3);
-    font-weight: 500;
+    background-color: #409EFF !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    border-radius: 20px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 6px rgba(64, 158, 255, 0.3) !important;
+    font-weight: 500 !important;
+    display: inline-block !important;
 }
 
 .edit-button:hover {
-    background-color: #66b1ff;
-    box-shadow: 0 4px 10px rgba(64, 158, 255, 0.4);
-    transform: translateY(-2px);
+    background-color: #66b1ff !important;
+    box-shadow: 0 4px 10px rgba(64, 158, 255, 0.4) !important;
+    transform: translateY(-2px) !important;
 }
 
 .dialog-input {
@@ -518,58 +499,45 @@ export default {
 }
 
 .dialog-title {
-    font-size: 17px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 500;
     color: #303133;
     margin: 0;
     padding: 8px 0;
-    position: relative;
-    display: inline-block;
-}
-
-.dialog-title::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 40px;
-    height: 3px;
-    background: #409EFF;
-    border-radius: 2px;
 }
 
 .dialog-btn {
-    display: inline-block;
-    padding: 6px 15px;
-    border-radius: 16px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 12px;
-    font-weight: 400;
-    margin-left: 10px;
+    display: inline-block !important;
+    padding: 6px 15px !important;
+    border-radius: 16px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    margin-left: 10px !important;
 }
 
 .cancel-btn {
-    background-color: #F5F7FA;
-    color: #606266;
-    border: 1px solid #DCDFE6;
+    background-color: #F5F7FA !important;
+    color: #606266 !important;
+    border: 1px solid #DCDFE6 !important;
 }
 
 .cancel-btn:hover {
-    color: #409EFF;
-    border-color: #c6e2ff;
-    background-color: #ECF5FF;
+    color: #409EFF !important;
+    border-color: #c6e2ff !important;
+    background-color: #ECF5FF !important;
 }
 
 .confirm-btn {
-    background-color: #409EFF;
-    color: white;
-    border: none;
-    box-shadow: 0 2px 6px rgba(64, 158, 255, 0.2);
+    background-color: #409EFF !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 2px 6px rgba(64, 158, 255, 0.2) !important;
 }
 
 .confirm-btn:hover {
-    background-color: #66b1ff;
+    background-color: #66b1ff !important;
 }
 
 .avatar-uploader {
@@ -598,15 +566,198 @@ export default {
     border-radius: 6px;
     object-fit: cover;
 }
-.flex-row-container {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 -8px; /* 抵消子元素的padding */
+
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
 }
 
-.flex-col-5 {
-    width: 20%;
-    padding: 8px;
+.book-col {
+    padding: 0;
+    margin-bottom: 0;
+}
+
+// 响应式调整
+@media (max-width: 1400px) {
+    .book-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 1200px) {
+    .book-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .book-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .book-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+// 书籍对话框样式
+.book-dialog {
+    border-radius: 8px;
+    overflow: hidden;
+    
+    .el-dialog__header {
+        display: none; // 隐藏原来的标题区域
+    }
+    
+    .el-dialog__body {
+        padding: 0;
+    }
+}
+
+.dialog-header {
+    background-color: #f9f9f9;
+    padding: 14px 20px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.dialog-content {
+    padding: 16px 20px;
+}
+
+.dialog-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #303133;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: inline-block;
+    
+    &:after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 30px;
+        height: 2px;
+        background-color: #409EFF;
+    }
+}
+
+.dialog-footer {
+    padding: 10px 20px 16px;
+    text-align: right;
+    border-top: 1px solid #ebeef5;
+}
+
+.form-label {
+    font-size: 13px;
+    color: #606266;
+    margin-bottom: 6px;
+    font-weight: 500;
+    display: block;
+    
+    i {
+        margin-right: 5px;
+        color: #409EFF;
+    }
+    
+    .required {
+        color: #F56C6C;
+        margin-left: 2px;
+    }
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.dialog-input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #DCDFE6;
+    border-radius: 4px;
     box-sizing: border-box;
+    font-size: 13px;
+    color: #606266;
+    
+    &:focus {
+        border-color: #409EFF;
+        outline: none;
+    }
+}
+
+.book-cover-uploader {
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: center;
+}
+
+.book-cover-image {
+    width: 150px;
+    height: 150px;
+    display: block;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.book-cover-placeholder {
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    text-align: center;
+    border: 1px dashed #d9d9d9;
+    border-radius: 4px;
+    background-color: #fafafa;
+    font-size: 24px;
+    color: #8c939d;
+    cursor: pointer;
+    transition: all 0.3s;
+    
+    &:hover {
+        border-color: #409EFF;
+        color: #409EFF;
+    }
+}
+
+.presale-group {
+    display: flex;
+    align-items: center;
+    
+    .switch-label {
+        margin-left: 10px;
+        font-size: 13px;
+        color: #606266;
+    }
+}
+
+.cancel-btn, .confirm-btn {
+    padding: 7px 16px;
+    font-size: 13px;
+    border-radius: 4px;
+    
+    &:focus {
+        outline: none;
+    }
+}
+
+.cancel-btn {
+    &:hover {
+        color: #409EFF;
+        border-color: #c6e2ff;
+        background-color: #ecf5ff;
+    }
+}
+
+.confirm-btn {
+    &:hover {
+        background-color: #66b1ff;
+        border-color: #66b1ff;
+    }
 }
 </style>

@@ -163,7 +163,7 @@ export default {
 .login-container {
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(to right, #ff9a9e, #fad0c4, #fad0c4, #a1c4fd);
+    background: linear-gradient(to right, #ff9a9e, #f8c4b8, #e8c6c0, #a1c4fd);
     background-size: 300% 300%;
     animation: gradientBG 15s ease infinite;
     display: flex;
@@ -373,14 +373,15 @@ export default {
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 5px;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
             letter-spacing: 1px;
         }
         
         .login-subtitle {
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 1);
             font-size: 16px;
             letter-spacing: 0.5px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
         }
 
@@ -397,9 +398,10 @@ export default {
             left: 20px;
             top: 50%;
             transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 1);
             font-size: 18px;
             z-index: 1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
             &:before {
                 font-family: "element-icons";
             }
@@ -425,6 +427,7 @@ export default {
         transition: all 0.3s ease;
         box-sizing: border-box;
         color: white;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
         
         &:focus {
             outline: none;
@@ -492,8 +495,9 @@ export default {
         text-align: center;
         
         p {
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 1);
             font-size: 15px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
             
             .register-link {
                 color: #ffffff;
@@ -504,6 +508,7 @@ export default {
                 text-decoration: none;
                 position: relative;
                 padding-bottom: 2px;
+                text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
                 
                 &:after {
                     content: '';

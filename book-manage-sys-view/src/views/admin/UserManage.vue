@@ -75,95 +75,99 @@
                 :total="totalItems"></el-pagination>
         </el-row>
         <!-- 操作面板 -->
-        <el-dialog :show-close="false" :visible.sync="dialogUserOperaion" width="38%" custom-class="user-dialog">
+        <el-dialog :show-close="false" :visible.sync="dialogUserOperaion" width="460px" custom-class="user-dialog">
             <div class="dialog-content">
                 <h3 class="dialog-title">用户信息</h3>
-                <el-row :gutter="24" type="flex">
-                    <el-col :span="8">
-                        <p class="point">用户头像</p>
+                <div class="user-form">
+                    <div class="avatar-section">
+                        <p class="form-label"><i class="el-icon-user"></i> 用户头像</p>
                         <el-upload 
                             class="avatar-uploader"
-                            action="http://localhost:2025/api/book-manage-sys-api/v1.0/file/upload" 
+                            :action="uploadUrl" 
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess">
                             <template v-if="userAvatar">
                                 <img :src="userAvatar" class="dialog-avatar">
                             </template>
                             <template v-else>
-                                <el-button icon="el-icon-plus" class="custom-upload-btn" size="large"></el-button>
+                                <div class="custom-upload-placeholder">
+                                    <i class="el-icon-plus"></i>
+                                </div>
                             </template>
                         </el-upload>
-                    </el-col>
-                    <el-col :span="16">
-                        <el-row :gutter="16">
-                            <el-col :span="12" class="form-col">
-                                <span class="point">用户名</span>
+                    </div>
+                    <div class="form-section">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label"><i class="el-icon-user-solid"></i> 用户名</label>
                                 <input class="dialog-input" v-model="data.userName" placeholder="请输入用户名" />
-                            </el-col>
-                            <el-col :span="12" class="form-col">
-                                <span class="point">账号</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><i class="el-icon-medal"></i> 账号</label>
                                 <input class="dialog-input" v-model="data.userAccount" placeholder="请输入账号" />
-                            </el-col>
-                        </el-row>
-                        <el-row :gutter="16">
-                            <el-col :span="12" class="form-col">
-                                <span class="point">邮箱</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label"><i class="el-icon-message"></i> 邮箱</label>
                                 <input class="dialog-input" v-model="data.userEmail" placeholder="请输入邮箱" />
-                            </el-col>
-                            <el-col :span="12" class="form-col">
-                                <span class="point">密码</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label"><i class="el-icon-lock"></i> 密码</label>
                                 <input class="dialog-input" v-model="userPwd" type="password" placeholder="请输入密码" />
-                            </el-col>
-                        </el-row>
-                    </el-col>
-                </el-row>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="dialog-footer">
-                <span class="dialog-btn cancel-btn" @click="cannel()">
-                    取消操作
-                </span>
-                <span v-if="!isOperation" class="dialog-btn confirm-btn" @click="addOperation()">
-                    确定新增
-                </span>
-                <span v-else class="dialog-btn confirm-btn" @click="updateOperation()">
-                    确定修改
-                </span>
+                <el-button class="cancel-btn" size="small" @click="cannel()">取消操作</el-button>
+                <el-button v-if="!isOperation" class="confirm-btn" type="primary" size="small" @click="addOperation()">确定新增</el-button>
+                <el-button v-else class="confirm-btn" type="primary" size="small" @click="updateOperation()">确定修改</el-button>
             </div>
         </el-dialog>
-        <el-dialog :show-close="false" :visible.sync="dialogStatusOperation" width="18%">
-            <div style="padding:30px 20px 0 20px;">
-                <el-row>
-                    <p>*封号状态</p>
-                    <el-switch v-model="data.isLogin" active-text="封号" inactive-text="正常状态">
-                    </el-switch>
-                </el-row>
-                <el-row style="margin: 20px 0;">
-                    <p>*禁言状态</p>
-                    <el-switch v-model="data.isWord" active-text="禁言" inactive-text="正常状态">
-                    </el-switch>
-                </el-row>
-                <el-row style="margin: 20px 0;">
-                    <p>*是否设置为管理员</p>
-                    <el-switch v-model="isAdmin" active-text="管理员" inactive-text="普通用户">
-                    </el-switch>
-                </el-row>
+        <el-dialog :show-close="false" :visible.sync="dialogStatusOperation" width="360px" custom-class="status-dialog">
+            <div class="dialog-header">
+                <h3 class="dialog-title">账号状态设置</h3>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <span class="channel-button" @click="cannel()">
-                    取消操作
-                </span>
-                <span class="edit-button" @click="comfirmStatus()">
-                    确定设置
-                </span>
-            </span>
+            <div class="dialog-body">
+                <div class="switch-item">
+                    <div class="switch-label">
+                        <i class="el-icon-lock"></i>
+                        <span>封号状态</span>
+                    </div>
+                    <el-switch v-model="data.isLogin" active-text="封号" inactive-text="正常状态"></el-switch>
+                </div>
+                <div class="switch-item">
+                    <div class="switch-label">
+                        <i class="el-icon-turn-off"></i>
+                        <span>禁言状态</span>
+                    </div>
+                    <el-switch v-model="data.isWord" active-text="禁言" inactive-text="正常状态"></el-switch>
+                </div>
+                <div class="switch-item">
+                    <div class="switch-label">
+                        <i class="el-icon-user"></i>
+                        <span>用户角色</span>
+                    </div>
+                    <el-switch v-model="isAdmin" active-text="管理员" inactive-text="普通用户"></el-switch>
+                </div>
+            </div>
+            <div class="dialog-footer">
+                <el-button class="cancel-btn" size="small" @click="cannel()">取消操作</el-button>
+                <el-button class="confirm-btn" type="primary" size="small" @click="comfirmStatus()">确认设置</el-button>
+            </div>
         </el-dialog>
     </el-row>
 </template>
 
 <script>
+import { getUploadUrl } from "@/utils/urlHelper.js";
+
 export default {
     data() {
         return {
+            uploadUrl: getUploadUrl(),
             userPwd: '',
             userAvatar: '',
             data: {},
@@ -196,6 +200,15 @@ export default {
             this.dialogUserOperaion = false;
             this.dialogStatusOperation = false;
             this.isOperation = false;
+            // 清理多余的遮罩层
+            this.$nextTick(() => {
+                const modals = document.querySelectorAll('.v-modal');
+                if (modals.length > 1) {
+                    for (let i = 1; i < modals.length; i++) {
+                        modals[i].parentNode.removeChild(modals[i]);
+                    }
+                }
+            });
         },
         comfirmStatus() {
             const userUpdateDto = {
@@ -579,5 +592,72 @@ export default {
         border-color: #409EFF;
         color: #409EFF;
     }
+}
+
+.user-form {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.avatar-section {
+    width: 40%;
+    padding: 0 10px;
+}
+
+.form-section {
+    width: 60%;
+    padding: 0 10px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.form-row {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    width: 50%;
+    padding: 0 5px;
+}
+
+.custom-upload-placeholder {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #d9d9d9;
+    border-radius: 4px;
+    background-color: #fafafa;
+}
+
+.status-dialog {
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dialog-header {
+    background-color: #f0f0f0;
+    padding: 10px 20px;
+    border-bottom: 1px solid #dcdfe6;
+}
+
+.dialog-body {
+    padding: 20px;
+}
+
+.switch-item {
+    margin-bottom: 15px;
+}
+
+.switch-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
 }
 </style>
