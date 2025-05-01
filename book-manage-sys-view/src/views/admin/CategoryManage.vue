@@ -29,21 +29,21 @@
                 :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
                 :total="totalItems"></el-pagination>
         </el-row>
-        <el-dialog :visible.sync="dialogOperation" width="25%">
-            <div slot="title">
-                <p class="dialog-title">{{ !isOperation ? '新增类别' : '修改类别' }}</p>
+        <el-dialog :visible.sync="dialogOperation" width="25%" custom-class="category-dialog">
+            <div class="dialog-header">
+                <h3 class="dialog-title">{{ !isOperation ? '新增类别' : '修改类别' }}</h3>
             </div>
-            <div style="padding:0 20px 40px 15px;">
-                <input class="dialog-input" v-model="data.name" placeholder="书籍类别名" />
+            <div class="dialog-content">
+                <div class="form-group">
+                    <label class="form-label"><i class="el-icon-collection-tag"></i> 书籍类别名</label>
+                    <el-input class="custom-input" v-model="data.name" placeholder="请输入书籍类别名称"></el-input>
+                </div>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button size="small" v-if="!isOperation" style="background-color: rgb(43, 121, 203);border: none;"
-                    class="customer" type="info" @click="addOperation">新增</el-button>
-                <el-button size="small" v-else style="background-color: rgb(43, 121, 203);border: none;"
-                    class="customer" type="info" @click="updateOperation">修改</el-button>
-                <el-button class="customer" size="small" style="background-color: rgb(241, 241, 241);border: none;"
-                    @click="cannel">取消</el-button>
-            </span>
+            <div class="dialog-footer">
+                <el-button class="cancel-btn" size="small" @click="cannel">取消</el-button>
+                <el-button class="confirm-btn" size="small" v-if="!isOperation" type="primary" @click="addOperation">新增</el-button>
+                <el-button class="confirm-btn" size="small" v-else type="primary" @click="updateOperation">修改</el-button>
+            </div>
         </el-dialog>
     </el-row>
 </template>
@@ -257,16 +257,125 @@ export default {
     width: 100%;
 }
 
-.dialog-footer {
-    /* 使按钮水平居中 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* 对话框样式 */
+.category-dialog {
+    border-radius: 8px;
+    overflow: hidden;
+    
+    :deep(.el-dialog__header) {
+        display: none;
+    }
+    
+    :deep(.el-dialog__body) {
+        padding: 0;
+    }
+    
+    :deep(.el-dialog__footer) {
+        display: none;
+    }
 }
 
-/* 如果需要调整按钮之间的间距 */
-.customer {
-    margin: 0 8px;
-    /* 根据需要调整间距 */
+.dialog-header {
+    background-color: #f9f9f9;
+    padding: 16px 20px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.dialog-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #303133;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: inline-block;
+    
+    &:after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 30px;
+        height: 2px;
+        background-color: #409EFF;
+    }
+}
+
+.dialog-content {
+    padding: 20px;
+}
+
+.dialog-footer {
+    padding: 10px 20px 20px;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    font-size: 14px;
+    color: #606266;
+    margin-bottom: 8px;
+    font-weight: 500;
+    display: block;
+    
+    i {
+        margin-right: 5px;
+        color: #409EFF;
+    }
+}
+
+.custom-input {
+    :deep(.el-input__inner) {
+        border-radius: 4px;
+        transition: all 0.3s;
+        height: 36px;
+        
+        &:hover, &:focus {
+            border-color: #409EFF;
+        }
+    }
+}
+
+.cancel-btn, .confirm-btn {
+    padding: 8px 20px;
+    font-size: 13px;
+    border-radius: 4px;
+    transition: all 0.3s;
+    
+    &:focus {
+        outline: none;
+    }
+}
+
+.cancel-btn {
+    background-color: #f5f7fa;
+    color: #606266;
+    border: 1px solid #dcdfe6;
+    
+    &:hover {
+        color: #409EFF;
+        border-color: #c6e2ff;
+        background-color: #ecf5ff;
+    }
+}
+
+.confirm-btn {
+    background-color: #409EFF;
+    color: white;
+    border: none;
+    box-shadow: 0 2px 6px rgba(64, 158, 255, 0.2);
+    
+    &:hover {
+        background-color: #66b1ff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(64, 158, 255, 0.3);
+    }
 }
 </style>

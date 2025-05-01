@@ -33,8 +33,12 @@
                         {{ parseLocation(save) }}
                     </div>
                     <div class="action-buttons">
-                        <span class="action-btn borrow" @click="handleEdit(save)">借书</span>
-                        <span class="action-btn cancel" @click="handleDelete(save)">取消收藏</span>
+                        <button class="action-btn borrow" @click="handleEdit(save)">
+                            <i class="el-icon-reading"></i> 借书
+                        </button>
+                        <button class="action-btn cancel" @click="handleDelete(save)">
+                            <i class="el-icon-star-off"></i> 取消收藏
+                        </button>
                     </div>
                 </div>
             </div>
@@ -47,28 +51,31 @@
                 </el-pagination>
             </div>
         </div>
-        <el-dialog :show-close="false" :visible.sync="dialogOperation" width="24%">
-            <div style="padding:20px 25px 25px 15px;">
-                <div style="margin-bottom: 10px;">
-                    <div class="point">借书数量</div>
+        <el-dialog :show-close="false" :visible.sync="dialogOperation" width="400px" custom-class="borrow-dialog">
+            <div class="dialog-header">
+                <h3 class="dialog-title">借阅信息</h3>
+            </div>
+            <div class="dialog-content">
+                <div class="form-group">
+                    <label class="form-label"><i class="el-icon-goods"></i> 借书数量</label>
                     <el-input-number style="width: 100%;" size="small" v-model="data.deadlineNum" :min="1" :max="10"
-                        label="数量"></el-input-number>
+                        label="数量" controls-position="right"></el-input-number>
                 </div>
-                <div>
-                    <div class="point">归还日期</div>
+                <div class="form-group">
+                    <label class="form-label"><i class="el-icon-date"></i> 归还日期</label>
                     <el-date-picker style="width: 100%;" size="small" v-model="data.returnTime" type="date"
-                        placeholder="选择日期">
+                        placeholder="选择归还日期" value-format="yyyy-MM-dd">
                     </el-date-picker>
                 </div>
+                <div class="borrow-notice">
+                    <i class="el-icon-info-circle"></i>
+                    <span>请在选定日期前归还图书</span>
+                </div>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <span class="channel-button" @click="cannel()">
-                    取消操作
-                </span>
-                <span class="edit-button" @click="addOperation">
-                    确定借书
-                </span>
-            </span>
+            <div class="dialog-footer">
+                <el-button class="cancel-btn" size="small" @click="cannel()">取消操作</el-button>
+                <el-button class="confirm-btn" type="primary" size="small" @click="addOperation">确定借书</el-button>
+            </div>
         </el-dialog>
     </el-row>
 </template>
@@ -395,6 +402,13 @@ export default {
         min-width: 120px;
         color: #333;
         font-size: 14px;
+        
+        &:last-child {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            justify-content: flex-start;
+        }
     }
 
     .title {
@@ -409,32 +423,45 @@ export default {
     }
 
     .action-btn {
-        display: inline-block;
-        padding: 6px 16px;
-        border-radius: 20px;
-        font-size: 13px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3px 8px !important;
+        border-radius: 12px !important;
+        font-size: 11px !important;
         cursor: pointer;
         transition: all 0.3s ease;
+        min-width: 60px !important;
+        height: auto !important;
+        border: 1px solid transparent;
+        width: auto !important;
+        
+        i {
+            margin-right: 3px;
+            font-size: 11px !important;
+        }
         
         &.borrow {
             background-color: rgba(255, 87, 34, 0.08);
             color: #ff5722;
-            border: 1px solid rgba(255, 87, 34, 0.2);
+            border-color: rgba(255, 87, 34, 0.2);
             
             &:hover {
                 background-color: rgba(255, 87, 34, 0.12);
                 transform: translateY(-1px);
+                box-shadow: 0 2px 5px rgba(255, 87, 34, 0.15);
             }
         }
         
         &.cancel {
             background-color: rgba(64, 158, 255, 0.08);
             color: #409eff;
-            border: 1px solid rgba(64, 158, 255, 0.2);
+            border-color: rgba(64, 158, 255, 0.2);
             
             &:hover {
                 background-color: rgba(64, 158, 255, 0.12);
                 transform: translateY(-1px);
+                box-shadow: 0 2px 5px rgba(64, 158, 255, 0.15);
             }
         }
     }
@@ -460,46 +487,125 @@ export default {
     align-items: center;
 }
 
-.point {
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 8px;
-    font-weight: 500;
+.borrow-dialog {
+    border-radius: 8px;
+    overflow: hidden;
+    
+    .el-dialog__header {
+        display: none;
+    }
+    
+    .el-dialog__body {
+        padding: 0;
+    }
 }
 
-.channel-button, .edit-button {
+.dialog-header {
+    background-color: #f9f9f9;
+    padding: 14px 20px;
+    border-bottom: 1px solid #ebeef5;
+}
+
+.dialog-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #303133;
+    margin: 0;
+    padding: 0;
+    position: relative;
     display: inline-block;
-    padding: 8px 16px;
-    border-radius: 16px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-    margin: 0 5px;
-}
-
-.channel-button {
-    background-color: #f4f4f5;
-    color: #606266;
     
-    &:hover {
-        background-color: #e9e9eb;
+    &:after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 30px;
+        height: 2px;
+        background-color: #ff5722;
     }
 }
 
-.edit-button {
-    background-color: #ff5722;
-    color: white;
-    
-    &:hover {
-        background-color: #f4511e;
-    }
+.dialog-content {
+    padding: 16px 20px;
 }
 
 .dialog-footer {
+    padding: 10px 20px 16px;
+    text-align: right;
+    border-top: 1px solid #ebeef5;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    font-size: 14px;
+    color: #606266;
+    margin-bottom: 8px;
+    font-weight: 500;
+    display: block;
+    
+    i {
+        margin-right: 5px;
+        color: #ff5722;
+    }
+}
+
+.borrow-notice {
+    background-color: #fff8e6;
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #e6a23c;
     display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
+    align-items: flex-start;
+    margin-top: 16px;
+    
+    i {
+        margin-right: 6px;
+        margin-top: 2px;
+    }
+    
+    span {
+        line-height: 1.4;
+    }
+}
+
+.cancel-btn, .confirm-btn {
+    padding: 7px 16px;
+    font-size: 13px;
+    border-radius: 20px;
+    
+    &:focus {
+        outline: none;
+    }
+}
+
+.cancel-btn {
+    background-color: #f5f7fa;
+    color: #606266;
+    border: 1px solid #dcdfe6;
+    
+    &:hover {
+        color: #409EFF;
+        border-color: #c6e2ff;
+        background-color: #ecf5ff;
+    }
+}
+
+.confirm-btn {
+    background-color: #ff5722;
+    color: white;
+    border: none;
+    box-shadow: 0 2px 6px rgba(255, 87, 34, 0.2);
+    
+    &:hover {
+        background-color: #f4511e;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(255, 87, 34, 0.3);
+    }
 }
 
 /* 分页组件样式 */

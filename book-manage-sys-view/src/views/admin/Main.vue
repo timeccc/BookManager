@@ -1,34 +1,65 @@
 <template>
     <div class="dashboard-container">
-        <el-row :gutter="16">
+        <el-row :gutter="24">
             <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-                <div class="dashboard-card">
-                    <PieChart fontColor="#333" bag="rgba(255, 255, 255, 0.6)" tag="基础数据" :values="pieValues"
+                <div class="dashboard-card data-card">
+                    <div class="card-header">
+                        <h3 class="card-title">基础数据</h3>
+                    </div>
+                    <PieChart fontColor="#333" bag="rgba(255, 255, 255, 0.6)" :values="pieValues"
                         :types="pieTypes" />
                 </div>
-                <div class="dashboard-card mt-16">
-                    <h3 class="card-title">最新公告</h3>
+                <div class="dashboard-card notice-card">
+                    <div class="card-header">
+                        <h3 class="card-title">最新公告</h3>
+                        <div class="card-actions">
+                            <el-button type="text" size="small" icon="el-icon-refresh" @click="loadMessage">刷新</el-button>
+                        </div>
+                    </div>
                     <div class="notice-list">
                         <div class="notice-item" v-for="(notice, index) in noticeList" :key="index">
                             <div class="notice-title">
+                                <i class="el-icon-bell"></i>
                                 <span>{{ notice.name }}</span>
                             </div>
                             <div class="notice-time">
-                                <span>时间：{{ notice.createTime }}</span>
+                                <i class="el-icon-time"></i>
+                                <span>{{ notice.createTime }}</span>
                             </div>
                         </div>
                         <div class="empty-notice" v-if="noticeList.length === 0">
+                            <i class="el-icon-info"></i>
                             <span>暂无公告</span>
                         </div>
                     </div>
                 </div>
             </el-col>
             <el-col :xs="24" :sm="24" :md="16" :lg="16" :xl="16">
-                <div class="dashboard-card">
+                <div class="dashboard-card chart-card">
+                    <div class="card-header">
+                        <h3 class="card-title">用户数变化趋势</h3>
+                        <div class="card-actions">
+                            <el-radio-group v-model="userDateRange" size="small" @change="userDatesSelected">
+                                <el-radio-button label="7">7天</el-radio-button>
+                                <el-radio-button label="30">30天</el-radio-button>
+                                <el-radio-button label="365">365天</el-radio-button>
+                            </el-radio-group>
+                        </div>
+                    </div>
                     <LineChart height="310px" tag="用户数" @on-selected="userDatesSelected" :values="userValues"
                         :date="userDates" />
                 </div>
-                <div class="dashboard-card mt-16">
+                <div class="dashboard-card chart-card">
+                    <div class="card-header">
+                        <h3 class="card-title">图书上架趋势</h3>
+                        <div class="card-actions">
+                            <el-radio-group v-model="bookDateRange" size="small" @change="modelDatesSelected">
+                                <el-radio-button label="7">7天</el-radio-button>
+                                <el-radio-button label="30">30天</el-radio-button>
+                                <el-radio-button label="365">365天</el-radio-button>
+                            </el-radio-group>
+                        </div>
+                    </div>
                     <LineChart height="310px" tag="图书上架情况" @on-selected="modelDatesSelected" :values="modelValues"
                         :date="modelDates" />
                 </div>
@@ -49,13 +80,15 @@ export default {
             modelValues: [],
             pieValues: [],
             pieTypes: [],
-            noticeList: []
+            noticeList: [],
+            userDateRange: '365',
+            bookDateRange: '365'
         }
     },
     created() {
-        // 默认查7天
+        // 默认查365天
         this.userDatesSelected(365);
-        // 默认查7天
+        // 默认查365天
         this.modelDatesSelected(365);
         this.loadPieCharts();
         this.loadMessage();
@@ -84,6 +117,12 @@ export default {
             })
         },
         modelDatesSelected(time) {
+            if (typeof time === 'object') {
+                time = this.bookDateRange;
+            } else {
+                this.bookDateRange = time.toString();
+            }
+            
             this.$axios.get(`/book/daysQuery/${time}`).then(response => {
                 const { data } = response;
                 if (data.code === 200) {
@@ -93,6 +132,12 @@ export default {
             })
         },
         userDatesSelected(time) {
+            if (typeof time === 'object') {
+                time = this.userDateRange;
+            } else {
+                this.userDateRange = time.toString();
+            }
+            
             this.$axios.get(`/user/daysQuery/${time}`).then(response => {
                 const { data } = response;
                 if (data.code === 200) {
@@ -108,100 +153,159 @@ export default {
 .dashboard-container {
     width: 100%;
     height: 100%;
-    padding: 16px;
+    padding: 20px;
     box-sizing: border-box;
     overflow: auto;
+    background-color: #f7f8fa;
 }
 
 .dashboard-card {
-    background-color: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
+    background-color: #ffffff;
     border-radius: 16px;
-    padding: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(240, 240, 240, 0.8);
+    margin-bottom: 24px;
+    overflow: hidden;
     
     &:hover {
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        transform: translateY(-3px);
     }
 }
 
-.mt-16 {
-    margin-top: 16px;
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding-bottom: 12px;
 }
 
 .card-title {
-    margin-top: 0;
-    margin-bottom: 16px;
+    margin: 0;
     font-size: 18px;
     font-weight: 600;
     color: #333;
+    position: relative;
+    padding-left: 12px;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 16px;
+        width: 4px;
+        background-color: #409EFF;
+        border-radius: 2px;
+    }
+}
+
+.card-actions {
+    display: flex;
+    align-items: center;
+}
+
+.chart-card {
+    height: calc(50% - 12px);
+}
+
+.data-card {
+    height: calc(45% - 12px);
+}
+
+.notice-card {
+    height: calc(55% - 12px);
 }
 
 .notice-list {
-    background-color: rgba(236, 245, 255, 0.5);
-    border-radius: 12px;
-    padding: 12px;
+    overflow-y: auto;
+    max-height: calc(100% - 50px);
+    padding: 0 4px;
 }
 
 .notice-item {
     margin-bottom: 16px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 12px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background-color: #f0f7ff;
+        transform: translateX(4px);
+    }
     
     &:last-child {
         margin-bottom: 0;
-        padding-bottom: 0;
-        border-bottom: none;
     }
 }
 
 .notice-title {
-    margin: 5px 0;
+    margin: 4px 0 8px;
     cursor: pointer;
-    font-weight: 500;
+    
+    i {
+        margin-right: 6px;
+        color: #409EFF;
+    }
     
     span {
         font-size: 15px;
         color: #333;
+        font-weight: 500;
     }
     
     &:hover span {
-        color: #3a8ee6;
+        color: #409EFF;
     }
 }
 
 .notice-time {
+    i {
+        margin-right: 6px;
+        color: #909399;
+        font-size: 12px;
+    }
+    
     span {
         font-size: 13px;
-        color: #666;
+        color: #909399;
     }
 }
 
 .empty-notice {
     text-align: center;
-    padding: 20px 0;
-    color: #999;
-    font-size: 14px;
+    padding: 30px 0;
+    color: #909399;
+    
+    i {
+        font-size: 24px;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    span {
+        font-size: 14px;
+    }
 }
 
-.status-success {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 4px;
-    background-color: rgba(201, 237, 249, 0.7);
-    color: #5e81ac;
-    font-size: 12px;
-}
-
-.status-error {
-    display: inline-block;
-    padding: 3px 8px;
-    border-radius: 4px;
-    background-color: rgba(233, 226, 134, 0.7);
-    color: #6f6ac4;
-    font-size: 12px;
+@media screen and (max-width: 768px) {
+    .dashboard-container {
+        padding: 12px;
+    }
+    
+    .dashboard-card {
+        margin-bottom: 16px;
+        padding: 16px;
+    }
+    
+    .chart-card, .data-card, .notice-card {
+        height: auto;
+    }
 }
 </style>

@@ -126,6 +126,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 20px;
+  padding-left: 30px;
   margin-bottom: 10px;
   position: relative;
   transition: padding 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
@@ -157,6 +158,10 @@ export default {
   }
   
   .collapse-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
     width: 32px;
     height: 32px;
     border-radius: 8px;
@@ -165,12 +170,12 @@ export default {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
     color: #ff5722;
     
     &:hover {
       background-color: rgba(255, 87, 34, 0.15);
-      transform: scale(1.05);
+      transform: translateY(-50%) scale(1.05);
     }
     
     i {
@@ -388,6 +393,7 @@ export default {
   .logo-container {
     justify-content: center;
     padding: 20px 0;
+    position: relative;
     
     .logo-text {
       width: 0;
@@ -402,10 +408,9 @@ export default {
     
     .collapse-btn {
       position: absolute;
-      top: 15px;
-      right: 15px;
-      width: 28px;
-      height: 28px;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
     }
   }
 
