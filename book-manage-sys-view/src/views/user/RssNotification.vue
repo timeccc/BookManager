@@ -1,5 +1,5 @@
 <template>
-    <el-row style="margin-top: 20px;">
+    <el-row style="margin-top: 10px;">
         <!-- 条件搜索 -->
         <div class="word-search" v-if="tableData.length !== 0">
             <div class="item">
@@ -10,7 +10,7 @@
         </div>
         <div class="read-bar" v-if="tableData.length !== 0">
             <div class="read" @click="readDeal">
-                全部已读
+                <i class="el-icon-check"></i> 全部已读
             </div>
         </div>
         <el-row style="margin: 10px 0;box-sizing: border-box;">
@@ -31,6 +31,7 @@
                         </div>
                         <div>
                             <span :class="['status-tag', rss.isRead ? 'read' : 'unread']">
+                                <i :class="rss.isRead ? 'el-icon-check' : 'el-icon-message'"></i>
                                 {{ rss.isRead ? '已读' : '未读' }}
                             </span>
                         </div>
@@ -38,7 +39,9 @@
                             {{ rss.createTime }}
                         </div>
                         <div class="action-buttons">
-                            <span class="action-btn delete" @click="handleDelete(rss)">删除</span>
+                            <span class="action-btn delete" @click="handleDelete(rss)">
+                                <i class="el-icon-delete"></i> 删除
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -184,7 +187,8 @@ export default {
     display: flex;
     justify-content: center;
     margin-bottom: 15px;
-    margin-top: 10px;
+    margin-top: -5px;
+
     .item {
         padding: 10px 20px;
         width: 500px;
@@ -197,10 +201,12 @@ export default {
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         border: 1px solid #eee;
         transition: all 0.3s ease;
+
         &:hover, &:focus-within {
             box-shadow: 0 6px 16px rgba(255, 87, 34, 0.12);
             border-color: rgba(255, 87, 34, 0.2);
         }
+
         input {
             flex: 1;
             border: none;
@@ -211,10 +217,12 @@ export default {
             margin: 0 15px;
             height: 24px;
         }
+
         i {
             font-size: 18px;
             color: #ff5722;
         }
+
         .search-text {
             display: inline-block;
             padding: 6px 16px;
@@ -225,6 +233,7 @@ export default {
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
+            
             &:hover {
                 background-color: #f4511e;
                 transform: translateY(-1px);
@@ -232,29 +241,38 @@ export default {
         }
     }
 }
+
 .read-bar {
     display: flex;
     justify-content: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+    margin-top: 5px;
 }
+
 .read {
     background: linear-gradient(90deg, #36d1c4 0%, #5b86e5 100%);
     color: #fff;
-    border-radius: 28px;
+    border-radius: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 8px 28px;
+    padding: 6px 20px;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 600;
-    box-shadow: 0 4px 16px rgba(91,134,229,0.10);
+    box-shadow: 0 2px 8px rgba(91,134,229,0.10);
     transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+    
+    i {
+        margin-right: 5px;
+        font-size: 12px;
+    }
 }
+
 .read:hover {
     background: linear-gradient(90deg, #2bc0b6 0%, #3a7bd5 100%);
-    box-shadow: 0 6px 24px rgba(91,134,229,0.16);
-    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 12px rgba(91,134,229,0.16);
+    transform: translateY(-1px) scale(1.02);
 }
 
 .notification-container {
@@ -265,11 +283,11 @@ export default {
 }
 
 .notification-table {
-    width: 92%;
+    width: 90%;
     max-width: 1200px;
-    border-radius: 20px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 6px 24px rgba(91,134,229,0.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     background: #fff;
 }
 
@@ -277,41 +295,52 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #f0f4fa;
+    border-bottom: 1px solid #f0f0f0;
     transition: all 0.3s ease;
+    
     &:last-child {
         border-bottom: none;
     }
+    
     div {
-        padding: 18px 24px;
+        padding: 16px 20px;
         flex: 1;
         min-width: 120px;
         color: #333;
-        font-size: 15px;
+        font-size: 14px;
     }
+    
     .title {
-        font-weight: 700;
-        color: #2d3a4a;
-        font-size: 15px;
+        font-weight: 600;
+        color: #555;
     }
+    
     .action-buttons {
         display: flex;
         gap: 10px;
         justify-content: flex-start;
     }
+    
     .action-btn {
-        display: inline-block;
-        padding: 7px 20px;
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 16px;
         border-radius: 20px;
-        font-size: 14px;
+        font-size: 13px;
         cursor: pointer;
         transition: all 0.2s;
         font-weight: 600;
+        
+        i {
+            margin-right: 5px;
+        }
+        
         &.delete {
             background: linear-gradient(90deg, #ff758c 0%, #ff7eb3 100%);
             color: #fff;
             border: none;
             box-shadow: 0 2px 8px rgba(255,117,140,0.10);
+            
             &:hover {
                 background: linear-gradient(90deg, #ff5e62 0%, #ff9966 100%);
                 transform: scale(1.06);
@@ -319,32 +348,42 @@ export default {
         }
     }
 }
+
 .save-book:hover {
-    background-color: #f6faff;
+    background-color: #f9f9f9;
 }
+
 .save-book.header {
-    background-color: #f0f6ff;
-    border-bottom: 1.5px solid #dbeafe;
+    background-color: #f5f7fa;
+    border-bottom: 1px solid #ebeef5;
+    
     &:hover {
-        background-color: #f0f6ff;
+        background-color: #f5f7fa;
     }
 }
 
 .status-tag {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     min-width: 48px;
-    padding: 4px 16px;
+    padding: 4px 12px;
     border-radius: 16px;
     font-size: 13px;
-    font-weight: bold;
+    font-weight: 600;
     text-align: center;
     box-shadow: 0 2px 8px rgba(91,134,229,0.06);
-    letter-spacing: 1px;
+    
+    i {
+        margin-right: 5px;
+        font-size: 12px;
+    }
 }
+
 .status-tag.unread {
     background: linear-gradient(90deg, #36d1c4 0%, #5b86e5 100%);
     color: #fff;
 }
+
 .status-tag.read {
     background: #f2f6fc;
     color: #5b86e5;
@@ -353,45 +392,41 @@ export default {
 
 .pager {
     display: flex;
-    margin: 36px 0 0 0;
+    margin: 30px 0;
     justify-content: center;
     align-items: center;
-    ::v-deep .el-pagination {
-        padding: 10px 20px;
-        background: #fff;
-        border-radius: 14px;
-        box-shadow: 0 2px 12px rgba(91,134,229,0.06);
-        .el-pagination__sizes .el-input .el-input__inner {
-            border-radius: 8px;
-        }
-        button, .btn-prev, .btn-next {
-            border-radius: 8px;
-            transition: all 0.2s;
-            &:hover {
-                background-color: rgba(91,134,229,0.10);
-            }
-        }
-        .el-pager li {
-            border-radius: 8px;
-            transition: all 0.2s;
-            &:hover:not(.active) {
-                background-color: rgba(91,134,229,0.10);
-            }
-            &.active {
-                background: linear-gradient(90deg, #36d1c4 0%, #5b86e5 100%);
-                color: #fff;
-                font-weight: bold;
-            }
-        }
-    }
+}
+
+/* 分页组件样式 */
+::v-deep .el-pagination {
+    padding: 15px 0;
+    text-align: center;
+}
+
+::v-deep .el-pagination .btn-prev,
+::v-deep .el-pagination .btn-next,
+::v-deep .el-pager li {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+::v-deep .el-pager li.active {
+    background-color: #ff5722;
+    color: white;
+}
+
+::v-deep .el-pager li:hover:not(.active) {
+    background-color: rgba(255, 87, 34, 0.1);
 }
 
 .el-empty {
     margin: 100px 0;
     transition: all 0.3s;
+    
     ::v-deep .el-empty__image {
         opacity: 0.8;
     }
+    
     ::v-deep .el-empty__description {
         color: #909399;
         font-size: 16px;

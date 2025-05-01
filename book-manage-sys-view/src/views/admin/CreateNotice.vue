@@ -1,14 +1,14 @@
 <template>
     <el-row class="common-container">
-        <el-row style="padding: 10px 16px;">
-            <el-row>
-                <span style="float: right;" class="edit-button" @click="saveOperation">
-                    {{ isUpdate ? '确认修改' : '确认新增' }}
-                </span>
-                <span style="float: right;margin-right: 10px;" class="channel-button" @click="returnToDo">
-                    取消操作
-                </span>
-            </el-row>
+        <el-row class="action-bar">
+            <div class="btn-group">
+                <el-button class="cancel-btn" size="small" @click="returnToDo">
+                    <i class="el-icon-close"></i> 取消操作
+                </el-button>
+                <el-button class="confirm-btn" type="primary" size="small" @click="saveOperation">
+                    <i class="el-icon-check"></i> {{ isUpdate ? '确认修改' : '确认新增' }}
+                </el-button>
+            </div>
         </el-row>
         <el-row style="margin: 10px 16px;">
             <el-row class="form-item">
@@ -107,30 +107,57 @@ export default {
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
 }
 
-.edit-button {
-    display: inline-block;
-    padding: 7px 15px;
-    background-color: #409EFF;
+.action-bar {
+    padding: 10px 16px;
+    display: flex;
+    justify-content: flex-end;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 15px;
+}
+
+.btn-group {
+    display: flex;
+    gap: 10px;
+}
+
+.cancel-btn {
+    color: #606266;
+    background-color: #f5f7fa;
+    border-color: #dcdfe6;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 13px;
+    transition: all 0.3s;
+    
+    &:hover {
+        color: #409EFF;
+        border-color: #c6e2ff;
+        background-color: #ecf5ff;
+    }
+    
+    &:focus {
+        outline: none;
+    }
+}
+
+.confirm-btn {
     color: white;
-    border-radius: 4px;
-    cursor: pointer;
+    background-color: #409EFF;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 13px;
+    border: none;
+    box-shadow: 0 2px 6px rgba(64, 158, 255, 0.2);
     transition: all 0.3s;
     
     &:hover {
         background-color: #66b1ff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(64, 158, 255, 0.3);
     }
-}
-
-.channel-button {
-    display: inline-block;
-    padding: 7px 15px;
-    background-color: #f2f6fc;
-    color: #606266;
-    border-radius: 4px;
-    cursor: pointer;
     
-    &:hover {
-        background-color: #edf2fc;
+    &:focus {
+        outline: none;
     }
 }
 
