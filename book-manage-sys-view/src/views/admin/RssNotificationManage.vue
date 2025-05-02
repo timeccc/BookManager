@@ -23,7 +23,7 @@
                 <el-table-column prop="createTime" width="168" label="发送时间"></el-table-column>
                 <el-table-column label="操作" fixed="right" width="90">
                     <template slot-scope="scope">
-                        <span class="text-button" @click="handleDelete(scope.row)">删除</span>
+                        <span class="text-button" style="color: #F56C6C;" @click="handleDelete(scope.row)">删除</span>
                     </template>
                 </el-table-column>
             </el-table>

@@ -156,22 +156,22 @@ export default {
     padding: 20px;
     box-sizing: border-box;
     overflow: auto;
-    background-color: #f7f8fa;
+    background-color: #ffffff;
 }
 
 .dashboard-card {
     background-color: #ffffff;
     border-radius: 16px;
     padding: 20px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
     border: 1px solid rgba(240, 240, 240, 0.8);
     margin-bottom: 24px;
     overflow: hidden;
     
     &:hover {
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        transform: translateY(-2px);
     }
 }
 

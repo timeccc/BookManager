@@ -17,8 +17,9 @@ const routes = [
     path: "/admin",
     component: () => import(`@/views/admin/Home.vue`),
     meta: { requireAuth: true },
+    redirect: "/adminLayout",
     children: [
-      { path: "/adminLayout", name: '仪表盘', icon: 'el-icon-pie-chart', component: () => import(`@/views/admin/Main.vue`), meta: { requireAuth: true } },
+      { path: "/adminLayout", name: '数据总览', icon: 'el-icon-pie-chart', component: () => import(`@/views/admin/Main.vue`), meta: { requireAuth: true } },
       { path: "/userManage", name: '用户管理', icon: 'el-icon-user-solid', component: () => import(`@/views/admin/UserManage.vue`), meta: { requireAuth: true } },
       { path: "/bookManage", name: '书籍管理', icon: 'el-icon-tickets', component: () => import(`@/views/admin/BookManage.vue`), meta: { requireAuth: true } },
       { path: "/bookOrderHistoryManage", name: '借阅记录', icon: 'el-icon-view', component: () => import(`@/views/admin/BookOrderHistoryManage.vue`), meta: { requireAuth: true } },
@@ -35,6 +36,7 @@ const routes = [
     path: "/user",
     component: () => import(`@/views/user/Home.vue`),
     meta: { requireAuth: true },
+    redirect: "/main",
     children: [
       { name: '留言', path: "/main", show: true, icon: 'el-icon-chat-dot-round', component: () => import(`@/views/user/Main.vue`), meta: { requireAuth: true } },
       { name: '借阅', path: "/bookOperation", show: true, icon: 'el-icon-tickets', component: () => import(`@/views/user/BookOperation.vue`), meta: { requireAuth: true } },

@@ -1,19 +1,13 @@
 <template>
-    <span class="logo">
-        <el-image style="width: 34px; height: 34px; margin-right: 5px" src="/logo.png" fit="fill"></el-image>
-        <div v-if="!flag">
-            <span :style="{ color: bag, display: 'block' }">{{ name }}</span>
-        </div>
-    </span>
+    <div class="logo-container" :class="{'logo-collapsed': flag}">
+        <img src="/logo.png" class="logo-image" alt="Logo">
+        <span v-if="!flag" class="logo-text" :style="{ color: bag }">{{ name }}</span>
+    </div>
 </template>
+
 <script>
 export default {
     name: "Logo",
-    data() {
-        return {
-
-        }
-    },
     props: {
         name:{
             type: String,
@@ -26,34 +20,47 @@ export default {
         bag: {
             type: String,
             default: '#1c1c1c'
-        },
-    },
-    created() {
-
-    },
-    methods: {
-
+        }
     }
 };
 </script>
+
 <style scoped lang="scss">
-.logo {
-    color: rgb(8, 24, 16) !important;
-    font-weight: bold;
-    font-size: 26px;
+.logo-container {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap;
-    user-select: none;
+    padding: 0 16px;
+    height: 100%;
+    transition: all 0.3s ease;
+    
+    .logo-image {
+        width: 42px;
+        height: 42px;
+        object-fit: contain;
+        transition: all 0.3s ease;
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
+    }
+    
+    .logo-text {
+        margin-left: 12px;
+        font-family: "汉仪晓波花月圆", "Microsoft YaHei", sans-serif;
+        font-weight: 600;
+        font-size: 19px;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+}
 
-    span {
-        margin-left: 10px;
-        color: #333;
-        font-family: "汉仪晓波花月圆", Arial, sans-serif;
-        font-weight: 700;
-        font-size: 22px;
-        letter-spacing: 1px;
-        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+.logo-collapsed {
+    justify-content: center;
+    padding: 0;
+    
+    .logo-image {
+        width: 48px;
+        height: 48px;
+        margin: 0;
     }
 }
 </style>

@@ -7,10 +7,10 @@
                     placeholder="书籍类别名" clearable @clear="handleFilterClear">
                 </el-input>
                 <el-button size="small" class="customer"
-                    style="background-color: rgb(235, 237, 245);color: rgb(43, 121, 203);border: none;" type="primary"
+                    style="background-color: rgb(235, 237, 245);color: white;border: none;" type="primary"
                     @click="handleFilter">立即查询</el-button>
                 <el-button size="small"
-                    style="background-color: rgb(235, 237, 245);color: rgb(43, 121, 203);border: none;" class="customer"
+                    style="background-color: rgb(235, 237, 245);color: white;border: none;" class="customer"
                     type="info" @click="add()">新增书籍类别</el-button>
             </el-row>
         </el-row>
@@ -19,8 +19,8 @@
                 <el-table-column prop="name"  label="书籍类别名"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope" width="90">
-                        <span class="text-button" @click="handleEdit(scope.row)">编辑</span>
-                        <span class="text-button" @click="handleDelete(scope.row)">删除</span>
+                        <span class="text-button" style="color: #409EFF;" @click="handleEdit(scope.row)">编辑</span>
+                        <span class="text-button" style="color: #F56C6C;" @click="handleDelete(scope.row)">删除</span>
                     </template>
                 </el-table-column>
             </el-table>
@@ -255,6 +255,50 @@ export default {
     color: rgb(102, 102, 102);
     font-weight: 900;
     width: 100%;
+}
+
+/* 日期选择器美化样式 */
+.custom-date-picker {
+    ::v-deep .el-input__inner {
+        border-radius: 4px;
+        border-color: #dcdfe6;
+        transition: all 0.2s;
+        
+        &:hover {
+            border-color: #c0c4cc;
+        }
+        
+        &:focus {
+            border-color: #409EFF;
+            box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+        }
+    }
+    
+    ::v-deep .el-range-separator {
+        color: #606266;
+        padding: 0 5px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    ::v-deep .el-range-input {
+        font-size: 13px;
+        color: #606266;
+    }
+    
+    ::v-deep .el-range__icon {
+        color: #c0c4cc;
+    }
+    
+    ::v-deep .el-range__close-icon {
+        color: #c0c4cc;
+        font-size: 14px;
+        
+        &:hover {
+            color: #909399;
+        }
+    }
 }
 
 /* 对话框样式 */

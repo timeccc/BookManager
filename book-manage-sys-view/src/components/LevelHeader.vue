@@ -1,37 +1,38 @@
 <template>
-    <div class="main">
-        <span class="header-left">
-            <span class="operation-span" @click="operation">
-                <i v-if="!showFlag" class="el-icon-s-fold i-folder"></i>
-                <i v-else class="el-icon-s-unfold i-folder"></i>
-            </span>
-        </span>
-        <span>
-            <span class="operation-span-tag">
-                &nbsp;&nbsp;{{ tag == '' ? '元数据' : tag }}
-            </span>
-        </span>
-        <span class="user-block">
-            <el-dropdown class="user-dropdown">
-                <span class="el-dropdown-link" style="display: flex; align-items: center;">
-                    <el-avatar :size="35" :src="userInfo.url" style="margin-top: 0;"></el-avatar>
-                    <span class="userName" style="margin-left: 5px;font-size: 16px;">{{ userInfo.name }}</span>
-                    <i class="el-icon-arrow-down el-icon--right" style="margin-left: 5px;"></i>
-                </span>
+    <div class="header-container">
+        <div class="header-left">
+            <button class="collapse-button" @click="operation">
+                <i :class="showFlag ? 'el-icon-s-unfold' : 'el-icon-s-fold'"></i>
+            </button>
+            <h1 class="page-title">{{ tag || '仪表盘' }}</h1>
+        </div>
+        
+        <div class="header-right">
+            <el-dropdown trigger="click">
+                <div class="user-profile">
+                    <el-avatar :size="32" :src="userInfo.url"></el-avatar>
+                    <span class="username">{{ userInfo.name }}</span>
+                    <i class="el-icon-arrow-down"></i>
+                </div>
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item icon="el-icon-user-solid" @click.native="userCenterPanel">个人资料</el-dropdown-item>
-                    <el-dropdown-item icon="el-icon-s-fold" @click.native="loginOut">退出登录</el-dropdown-item>
+                    <el-dropdown-item @click.native="userCenterPanel">
+                        <i class="el-icon-user"></i>个人资料
+                    </el-dropdown-item>
+                    <el-dropdown-item @click.native="loginOut">
+                        <i class="el-icon-switch-button"></i>退出登录
+                    </el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-        </span>
+        </div>
     </div>
 </template>
+
 <script>
 export default {
     name: "LevelHeader",
     data() {
         return {
-            showFlag: sessionStorage.getItem('flag') === 'true',
+            showFlag: sessionStorage.getItem('flag') === 'true'
         };
     },
     props: {
@@ -43,19 +44,13 @@ export default {
         userInfo: {
             type: Object,
             required: true,
-            default: {}
-        },
-        bag: {
-            type: String,
-            default: ''
-        },
+            default: () => ({})
+        }
     },
     methods: {
-        // 个人中心，传回父组件处理
         userCenterPanel() {
             this.$emit('eventListener', 'center');
         },
-        // 退出登录，传回父组件处理
         loginOut() {
             this.$emit('eventListener', 'loginOut');
         },
@@ -63,67 +58,105 @@ export default {
             this.showFlag = !this.showFlag;
             sessionStorage.setItem('flag', this.showFlag);
             this.$emit('selectOperation', this.showFlag);
-        },
+        }
     }
 };
 </script>
+
 <style scoped lang="scss">
-.main {
-    padding: 20px 20px;
+.header-container {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 100%;
     width: 100%;
-    position: relative;
-    background-color: rgb(255, 255, 255);
-    color: #666;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.02);
     box-sizing: border-box;
+}
 
-    .header-left {
-        margin-left: 0;
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.collapse-button {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background-color: #f5f7fa;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    margin-right: 18px;
+    
+    &:hover {
+        background-color: #ecf5ff;
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(64, 158, 255, 0.15);
     }
-
-    .operation-span-tag {
-        padding: 9px 10px;
-        border-radius: 3px;
-        font-size: 22px;
-        font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-        user-select: none;
-        margin-top: 15px;
+    
+    i {
+        font-size: 20px;
+        color: #409EFF;
     }
+}
 
-    .operation-span:hover {
-        background-color: rgb(248, 248, 248);
+.page-title {
+    font-family: '未来圆SC','PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #303133;
+    margin: 0;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    
+    &:hover {
+        background-color: #f5f7fa;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     }
+    
+    .username {
+        margin: 0 10px;
+        font-size: 15px;
+        color: #303133;
+        font-weight: 500;
+    }
+    
+    i {
+        font-size: 14px;
+        color: #909399;
+    }
+}
 
-    .operation-span {
-        margin-top: 20px;
-        padding: 6px;
-        border-radius: 3px;
-        user-select: none;
-
+.el-dropdown-menu {
+    padding: 8px 0;
+    border-radius: 8px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    
+    .el-dropdown-item {
+        font-size: 14px;
+        padding: 10px 20px;
+        
         i {
-            margin: 5px;
-            font-size: 20px;
-            color: #333;
-        }
-    }
-
-    span {
-        color: #333;
-    }
-
-    .user-block {
-        position: absolute;
-        right: 20px;
-
-        .userName {
-            display: inline-block;
-            vertical-align: middle;
-            font-size: 14px;
-            cursor: pointer;
-            user-select: none;
+            margin-right: 10px;
+            font-size: 16px;
+            color: #409EFF;
         }
     }
 }

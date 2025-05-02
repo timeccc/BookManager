@@ -40,8 +40,8 @@
                 </el-table-column>
                 <el-table-column prop="isLogin" width="108" label="封号">
                     <template slot-scope="scope">
-                        <i v-if="scope.row.isLogin" style="margin-right: 5px;" class="el-icon-warning"></i>
-                        <i v-else style="margin-right: 5px;color: rgb(253, 199, 50);" class="el-icon-success"></i>
+                        <i v-if="scope.row.isLogin" style="margin-right: 5px;color: #E6A23C;" class="el-icon-warning"></i>
+                        <i v-else style="margin-right: 5px;color: #67C23A;" class="el-icon-success"></i>
                         <el-tooltip v-if="scope.row.isLogin" class="item" effect="dark"
                             content="账号一经封号，不可登录系统。经由管理员解禁后，方可登录" placement="bottom-end">
                             <span style="text-decoration: underline;text-decoration-style: dashed;">已封号</span>
@@ -51,8 +51,8 @@
                 </el-table-column>
                 <el-table-column prop="isWord" width="108" label="禁言">
                     <template slot-scope="scope">
-                        <i v-if="scope.row.isWord" style="margin-right: 5px;" class="el-icon-warning"></i>
-                        <i v-else style="margin-right: 5px;color: rgb(253, 199, 50);" class="el-icon-success"></i>
+                        <i v-if="scope.row.isWord" style="margin-right: 5px;color: #E6A23C;" class="el-icon-warning"></i>
+                        <i v-else style="margin-right: 5px;color: #67C23A;" class="el-icon-success"></i>
                         <el-tooltip v-if="scope.row.isWord" class="item" effect="dark"
                             content="账号一经禁言，不可评论互动。经由管理员解禁后，方可评论" placement="bottom-end">
                             <span style="text-decoration: underline;text-decoration-style: dashed;">已禁言</span>
@@ -63,9 +63,9 @@
                 <el-table-column :sortable="true" prop="createTime" width="168" label="注册于"></el-table-column>
                 <el-table-column label="操作" width="170">
                     <template slot-scope="scope">
-                        <span class="text-button" @click="handleStatus(scope.row)">账号状态</span>
+                        <span class="text-button" style="color: #E6A23C;" @click="handleStatus(scope.row)">账号状态</span>
                         <span class="text-button" @click="handleEdit(scope.row)">编辑</span>
-                        <span class="text-button" @click="handleDelete(scope.row)">删除</span>
+                        <span class="text-button" style="color: #F56C6C;" @click="handleDelete(scope.row)">删除</span>
                     </template>
                 </el-table-column>
             </el-table>

@@ -91,28 +91,33 @@
                     :total="totalCount">
                 </el-pagination>
         </div>
-        <el-dialog :show-close="false" :visible.sync="dialogOperation" width="18%">
-            <div style="padding:20px 20px 20px 15px;">
-                <div style="margin-bottom: 10px;">
-                    <div class="point">借书数量</div>
-                    <el-input-number style="width: 100%;" size="small" v-model="deadlineNum" :min="1" :max="10"
-                        label="数量"></el-input-number>
-                </div>
-                <div>
-                    <div class="point">归还日期</div>
-                    <el-date-picker style="width: 100%;" size="small" v-model="data.returnTime" type="date"
-                        placeholder="选择日期">
-                    </el-date-picker>
+        <el-dialog :show-close="false" :visible.sync="dialogOperation" width="280px" custom-class="borrow-dialog">
+            <div class="dialog-content">
+                <h3 class="dialog-title">借阅书籍</h3>
+                <div class="form-container">
+                    <div class="form-item">
+                        <div class="point">借书数量</div>
+                        <el-input-number class="custom-input" size="small" v-model="deadlineNum" :min="1" :max="10"
+                            label="数量" controls-position="right"></el-input-number>
+                    </div>
+                    <div class="form-item">
+                        <div class="point">归还日期</div>
+                        <el-date-picker class="custom-input custom-date-picker" size="small" v-model="data.returnTime" type="date"
+                            placeholder="选择日期">
+                        </el-date-picker>
+                    </div>
                 </div>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <span class="channel-button" @click="dialogOperation = false">
-                    取消操作
-                </span>
-                <span class="edit-button" @click="addOperation()">
-                    确定借阅
-                </span>
-            </span>
+            <div class="dialog-footer">
+                <span style="display: inline-block; padding: 7px 18px; border-radius: 20px; cursor: pointer; font-size: 14px; margin: 0 8px; background-color: #f5f5f5; color: #606266; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: none; transition: all 0.3s;" 
+                      onmouseover="this.style.backgroundColor='#e8e8e8'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'"
+                      onmouseout="this.style.backgroundColor='#f5f5f5'; this.style.transform=''; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'"
+                      @click="dialogOperation = false">取消</span>
+                <span style="display: inline-block; padding: 7px 18px; border-radius: 20px; cursor: pointer; font-size: 14px; margin: 0 8px; background-color: #ff5722; color: white; font-weight: 500; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: none; transition: all 0.3s;"
+                      onmouseover="this.style.backgroundColor='#ff6e40'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'"
+                      onmouseout="this.style.backgroundColor='#ff5722'; this.style.transform=''; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'"
+                      @click="addOperation()">确定</span>
+            </div>
         </el-dialog>
     </el-row>
 </template>
@@ -590,32 +595,28 @@ export default {
     font-weight: 500;
 }
 
-.channel-button, .edit-button {
-    display: inline-block;
-    padding: 8px 16px;
-    border-radius: 16px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-    margin: 0 5px;
-}
-
 .channel-button {
     background-color: #f4f4f5;
     color: #606266;
-}
-
-.edit-button {
-    background-color: #ff5722;
-    color: white;
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    margin: 0 5px;
 }
 
 .channel-button:hover {
     background-color: #e9e9eb;
 }
 
-.edit-button:hover {
+.confirm-button {
+    background-color: #ff5722;
+    color: white;
+}
+
+.confirm-button:hover {
     background-color: #ff7043;
 }
 
@@ -639,8 +640,16 @@ export default {
     width: 100%;
 }
 
-::v-deep .el-date-editor {
-    width: 100%;
+/* 修改日期选择器样式，隐藏图标 */
+::v-deep .custom-date-picker .el-input__icon {
+    display: none;
+}
+
+::v-deep .custom-date-picker .el-input__inner {
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    padding-left: 12px;
+    transition: all 0.3s;
 }
 
 /* 分页组件样式 */
@@ -663,5 +672,96 @@ export default {
 
 ::v-deep .el-pagination .el-select .el-input {
     border-radius: 8px;
+}
+
+/* 修复日期选择器文字重叠问题 */
+::v-deep .custom-date-picker .el-input__inner {
+    padding-left: 30px;
+}
+
+::v-deep .custom-date-picker .el-input__icon {
+    width: 25px;
+}
+
+/* 弹出框样式优化 */
+.borrow-dialog {
+    overflow: hidden;
+}
+
+::v-deep .el-dialog {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.dialog-content {
+    padding: 20px 15px 10px;
+}
+
+.dialog-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    margin: 0 0 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed #eee;
+}
+
+.form-container {
+    margin-bottom: 10px;
+}
+
+.form-item {
+    margin-bottom: 15px;
+}
+
+.point {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.custom-input {
+    width: 100%;
+}
+
+/* 日期选择器样式 */
+::v-deep .custom-date-picker .el-input__icon {
+    display: none;
+}
+
+::v-deep .custom-date-picker .el-input__inner {
+    padding-left: 12px;
+}
+
+::v-deep .custom-input .el-input__inner {
+    border-radius: 6px;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: center;
+    padding: 12px 0;
+    border-top: 1px solid #f0f0f0;
+    background-color: #fafafa;
+}
+
+.dialog-btn {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+    margin: 0 8px;
+}
+
+.cancel-btn {
+    background-color: #f4f4f5;
+    color: #606266;
+}
+
+.confirm-btn {
+    background-color: #ff5722;
+    color: white;
 }
 </style>

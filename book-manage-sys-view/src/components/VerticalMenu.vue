@@ -1,9 +1,8 @@
 <template>
-	<el-menu :collapse-transition="false" :collapse="flag" class="glass-menu"
+	<el-menu :collapse-transition="false" :collapse="flag" class="admin-menu"
 		:default-active="currentRoute" :background-color="bag" text-color="#333" @select="handleSelect">
-		<el-menu-item v-for="(item, index) in routes" :key="index" style="width: 100%;"
-			v-if="!item.isHidden" :index="item.path"
-			:class="{ 'is-active': isActive(item.path) }">
+		<el-menu-item v-for="(item, index) in routes" :key="index" v-if="!item.isHidden" :index="item.path"
+			:class="{ 'active-menu-item': isActive(item.path) }">
 			<i :class="item.icon"></i>
 			<span slot="title">{{ item.name }}</span>
 		</el-menu-item>
@@ -14,9 +13,7 @@ export default {
 	name: 'AdminMenu',
 	data() {
 		return {
-			activeIndex: "1",
-			isCollapse: true,
-			selectedMenuItem: '',
+			activeIndex: "1"
 		}
 	},
 	computed: {
@@ -59,132 +56,252 @@ export default {
 };
 </script>
 
-<style scoped>
-.glass-menu {
-    border-right: none !important;
-    width: 100% !important; /* 确保菜单始终占满容器 */
-    max-width: 220px;
-    min-width: 200px; /* 设置最小宽度，避免缩放问题 */
-    padding: 5px 12px;
-    background-color: transparent !important;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(31, 38, 135, 0.08);
-    margin: 15px 0 10px 5px; /* 增加上边距让导航栏下移 */
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-sizing: border-box; /* 确保padding不会影响宽度计算 */
+<style scoped lang="scss">
+// 定义变量
+$primary-color: #409EFF;
+$secondary-color: #64B5F6;
+$transition-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
+$border-radius: 16px;
+$shadow-normal: 0 6px 20px rgba(0, 0, 0, 0.06);
+$shadow-active: 0 8px 24px rgba(64, 158, 255, 0.3);
+$shadow-active-pulse: 0 10px 30px rgba(64, 158, 255, 0.5);
+
+// 共用动画
+@keyframes subtle-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
 }
 
-/* Element UI菜单项默认焦点样式覆盖 */
-.el-menu-item.is-active {
-    color: white !important;
+@keyframes pulseActive {
+    0%, 100% { box-shadow: $shadow-active; }
+    50% { box-shadow: $shadow-active-pulse; }
 }
 
-.is-active {
-	background: linear-gradient(135deg, rgba(81, 136, 253, 0.9), rgba(124, 183, 251, 0.9)) !important;
-	color: white !important;
-	font-weight: bold;
-	border-radius: 12px;
-	box-shadow: 0 4px 15px rgba(81, 136, 253, 0.3);
-	position: relative;
-	overflow: hidden;
-	transition: all 0.3s ease;
+@keyframes menu-popup {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.is-active i, .is-active span {
-    color: white !important;
+@keyframes menu-item-slide {
+    to { opacity: 1; transform: translateX(0); }
 }
 
-.is-active::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
+// 基本菜单样式
+.admin-menu {
+    border-right: none;
     width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: 0.5s;
-    animation: shine 3s infinite;
-}
-
-@keyframes shine {
-    0% {
-        left: -100%;
+    background-color: transparent;
+    padding: 10px 12px 10px 16px;
+    box-sizing: border-box;
+    
+    // 菜单项通用样式
+    .el-menu-item {
+        height: 50px;
+        line-height: 50px;
+        margin: 8px auto;
+        border-radius: $border-radius;
+        transition: all 0.4s $transition-bezier;
+        font-size: 15px;
+        padding: 0 18px;
+        overflow: hidden;
+        position: relative;
+        width: calc(100% - 16px);
+        margin-right: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        box-sizing: border-box;
+        
+        // 悬浮背景
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: $border-radius;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.4s $transition-bezier;
+            background: linear-gradient(135deg, rgba(235, 242, 255, 0.9), rgba(235, 242, 255, 0.7));
+            transform: scale(0.96);
+        }
+        
+        // 悬浮效果
+        &:hover {
+            background-color: transparent;
+            color: $primary-color;
+            box-shadow: $shadow-normal;
+            transform: translateY(-2px);
+            
+            &::before {
+                opacity: 1;
+                transform: scale(1);
+            }
+            
+            i {
+                color: $primary-color;
+                transform: scale(1.1) rotate(5deg);
+            }
+        }
+        
+        &:focus {
+            background-color: transparent;
+        }
+        
+        // 图标样式
+        i {
+            font-size: 18px;
+            margin-right: 12px;
+            color: #555;
+            transition: all 0.4s $transition-bezier;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        // 文本样式
+        span {
+            font-weight: 500;
+            color: #333;
+            transition: all 0.3s ease;
+            letter-spacing: 0.2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transform-origin: left center;
+        }
     }
-    35% {
-        left: 100%;
+    
+    // 激活状态样式
+    .active-menu-item {
+        background: linear-gradient(135deg, $primary-color, $secondary-color);
+        color: white;
+        font-weight: bold;
+        box-shadow: $shadow-active;
+        border-radius: $border-radius;
+        transform: translateY(-2px);
+        animation: pulseActive 2s infinite;
+        
+        &::before {
+            opacity: 0;
+        }
+        
+        i, span {
+            color: white;
+        }
+        
+        i {
+            animation: subtle-bounce 2s infinite;
+        }
     }
-    100% {
-        left: 100%;
-    }
 }
 
-.el-menu-item,
-.el-submenu__title {
-	height: 50px !important;
-	line-height: 50px !important;
-	user-select: none;
-	color: #333;
-	transition: all 0.3s ease;
-	font-size: 15px;
-	letter-spacing: 0.5px;
-}
-
-.el-menu-item i {
-    font-size: 18px !important;
-    margin-right: 5px;
-    color: #555;
-    transition: all 0.3s ease;
-}
-
-.el-menu-item:focus {
-    background-color: transparent !important;
-}
-
-.el-menu-item:hover {
-	box-sizing: border-box;
-	border-radius: 12px;
-	background: rgba(235, 242, 255, 0.7) !important;
-	transform: translateY(-2px);
-	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.07);
-	color: #3a8ee6 !important;
-}
-
-.el-menu-item:hover i {
-    color: #3a8ee6;
-}
-
-.el-menu-item {
-	height: 50px !important;
-	line-height: 50px !important;
-	margin: 6px 0;
-	border-radius: 12px;
-	padding: 0 15px;
-	position: relative;
-	overflow: hidden;
-}
-
-.el-menu-item span {
-    font-weight: 500;
-	color: #333;
-	transition: all 0.3s ease;
-}
-
-/* 折叠模式下的样式优化 */
+// 折叠状态样式
 .el-menu--collapse {
-    width: auto !important;
-    min-width: 70px !important;
+    width: 90px;
+    min-width: 90px;
+    padding: 10px 8px;
+    
+    .el-menu-item {
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        line-height: 50px;
+        margin: 8px auto;
+        border-radius: $border-radius;
+        margin-left: auto;
+        margin-right: auto;
+        width: 60px;
+        min-width: 60px;
+        transition: all 0.4s $transition-bezier;
+        
+        i {
+            margin: 0;
+            font-size: 22px;
+            position: static;
+            transition: all 0.4s $transition-bezier;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        span {
+            display: none;
+        }
+        
+        &:hover {
+            transform: translateY(-2px) scale(1.05);
+            
+            i {
+                transform: scale(1.15) rotate(5deg);
+            }
+        }
+    }
+    
+    .active-menu-item {
+        background: linear-gradient(135deg, $primary-color, $secondary-color);
+        box-shadow: $shadow-active;
+        animation: pulseActive 2s infinite;
+        
+        i {
+            color: white;
+            animation: subtle-bounce 2s infinite;
+        }
+    }
 }
 
-.el-menu--collapse .el-menu-item {
-    padding: 0 !important;
-    text-align: center;
+// 其他样式修复和增强
+.el-menu-item.is-active {
+    border-radius: $border-radius;
 }
 
-.el-menu--collapse .el-menu-item i {
-    margin: 0 !important;
-    font-size: 22px !important;
+.el-menu--collapse .el-tooltip {
+    padding: 0;
+    width: 60px;
+    min-width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.el-menu {
+    transition: width 0.4s $transition-bezier, 
+                padding 0.4s $transition-bezier, 
+                min-width 0.4s $transition-bezier;
+}
+
+.el-menu-item-group__title {
+    display: none;
+}
+
+// 弹出菜单动画
+.el-menu--popup {
+    min-width: 200px;
+    border-radius: 8px;
+    overflow: hidden;
+    animation: menu-popup 0.3s $transition-bezier;
+    
+    .el-menu-item {
+        height: 46px;
+        line-height: 46px;
+        margin: 4px 0;
+        animation: menu-item-slide 0.3s ease forwards;
+        opacity: 0;
+        transform: translateX(-10px);
+        
+        @for $i from 1 through 10 {
+            &:nth-child(#{$i}) {
+                animation-delay: #{$i * 0.05}s;
+            }
+        }
+    }
+}
+
+// 隐藏提示
+.el-tooltip__popper {
+    display: none;
 }
 </style>

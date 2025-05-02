@@ -7,8 +7,9 @@
                     @clear="handleFilterClear">
                 </el-input>
                 <span class="top-bar">发布时间</span>
-                <el-date-picker size="small" style="margin-left: 10px;width: 220px;" v-model="searchTime"
-                    type="daterange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间">
+                <el-date-picker class="custom-date-picker" size="small" style="width: 240px;" v-model="searchTime"
+                    type="daterange" value-format="yyyy-MM-dd" range-separator=" 至 " 
+                    start-placeholder="起始日期" end-placeholder="结束日期">
                 </el-date-picker>
                 <el-button size="small" class="customer"
                     style="margin-left: 10px;background-color: rgb(235, 237, 245);color: rgb(43, 121, 203);border: none;" type="primary"
@@ -24,8 +25,8 @@
                 <el-table-column prop="createTime" width="188" label="发布时间"></el-table-column>
                 <el-table-column label="操作" width="120">
                     <template slot-scope="scope">
-                        <span class="text-button" @click="handleEdit(scope.row)">修改</span>
-                        <span class="text-button" @click="handleDelete(scope.row)">删除</span>
+                        <span class="text-button" style="color: #409EFF;" @click="handleEdit(scope.row)">修改</span>
+                        <span class="text-button" style="color: #F56C6C;" @click="handleDelete(scope.row)">删除</span>
                     </template>
                 </el-table-column>
             </el-table>
@@ -199,9 +200,11 @@ export default {
 }
 
 .top-bar {
-    margin-right: 8px;
-    font-size: 14px;
     color: #606266;
+    font-size: 14px;
+    margin-right: 8px;
+    line-height: 32px;
+    font-weight: 500;
 }
 
 .text-button {
@@ -221,5 +224,49 @@ export default {
     overflow: hidden;
     margin-bottom: 20px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* 日期选择器美化样式 */
+.custom-date-picker {
+    ::v-deep .el-input__inner {
+        border-radius: 4px;
+        border-color: #dcdfe6;
+        transition: all 0.2s;
+        
+        &:hover {
+            border-color: #c0c4cc;
+        }
+        
+        &:focus {
+            border-color: #409EFF;
+            box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+        }
+    }
+    
+    ::v-deep .el-range-separator {
+        color: #606266;
+        padding: 0 5px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    ::v-deep .el-range-input {
+        font-size: 13px;
+        color: #606266;
+    }
+    
+    ::v-deep .el-range__icon {
+        color: #c0c4cc;
+    }
+    
+    ::v-deep .el-range__close-icon {
+        color: #c0c4cc;
+        font-size: 14px;
+        
+        &:hover {
+            color: #909399;
+        }
+    }
 }
 </style>

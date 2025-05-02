@@ -3,11 +3,12 @@
         <el-row style="padding: 10px 16px;">
             <el-row>
                 <span class="top-bar">订阅时间</span>
-                <el-date-picker size="small" style="width: 220px;" v-model="searchTime" type="daterange"
-                    range-separator="至" start-placeholder="起始时间" end-placeholder="结束时间">
+                <el-date-picker class="custom-date-picker" size="small" style="width: 240px;" v-model="searchTime" type="daterange"
+                    value-format="yyyy-MM-dd"
+                    range-separator=" 至 " start-placeholder="起始日期" end-placeholder="结束日期">
                 </el-date-picker>
                 <el-button size="small" class="customer"
-                    style="margin-left: 10px;background-color: rgb(235, 237, 245);color: rgb(43, 121, 203);border: none;" type="primary"
+                    style="margin-left: 10px;background-color: rgb(235, 237, 245);color: white;border: none;" type="primary"
                     @click="handleFilter">立即查询</el-button>
             </el-row>
         </el-row>
@@ -206,9 +207,11 @@ export default {
 }
 
 .top-bar {
-    margin-right: 8px;
-    font-size: 14px;
     color: #606266;
+    font-size: 14px;
+    margin-right: 8px;
+    line-height: 32px;
+    font-weight: 500;
 }
 
 .text-button {
@@ -234,5 +237,49 @@ export default {
     width: 50px;
     height: 70px;
     border-radius: 5px;
+}
+
+/* 日期选择器美化样式 */
+.custom-date-picker {
+    ::v-deep .el-input__inner {
+        border-radius: 4px;
+        border-color: #dcdfe6;
+        transition: all 0.2s;
+        
+        &:hover {
+            border-color: #c0c4cc;
+        }
+        
+        &:focus {
+            border-color: #409EFF;
+            box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+        }
+    }
+    
+    ::v-deep .el-range-separator {
+        color: #606266;
+        padding: 0 5px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    ::v-deep .el-range-input {
+        font-size: 13px;
+        color: #606266;
+    }
+    
+    ::v-deep .el-range__icon {
+        color: #c0c4cc;
+    }
+    
+    ::v-deep .el-range__close-icon {
+        color: #c0c4cc;
+        font-size: 14px;
+        
+        &:hover {
+            color: #909399;
+        }
+    }
 }
 </style>

@@ -91,38 +91,99 @@
 
         <!-- 留言对话框 -->
         <el-dialog 
-            title="发表留言" 
             :visible.sync="dialogWordOperation"
             :show-close="false"
-            width="500px">
-            <el-form :model="proposal" ref="proposalForm" label-width="80px">
-                <el-form-item label="留言内容" prop="content" :rules="[
-                    { required: true, message: '请输入留言内容', trigger: 'blur' },
-                    { max: 250, message: '留言内容不能超过250字', trigger: 'blur' }
-                ]">
-                    <el-input 
-                        type="textarea" 
-                        :rows="6" 
-                        placeholder="请输入留言内容，250字以内" 
-                        v-model="proposal.content">
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="是否公开">
-                    <el-radio-group v-model="publishItemSelected">
-                        <el-radio v-for="(item, index) in publishList" :key="index" :label="item">
-                            {{ item }}
-                        </el-radio>
-                    </el-radio-group>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <span class="channel-button" @click="cannel">
-                    取消操作
-                </span>
-                <span class="edit-button" @click="postProposal">
-                    发表留言
-                </span>
-            </span>
+            width="520px"
+            custom-class="modern-dialog"
+            :append-to-body="true">
+            <div class="dialog-container">
+                <!-- 对话框标题区 -->
+                <div class="dialog-header">
+                    <div class="header-icon">
+                        <i class="el-icon-edit"></i>
+                    </div>
+                    <div class="header-content">
+                        <h3 class="header-title">发表留言</h3>
+                        <p class="header-subtitle">分享您的想法和建议</p>
+                    </div>
+                </div>
+                
+                <!-- 表单区域 -->
+                <el-form :model="proposal" ref="proposalForm" class="proposal-form">
+                    <!-- 输入区域 -->
+                    <div class="input-section">
+                        <el-form-item prop="content" :rules="[
+                            { required: true, message: '请输入留言内容', trigger: 'blur' },
+                            { max: 250, message: '留言内容不能超过250字', trigger: 'blur' }
+                        ]">
+                            <el-input 
+                                type="textarea" 
+                                :rows="4" 
+                                placeholder="请输入留言内容，250字以内" 
+                                v-model="proposal.content"
+                                resize="none"
+                                maxlength="250"
+                                show-word-limit
+                                class="content-textarea">
+                            </el-input>
+                        </el-form-item>
+                    </div>
+                    
+                    <!-- 可见性选择区域 -->
+                    <div class="visibility-section">
+                        <div class="section-title">
+                            <i class="el-icon-view"></i>
+                            <span>留言可见性</span>
+                        </div>
+                        
+                        <div class="option-cards">
+                            <div 
+                                class="option-card" 
+                                :class="{'active': publishItemSelected === '公开'}"
+                                @click="publishItemSelected = '公开'">
+                                <div class="card-icon">
+                                    <i class="el-icon-unlock"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h4>公开</h4>
+                                    <p>所有用户可见</p>
+                                </div>
+                                <div class="card-radio">
+                                    <div class="radio-inner" v-if="publishItemSelected === '公开'"></div>
+                                </div>
+                            </div>
+                            
+                            <div 
+                                class="option-card" 
+                                :class="{'active': publishItemSelected === '不公开'}"
+                                @click="publishItemSelected = '不公开'">
+                                <div class="card-icon">
+                                    <i class="el-icon-lock"></i>
+                                </div>
+                                <div class="card-content">
+                                    <h4>不公开</h4>
+                                    <p>仅管理员可见</p>
+                                </div>
+                                <div class="card-radio">
+                                    <div class="radio-inner" v-if="publishItemSelected === '不公开'"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </el-form>
+                
+                <!-- 按钮区域 -->
+                <div class="action-buttons">
+                    <button class="cancel-button" @click="cannel">
+                        <i class="el-icon-close"></i>
+                        <span>取消</span>
+                    </button>
+                    <button class="submit-button" @click="postProposal">
+                        <i class="el-icon-s-promotion"></i>
+                        <span>发表留言</span>
+                    </button>
+                </div>
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -541,20 +602,307 @@ export default {
     gap: 10px;
 }
 
-/* 对话框样式 */
-::v-deep .el-dialog {
-    border-radius: 16px;
+/* 现代化对话框样式 */
+::v-deep .modern-dialog {
+    border-radius: 14px;
     overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
     
-    .el-dialog__header {
-        padding: 16px 20px;
-        border-bottom: 1px solid rgba(0,0,0,0.05);
+    .el-dialog__header,
+    .el-dialog__body {
+        padding: 0;
     }
     
-    .el-dialog__title {
+    .el-dialog__headerbtn {
+        display: none;
+    }
+}
+
+.dialog-container {
+    padding: 0;
+}
+
+.dialog-header {
+    display: flex;
+    align-items: center;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, #ff7043 0%, #ff5722 100%);
+    color: white;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        transform: translate(50%, -50%);
+        z-index: 0;
+    }
+
+    .header-icon {
+        width: 38px;
+        height: 38px;
+        background-color: rgba(255,255,255,0.2);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 14px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        backdrop-filter: blur(5px);
+        position: relative;
+        z-index: 1;
+        
+        i {
+            font-size: 20px;
+            color: white;
+        }
+    }
+    
+    .header-content {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .header-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 3px 0;
+    }
+    
+    .header-subtitle {
+        font-size: 13px;
+        margin: 0;
+        opacity: 0.9;
+    }
+}
+
+.proposal-form {
+    padding: 18px 22px;
+}
+
+.input-section {
+    margin-bottom: 20px;
+    
+    ::v-deep .el-textarea__inner {
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 14px;
+        border: 1px solid #e0e0e0;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+        transition: all 0.3s;
+        
+        &:hover {
+            border-color: #ff9800;
+        }
+        
+        &:focus {
+            border-color: #ff5722;
+            box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.1);
+        }
+    }
+    
+    ::v-deep .el-textarea__word-count {
+        color: #999;
+        font-size: 12px;
+        background: rgba(0,0,0,0.04);
+        padding: 2px 8px;
+        border-radius: 16px;
+        bottom: -22px;
+        right: 5px;
+    }
+}
+
+.visibility-section {
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    
+    .section-title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        
+        i {
+            font-size: 16px;
+            color: #ff5722;
+            margin-right: 6px;
+        }
+        
+        span {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+    }
+}
+
+.option-cards {
+    display: flex;
+    gap: 12px;
+}
+
+.option-card {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background-color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255,87,34,0.05) 0%, rgba(255,152,0,0.05) 100%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        
+        &::before {
+            opacity: 1;
+        }
+    }
+    
+    &.active {
+        border-color: #ff5722;
+        background-color: rgba(255,87,34,0.05);
+        
+        .card-icon {
+            background-color: #ff5722;
+            
+            i {
+                color: white;
+            }
+        }
+        
+        h4 {
+            color: #ff5722;
+        }
+    }
+    
+    .card-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background-color: #f5f5f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        
+        i {
+            font-size: 16px;
+            color: #666;
+        }
+    }
+    
+    .card-content {
+        flex: 1;
+        
+        h4 {
+            margin: 0 0 2px 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            transition: color 0.3s;
+        }
+        
+        p {
+            margin: 0;
+            font-size: 12px;
+            color: #999;
+        }
+    }
+    
+    .card-radio {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        
+        .radio-inner {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ff5722;
+        }
+    }
+    
+    &.active .card-radio {
+        border-color: #ff5722;
+    }
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 22px 22px;
+    gap: 12px;
+    
+    button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        height: 36px;
+        padding: 0 18px;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
         font-weight: 500;
-        font-size: 16px;
-        color: #333;
+        cursor: pointer;
+        transition: all 0.3s;
+        
+        i {
+            font-size: 14px;
+        }
+    }
+    
+    .cancel-button {
+        background-color: #f5f5f5;
+        color: #666;
+        font-size: 14px;
+        
+        &:hover {
+            background-color: #eee;
+            transform: translateY(-2px);
+        }
+    }
+    
+    .submit-button {
+        background: linear-gradient(to right, #ff7043, #ff5722);
+        color: white;
+        font-size: 14px;
+        box-shadow: 0 3px 8px rgba(255,87,34,0.3);
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255,87,34,0.4);
+        }
     }
 }
 

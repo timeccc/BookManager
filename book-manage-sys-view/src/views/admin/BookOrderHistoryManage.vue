@@ -3,11 +3,12 @@
         <el-row style="padding: 10px;margin: 0 10px;">
             <el-row>
                 <span class="top-bar">借阅时间</span>
-                <el-date-picker size="small" style="width: 220px;" v-model="searchTime" type="daterange"
-                    range-separator="至" start-placeholder="起始时间" end-placeholder="结束时间">
+                <el-date-picker class="custom-date-picker" size="small" style="width: 240px;" v-model="searchTime" type="daterange"
+                    value-format="yyyy-MM-dd"
+                    range-separator=" 至 " start-placeholder="起始日期" end-placeholder="结束日期">
                 </el-date-picker>
                 <el-button size="small" class="customer"
-                    style="margin-left: 10px;background-color: rgb(235, 237, 245);color: rgb(43, 121, 203);border: none;" type="primary"
+                    style="margin-left: 10px;background-color: rgb(235, 237, 245);color: white;border: none;" type="primary"
                     @click="handleFilter">立即查询</el-button>
             </el-row>
         </el-row>
@@ -25,7 +26,7 @@
                 <el-table-column prop="createTime" width="168" label="借阅时间"></el-table-column>
                 <el-table-column label="操作" fixed="right" width="90">
                     <template slot-scope="scope">
-                        <span class="text-button" @click="handleDelete(scope.row)">删除</span>
+                        <span class="text-button" style="color: #F56C6C;" @click="handleDelete(scope.row)">删除</span>
                     </template>
                 </el-table-column>
             </el-table>
@@ -137,9 +138,8 @@ export default {
                 let startTime = null;
                 let endTime = null;
                 if (this.searchTime != null && this.searchTime.length === 2) {
-                    const [startDate, endDate] = await Promise.all(this.searchTime.map(date => date.toISOString()));
-                    startTime = `${startDate.split('T')[0]}T00:00:00`;
-                    endTime = `${endDate.split('T')[0]}T23:59:59`;
+                    startTime = `${this.searchTime[0]}T00:00:00`;
+                    endTime = `${this.searchTime[1]}T23:59:59`;
                 }
                 // 请求参数
                 const params = {
@@ -186,6 +186,7 @@ export default {
             this.cover = row.cover;
         },
         handleDelete(row) {
+            this.selectedRows = [];
             this.selectedRows.push(row);
             this.batchDelete();
         }
@@ -197,5 +198,57 @@ export default {
     width: 50px;
     height: 70px;
     border-radius: 5px;
+}
+
+.top-bar {
+    color: #606266;
+    font-size: 14px;
+    margin-right: 8px;
+    line-height: 32px;
+    font-weight: 500;
+}
+
+/* 日期选择器美化样式 */
+.custom-date-picker {
+    ::v-deep .el-input__inner {
+        border-radius: 4px;
+        border-color: #dcdfe6;
+        transition: all 0.2s;
+        
+        &:hover {
+            border-color: #c0c4cc;
+        }
+        
+        &:focus {
+            border-color: #409EFF;
+            box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+        }
+    }
+    
+    ::v-deep .el-range-separator {
+        color: #606266;
+        padding: 0 5px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    ::v-deep .el-range-input {
+        font-size: 13px;
+        color: #606266;
+    }
+    
+    ::v-deep .el-range__icon {
+        color: #c0c4cc;
+    }
+    
+    ::v-deep .el-range__close-icon {
+        color: #c0c4cc;
+        font-size: 14px;
+        
+        &:hover {
+            color: #909399;
+        }
+    }
 }
 </style>

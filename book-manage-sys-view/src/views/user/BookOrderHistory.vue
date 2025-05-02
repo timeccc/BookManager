@@ -1,76 +1,63 @@
 <template>
-    <el-row style="margin-top: 10px;">
+    <el-row class="history-container">
         <!-- 条件搜索 -->
         <div class="word-search">
             <div class="item">
                 <i class="el-icon-search"></i>
-                <input type="text" placeholder="书籍ID" v-model="bookQueryDto.bookId">
+                <input type="text" placeholder="搜索书籍ID" v-model="bookQueryDto.bookId">
                 <span class="search-text" @click="fetchFreshData">搜索</span>
             </div>
         </div>
-        <el-row style="margin: 10px 0;">
+        <div class="books-wrapper">
             <el-row v-if="tableData.length === 0">
-                <el-empty description="暂无书籍借阅历史"></el-empty>
+                <el-empty description="暂无书籍借阅历史" class="empty-data"></el-empty>
             </el-row>
-            <el-row v-else>
-                <div style="margin: 0 auto;width: 1200px;">
-                    <el-col v-for="(book, index) in tableData" :key="index" :span="6">
-                        <div class="item-book">
-                            <div style="display: flex;justify-content: center;">
-                                <img style="width: 100%;max-height: 280px;border-radius: 5px;" :src="book.bookCover"
-                                    alt="">
-                            </div>
-                            <div style="padding: 8px 16px;">
-                                <div style="color: rgb(51,51,51);font-size: 20px;font-weight: bold;margin-block: 4px;">
-                                    <el-tooltip class="item" effect="dark" :content="book.bookName"
-                                        placement="bottom-end">
-                                        <div class="title">{{ book.bookName }}</div>
-                                    </el-tooltip>
-                                </div>
-                                <div class="title" style="margin-block: 8px;">
-                                    <el-tooltip v-if="!book.isReturn" class="item" effect="dark" content="请及时归还"
-                                        placement="bottom-end">
-                                        <span
-                                            style="font-size: 14px;text-decoration: underline;text-decoration-style: dashed;">待归还</span>
-                                    </el-tooltip>
-                                    <span v-else style="font-size: 14px;">已归还</span>
-                                </div>
-                                <div style="margin-block: 6px;font-size: 12px;color: rgb(51,51,51);margin-block: 4px;">
-                                    <div style="font-size: 12px;margin-top: 6px;">
-                                        <div class="title">借阅【{{ book.deadlineNum }}】本</div>
-                                    </div>
-                                    <div>
-                                        <el-tooltip class="item" effect="dark" :content="book.createTime"
-                                            placement="bottom-end">
-                                            <div class="title" style="margin-block: 10px;">
-                                                <span style="margin-right: 5px;">借阅时间：{{ book.createTime }}</span>
-                                            </div>
-                                        </el-tooltip>
-
-                                        <div class="title" style="margin-block: 10px;">
-                                            <span style="margin-right: 5px;">归还时间：{{ book.returnTime }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span class="edit-round" v-if="book.isReturn === false"
-                                        @click="handleReturn(book)">还书</span>
-                                    <span class="edit-round" v-else @click="handleDelete(book)">删除</span>
-                                </div>
+            <el-row v-else class="books-grid">
+                <el-col v-for="(book, index) in tableData" :key="index" :sm="12" :md="8" :lg="6" :xl="6">
+                    <div class="book-card" :class="{'returned': book.isReturn}">
+                        <div class="book-cover">
+                            <img :src="book.bookCover" alt="">
+                            <div class="book-status" :class="{'return-pending': !book.isReturn}">
+                                {{ book.isReturn ? '已归还' : '待归还' }}
                             </div>
                         </div>
-                    </el-col>
-                </div>
-
+                        <div class="book-info">
+                            <h3 class="book-title" :title="book.bookName">{{ book.bookName }}</h3>
+                            <div class="book-quantity">
+                                借阅数量: <span>{{ book.deadlineNum }}</span> 本
+                            </div>
+                            <div class="book-dates">
+                                <div class="date-item">
+                                    <i class="el-icon-time"></i>
+                                    <span>借阅: {{ book.createTime }}</span>
+                                </div>
+                                <div class="date-item">
+                                    <i class="el-icon-date"></i>
+                                    <span>归还: {{ book.returnTime }}</span>
+                                </div>
+                            </div>
+                            <div class="book-actions">
+                                <button v-if="!book.isReturn" class="action-btn return-btn" @click="handleReturn(book)">
+                                    <i class="el-icon-refresh-left"></i><span>归还</span>
+                                </button>
+                                <button v-else class="action-btn delete-btn" @click="handleDelete(book)">
+                                    <i class="el-icon-delete"></i><span>删除</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </el-col>
             </el-row>
-        </el-row>
+        </div>
         <div class="pager" v-if="tableData.length !== 0">
-            <div>
-                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                    :current-page.sync="current" :page-size="size" layout="total, prev, pager, next"
-                    :total="totalCount">
-                </el-pagination>
-            </div>
+            <el-pagination 
+                @size-change="handleSizeChange" 
+                @current-change="handleCurrentChange"
+                :current-page.sync="current" 
+                :page-size="size" 
+                layout="total, prev, pager, next"
+                :total="totalCount">
+            </el-pagination>
         </div>
     </el-row>
 </template>
@@ -83,8 +70,8 @@ export default {
             data: {},
             current: 1,
             cover: null,
-            size: 10,
-            totalItems: 0,
+            size: 8,
+            totalCount: 0,
             dialogOperation: false, // 开关
             isOperation: false, // 开关-标识新增或修改
             tableData: [],
@@ -154,8 +141,8 @@ export default {
         async fetchFreshData() {
             try {
                 const params = {
-                    current: this.currentPage,
-                    size: this.pageSize,
+                    current: this.current,
+                    size: this.size,
                     ...this.bookQueryDto
                 };
                 const response = await this.$axios.post('/bookOrderHistory/queryUser', params);
@@ -166,31 +153,14 @@ export default {
                 console.error('查询书籍借阅历史信息异常:', error);
             }
         },
-        add() {
-            this.dialogOperation = true;
-        },
-        handleFilter() {
-            this.currentPage = 1;
-            this.fetchFreshData();
-        },
-        handleFilterClear() {
-            this.handleFilter();
-        },
         handleSizeChange(val) {
-            this.pageSize = val;
-            this.currentPage = 1;
+            this.size = val;
+            this.current = 1;
             this.fetchFreshData();
         },
         handleCurrentChange(val) {
-            this.currentPage = val;
+            this.current = val;
             this.fetchFreshData();
-        },
-        messagePush(row) {
-            this.data = { ...row };
-        },
-        handleEdit(row) {
-            this.dialogOperation = true;
-            this.data = { ...row };
         },
         handleDelete(row) {
             this.batchDelete(row);
@@ -199,46 +169,202 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.item-book {
-    border: 1px solid rgb(235, 235, 235);
-    margin: 4px;
-    border-radius: 5px;
-    padding: 4px;
-    box-sizing: border-box;
+.history-container {
+    width: 100%;
+    padding: 20px;
+    background-color: #fafafa;
+    min-height: 100vh;
 }
 
-.title {
-    width: 120px;
+.books-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.books-grid {
+    margin: 0 -12px;
+}
+
+.book-card {
+    margin: 12px;
+    background-color: white;
+    border-radius: 12px;
     overflow: hidden;
-    /* 隐藏超出部分 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    &.returned {
+        border-left: 4px solid #67c23a;
+    }
+    
+    &:not(.returned) {
+        border-left: 4px solid #e6a23c;
+    }
+}
+
+.book-cover {
+    position: relative;
+    overflow: hidden;
+    background-color: white;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    img {
+        width: auto;
+        height: auto;
+        max-width: 85%;
+        max-height: 85%;
+        object-fit: contain;
+        transition: transform 0.5s ease;
+    }
+    
+    &:hover img {
+        transform: scale(1.1);
+    }
+    
+    .book-status {
+        position: absolute;
+        top: 12px;
+        right: 0;
+        background-color: #67c23a;
+        color: white;
+        padding: 4px 12px;
+        font-size: 12px;
+        border-radius: 4px 0 0 4px;
+        font-weight: 500;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        
+        &.return-pending {
+            background-color: #e6a23c;
+        }
+    }
+}
+
+.book-info {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 12px 0;
+    overflow: hidden;
     text-overflow: ellipsis;
-    /* 使用省略号表示超出部分 */
     white-space: nowrap;
-    /* 禁止换行 */
+}
+
+.book-quantity {
+    font-size: 14px;
+    color: #606266;
+    margin-bottom: 12px;
+    
+    span {
+        font-weight: 600;
+        color: #ff5722;
+    }
+}
+
+.book-dates {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.date-item {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    color: #909399;
+    
+    i {
+        margin-right: 6px;
+        color: #909399;
+    }
+    
+    span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.book-actions {
+    margin-top: auto;
+}
+
+.action-btn {
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    height: 36px;
+    
+    i {
+        margin-right: 6px;
+        font-size: 14px;
+    }
+    
+    span {
+        font-size: 14px;
+    }
+    
+    &.return-btn {
+        background-color: #e6a23c;
+        color: white;
+        
+        &:hover {
+            background-color: darken(#e6a23c, 5%);
+        }
+    }
+    
+    &.delete-btn {
+        background-color: #f56c6c;
+        color: white;
+        
+        &:hover {
+            background-color: darken(#f56c6c, 5%);
+        }
+    }
+}
+
+.empty-data {
+    margin: 40px 0;
 }
 
 .pager {
     display: flex;
-    margin-block: 20px;
     justify-content: center;
-    align-items: center;
+    margin: 30px 0 10px;
 }
 
-.category {
-    font-size: 16px;
-    color: rgb(114, 114, 114);
-    cursor: pointer;
-    display: inline-block;
-    transition: all .2s;
-    padding: 10px 20px;
-    border-radius: 10px;
-}
-
+// 搜索框样式
 .word-search {
     display: flex;
     justify-content: center;
-    margin-bottom: 15px;
-    margin-top: -5px;
+    margin-bottom: 20px;
 
     .item {
         padding: 10px 20px;
@@ -288,8 +414,15 @@ export default {
             &:hover {
                 background-color: #f4511e;
                 transform: translateY(-1px);
+            }
         }
     }
+}
+
+// 响应式调整
+@media (max-width: 768px) {
+    .word-search .item {
+        width: 90%;
     }
 }
 </style>

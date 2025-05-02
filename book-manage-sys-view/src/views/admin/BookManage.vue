@@ -30,9 +30,8 @@
                             </div>
                             <div style="font-size: 12px;color: rgb(51,51,51);margin-bottom: 8px;">
                                 <div class="title" style="margin: 0 auto 5px auto;">
-                                    <i v-if="book.isPlanBuy" style="margin-right: 5px;" class="el-icon-warning"></i>
-                                    <i v-else style="margin-right: 5px;color: rgb(253, 199, 50);"
-                                        class="el-icon-success"></i>
+                                    <i v-if="book.isPlanBuy" style="margin-right: 5px;color: #E6A23C;" class="el-icon-warning"></i>
+                                    <i v-else style="margin-right: 5px;color: #67C23A;" class="el-icon-success"></i>
                                     <el-tooltip v-if="book.isPlanBuy" class="item" effect="dark"
                                         content="计划上架的书籍，为预售书籍。用户可以订阅，书籍上架之后将做通知" placement="top">
                                         <span

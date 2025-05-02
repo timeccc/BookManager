@@ -83,24 +83,33 @@ export default {
           padding: [10, 15]
         },
         legend: {
+          type: 'plain',
           orient: 'horizontal',
-          bottom: '0%',
+          bottom: 0,
           left: 'center',
           show: true,
-          itemWidth: 10,
-          itemHeight: 10,
+          itemWidth: 12,
+          itemHeight: 12,
           textStyle: {
             color: '#666',
-            fontSize: 12
+            fontSize: 13,
+            lineHeight: 20
           },
-          icon: 'circle'
+          icon: 'circle',
+          itemGap: 16,
+          formatter: function(name) {
+            return name;
+          },
+          padding: 5,
+          selectedMode: false,
+          inactiveColor: '#ccc'
         },
         series: [
           {
             name: this.tag,
             type: 'pie',
-            radius: ['40%', '70%'],
-            center: ['50%', '45%'],
+            radius: ['40%', '68%'],
+            center: ['50%', '38%'],
             avoidLabelOverlap: true,
             emphasis: {
               label: {
