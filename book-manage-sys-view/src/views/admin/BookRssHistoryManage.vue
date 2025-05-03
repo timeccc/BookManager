@@ -3,9 +3,9 @@
         <el-row style="padding: 10px 16px;">
             <el-row>
                 <span class="top-bar">订阅时间</span>
-                <el-date-picker class="custom-date-picker" size="small" style="width: 240px;" v-model="searchTime" type="daterange"
+                <el-date-picker size="small" style="width: 240px;" v-model="searchTime" type="daterange"
                     value-format="yyyy-MM-dd"
-                    range-separator=" 至 " start-placeholder="起始日期" end-placeholder="结束日期">
+                    range-separator="-" start-placeholder="起始日期" end-placeholder="结束日期">
                 </el-date-picker>
                 <el-button size="small" class="customer"
                     style="margin-left: 10px;background-color: rgb(235, 237, 245);color: white;border: none;" type="primary"
@@ -24,9 +24,11 @@
                 </el-table-column>
                 <el-table-column prop="userName" width="148" label="订阅者"></el-table-column>
                 <el-table-column prop="createTime" width="168" label="订阅时间"></el-table-column>
-                <el-table-column label="操作" fixed="right" width="90">
+                <el-table-column label="操作" width="90" align="center">
                     <template slot-scope="scope">
-                        <span class="text-button" @click="handleDelete(scope.row)">删除</span>
+                        <el-tag type="danger" size="small" @click.native="handleDelete(scope.row)" class="delete-tag">
+                            删除
+                        </el-tag>
                     </template>
                 </el-table-column>
             </el-table>
@@ -214,6 +216,29 @@ export default {
     font-weight: 500;
 }
 
+.delete-tag {
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+.delete-btn {
+    color: #F56C6C;
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    
+    &:hover {
+        color: #ff8c8c;
+    }
+}
+
 .text-button {
     color: #409EFF;
     margin-right: 8px;
@@ -231,6 +256,32 @@ export default {
     overflow: hidden;
     margin-bottom: 20px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    
+    ::v-deep .el-table__header-wrapper {
+        th {
+            background-color: #f5f7fa;
+            color: #606266;
+            font-weight: 600;
+            padding: 12px 0;
+        }
+    }
+    
+    ::v-deep .el-table__body-wrapper {
+        .el-table__row {
+            transition: all 0.3s;
+            
+            &:hover {
+                background-color: #f0f9ff !important;
+            }
+            
+            td {
+                padding: 10px 0;
+                vertical-align: middle;
+                height: 40px;
+                line-height: 20px;
+            }
+        }
+    }
 }
 
 .list-cover {
@@ -239,46 +290,42 @@ export default {
     border-radius: 5px;
 }
 
-/* 日期选择器美化样式 */
-.custom-date-picker {
-    ::v-deep .el-input__inner {
-        border-radius: 4px;
-        border-color: #dcdfe6;
-        transition: all 0.2s;
-        
-        &:hover {
-            border-color: #c0c4cc;
-        }
-        
-        &:focus {
-            border-color: #409EFF;
-            box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
-        }
-    }
-    
-    ::v-deep .el-range-separator {
-        color: #606266;
-        padding: 0 5px;
+/* 分页样式美化 */
+::v-deep .el-pagination {
+    .el-pagination__total {
         font-weight: 500;
-        display: inline-flex;
-        align-items: center;
     }
     
-    ::v-deep .el-range-input {
-        font-size: 13px;
-        color: #606266;
+    .el-pagination__sizes {
+        .el-input .el-input__inner {
+            border-radius: 4px;
+            transition: all 0.3s;
+            
+            &:hover, &:focus {
+                border-color: #409EFF;
+            }
+        }
     }
     
-    ::v-deep .el-range__icon {
-        color: #c0c4cc;
-    }
-    
-    ::v-deep .el-range__close-icon {
-        color: #c0c4cc;
-        font-size: 14px;
+    .el-pager li {
+        border-radius: 4px;
+        transition: all 0.3s;
         
         &:hover {
-            color: #909399;
+            color: #409EFF;
+        }
+        
+        &.active {
+            background-color: #409EFF;
+            color: #fff;
+        }
+    }
+    
+    .btn-prev, .btn-next {
+        border-radius: 4px;
+        
+        &:hover {
+            color: #409EFF;
         }
     }
 }

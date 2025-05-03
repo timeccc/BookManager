@@ -1,5 +1,5 @@
 <template>
-    <el-row style="margin-top: 10px;">
+    <el-row class="book-rss-history-container">
         <div class="word-search" v-if="tableData.length !== 0">
             <div class="item">
                 <i class="el-icon-search"></i>
@@ -266,6 +266,13 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.book-rss-history-container {
+    width: 100%;
+    padding: 10px 20px 20px 20px;
+    box-sizing: border-box;
+    background-color: #fafafa;
+}
+
 .word-search {
     display: flex;
     justify-content: center;

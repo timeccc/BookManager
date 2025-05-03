@@ -1,44 +1,49 @@
 <template>
-    <div>
-        <el-row class="page-container">
-            <!-- 搜索框 -->
-            <div class="search-wrapper">
-                <div class="search-input">
-                    <div class="custom-input">
-                        <i class="el-icon-search"></i>
-                        <input type="text" placeholder="搜索用户留言" v-model="readerProposalQueryDto.content">
-                        <span class="search-text" @click="fetchReaderProposal">搜索</span>
-                    </div>
+    <el-row class="main-proposal-container">
+        <!-- 搜索框 -->
+        <div class="word-search">
+            <div class="item">
+                <i class="el-icon-search"></i>
+                <input type="text" placeholder="搜索用户留言" v-model="readerProposalQueryDto.content">
+                <span class="search-text" @click="fetchReaderProposal">搜索</span>
+            </div>
+        </div>
+        
+        <!-- 筛选标签 -->
+        <div class="category-container">
+            <span class="category" 
+                  :class="{'active-category': tagSelected === tagItem}" 
+                  @click="condition(tagItem)" 
+                  v-for="(tagItem, index) in tags" 
+                  :key="index">
+                {{ tagItem }}
+            </span>
+        </div>
+        
+        <!-- 留言内容区 -->
+        <div class="content-section">
+            <el-empty 
+                v-if="proposals.length === 0" 
+                description="暂无留言" 
+                :image-size="200">
+            </el-empty>
+            
+            <div v-else class="card-list">
+                <div class="page-title">
+                    <span class="title-text">用户留言</span>
+                    <div class="line-decoration"></div>
                 </div>
-            </div>
-            
-            <!-- 筛选标签 -->
-            <div class="category-container">
-                <span class="category" 
-                      :class="{'active-category': tagSelected === tagItem}" 
-                      @click="condition(tagItem)" 
-                      v-for="(tagItem, index) in tags" 
-                      :key="index">
-                    {{ tagItem }}
-                </span>
-            </div>
-            
-            <!-- 留言内容区 -->
-            <div class="content-section">
-                <el-empty 
-                    v-if="proposals.length === 0" 
-                    description="暂无留言" 
-                    :image-size="200">
-                </el-empty>
-                
-                <div v-else class="card-list">
-                    <el-card 
-                        v-for="(proposal, index) in proposals" 
-                        :key="index"
-                        shadow="hover" 
-                        class="message-card"
-                        :class="getCardClass(index, proposal)">
-                        
+
+                <div 
+                    v-for="(proposal, index) in proposals" 
+                    :key="index"
+                    class="message-card"
+                    :class="getCardClass(index, proposal)">
+                    
+                    <div class="message-icon">
+                        <i class="el-icon-chat-dot-square"></i>
+                    </div>
+                    <div class="message-main">
                         <!-- 卡片头部 -->
                         <div class="card-header">
                             <div class="user-info">
@@ -47,6 +52,7 @@
                             </div>
                             <div class="message-actions">
                                 <span class="message-time">{{ proposal.createTime }}</span>
+                                <span v-if="proposal.replyTime !== null" class="reply-tag">已回复</span>
                                 <el-popconfirm 
                                     v-if="myContent(proposal)" 
                                     title="确定删除这条留言吗？" 
@@ -64,7 +70,7 @@
                         <!-- 回复内容 -->
                         <div v-if="proposal.replyTime !== null" class="card-reply">
                             <div class="reply-header">
-                                <i class="el-icon-chat-dot-square"></i>
+                                <i class="el-icon-s-custom"></i>
                                 <span>管理员回复</span>
                                 <span class="reply-time">{{ proposal.replyTime }}</span>
                             </div>
@@ -72,22 +78,22 @@
                                 {{ proposal.replyContent }}
                             </div>
                         </div>
-                    </el-card>
+                    </div>
                 </div>
             </div>
-            
-            <!-- 分页控件 -->
-            <div class="pager" v-if="proposals.length !== 0">
-                <el-pagination
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page.sync="current"
-                    :page-size="size"
-                    layout="total, prev, pager, next"
-                    :total="totalCount">
-                </el-pagination>
-            </div>
-        </el-row>
+        </div>
+        
+        <!-- 分页控件 -->
+        <div class="pager" v-if="proposals.length !== 0">
+            <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page.sync="current"
+                :page-size="size"
+                layout="total, prev, pager, next"
+                :total="totalCount">
+            </el-pagination>
+        </div>
 
         <!-- 留言对话框 -->
         <el-dialog 
@@ -185,7 +191,7 @@
                 </div>
             </div>
         </el-dialog>
-    </div>
+    </el-row>
 </template>
 
 <script>
@@ -197,13 +203,15 @@ export default {
             proposal: {},
             tags: ['全部', '已回复', '未回复', '我的发布'],
             tagSelected: '全部',
-            readerProposalQueryDto: {},
+            readerProposalQueryDto: {
+                current: 1,
+                size: 5
+            },
             proposals: [],
-            totalCount: 5,
+            totalCount: 0,
             size: 5,
             current: 1,
             queryUser: false,
-            publishList: ['公开', '不公开'],
             publishItemSelected: '公开',
             dialogWordOperation: false,
             cardColors: ['blue-card', 'green-card', 'orange-card', 'purple-card', 'cyan-card']
@@ -213,23 +221,18 @@ export default {
         this.fetchReaderProposal();
     },
     methods: {
+        // 获取卡片样式类
         getCardClass(index, proposal) {
-            // 根据索引或其他条件分配不同颜色
-            let baseClass = this.cardColors[index % this.cardColors.length];
-            
-            // 为已回复和未回复的留言添加额外的类
-            if (proposal.replyTime !== null) {
-                return `${baseClass} replied`;
-            }
-            return baseClass;
+            return this.cardColors[index % this.cardColors.length];
         },
-        publishChoose(publish) {
-            this.publishItemSelected = publish;
-        },
+        
+        // 发表留言
         postProposal() {
             this.$refs.proposalForm.validate(valid => {
-                if (valid) {
-                    this.$axios.post(`/readerProposal/save`, this.proposal).then(res => {
+                if (!valid) return;
+                
+                this.$axios.post(`/readerProposal/save`, this.proposal)
+                    .then(res => {
                         const { data } = res;
                         if (data.code === 200) {
                             this.$notify({
@@ -241,7 +244,8 @@ export default {
                             this.paramCondition('我的发布');
                             this.cannel();
                         }
-                    }).catch(error => {
+                    })
+                    .catch(error => {
                         this.$notify({
                             title: '留言发表',
                             message: error.message || '发表失败',
@@ -249,9 +253,10 @@ export default {
                         });
                         console.log("留言发表异常：", error);
                     });
-                }
             });
         },
+        
+        // 取消操作
         cannel() {
             this.dialogWordOperation = false;
             this.proposal = {};
@@ -259,198 +264,293 @@ export default {
                 this.$refs.proposalForm.resetFields();
             }
         },
+        
+        // 打开留言对话框
         postWord() {
             this.dialogWordOperation = true;
         },
+        
+        // 检查是否是当前用户的留言
         myContent(proposal) {
             const userId = sessionStorage.getItem('userId');
             return proposal.userId === Number(userId);
         },
+        
+        // 确认删除留言
         confirmDel(proposal) {
             const ids = [proposal.id];
-            this.$axios.post(`/readerProposal/batchDelete`, ids).then(res => {
-                const { data } = res;
-                if (data.code === 200) {
+            this.$axios.post(`/readerProposal/batchDelete`, ids)
+                .then(res => {
+                    const { data } = res;
+                    if (data.code === 200) {
+                        this.$notify({
+                            duration: 1000,
+                            title: '留言删除',
+                            message: '留言删除成功',
+                            type: 'success'
+                        });
+                        this.fetchReaderProposal();
+                    }
+                })
+                .catch(error => {
                     this.$notify({
-                        duration: 1000,
                         title: '留言删除',
-                        message: '留言删除成功',
-                        type: 'success'
+                        message: error.message || '删除失败',
+                        type: 'error'
                     });
-                    this.fetchReaderProposal();
-                }
-            }).catch(error => {
-                this.$notify({
-                    title: '留言删除',
-                    message: error.message || '删除失败',
-                    type: 'error'
+                    console.log("删除留言异常：", error);
                 });
-                console.log("删除留言异常：", error);
-            });
         },
+        
+        // 分页大小变化
         handleSizeChange(size) {
             this.size = size;
+            this.readerProposalQueryDto.size = size;
             this.fetchReaderProposal();
         },
+        
+        // 当前页变化
         handleCurrentChange(current) {
             this.current = current;
+            this.readerProposalQueryDto.current = current;
             this.fetchReaderProposal();
         },
+        
+        // 筛选标签点击
         condition(tag) {
             this.tagSelected = tag;
             this.paramCondition(tag);
         },
+        
+        // 设置查询参数
         paramCondition(tag) {
-            if (tag === '全部') {
-                this.queryUser = false;
-                this.readerProposalQueryDto.isReply = null;
-            } else if (tag === '已回复') {
-                this.queryUser = false;
-                this.readerProposalQueryDto.isReply = true;
-            } else if (tag === '未回复') {
-                this.queryUser = false;
-                this.readerProposalQueryDto.isReply = false;
-            } else if (tag === '我的发布') {
-                this.queryUser = true;
+            switch (tag) {
+                case '全部':
+                    this.queryUser = false;
+                    this.readerProposalQueryDto.isReply = null;
+                    break;
+                case '已回复':
+                    this.queryUser = false;
+                    this.readerProposalQueryDto.isReply = true;
+                    break;
+                case '未回复':
+                    this.queryUser = false;
+                    this.readerProposalQueryDto.isReply = false;
+                    break;
+                case '我的发布':
+                    this.queryUser = true;
+                    break;
             }
             this.fetchReaderProposal();
         },
-        // 读者建议查询
+        
+        // 查询留言列表
         fetchReaderProposal() {
             this.readerProposalQueryDto.size = this.size;
             this.readerProposalQueryDto.current = this.current;
-            this.$axios.post(`/readerProposal/${this.queryUser ? '/queryUser' : '/query'}`, this.readerProposalQueryDto).then(res => {
-                const { data } = res;
-                if (data.code === 200) {
-                    this.proposals = data.data;
-                    this.totalCount = data.total;
-                }
-            }).catch(error => {
-                console.log("查询用户留言异常：", error);
-            });
-        },
-        timeDeal() {
-            this.proposals.map(proposal => proposal.createTime.substring(1, 5))
+            
+            const endpoint = this.queryUser ? '/readerProposal/queryUser' : '/readerProposal/query';
+            
+            this.$axios.post(endpoint, this.readerProposalQueryDto)
+                .then(res => {
+                    const { data } = res;
+                    if (data.code === 200) {
+                        this.proposals = data.data;
+                        this.totalCount = data.total;
+                    }
+                })
+                .catch(error => {
+                    console.log("查询用户留言异常：", error);
+                });
         }
     },
 };
 </script>
 <style scoped lang="scss">
-.page-container {
-    background-color: white;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-    margin-bottom: 20px;
+// 颜色变量
+$primary-color: #ff5722;
+$primary-light: rgba(255, 87, 34, 0.08);
+$primary-border: rgba(255, 87, 34, 0.2);
+$card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+$hover-shadow: 0 6px 16px rgba(0,0,0,0.12);
+$text-primary: #333;
+$text-secondary: #666;
+$text-light: #999;
+$border-light: #eee;
+$background-light: #f8f9fa;
+
+// 公共动画
+@mixin hover-transform {
+  transition: all 0.3s ease;
+  &:hover {
+    transform: translateY(-2px);
+  }
 }
 
-.search-wrapper {
+.main-proposal-container {
+    width: 100%;
+    background-color: transparent;
+    box-shadow: none;
+    margin-bottom: 0;
+}
+
+// 搜索框样式
+.word-search {
+    display: flex;
+    justify-content: center;
     margin-bottom: 15px;
-    margin-top: -5px;
+    margin-top: 0;
     
-    .search-input {
+    .item {
+        padding: 10px 20px;
+        width: 500px;
+        background-color: white;
+        border-radius: 40px;
         display: flex;
-        max-width: 500px;
-        margin: 0 auto;
+        justify-content: space-between;
+        align-items: center;
+        box-sizing: border-box;
+        box-shadow: $card-shadow;
+        border: 1px solid $border-light;
+        transition: all 0.3s ease;
         
-        .custom-input {
-            display: flex;
-            width: 100%;
-            background-color: white;
-            border-radius: 40px;
-            align-items: center;
-            box-sizing: border-box;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border: 1px solid #eee;
+        &:hover, &:focus-within {
+            box-shadow: $hover-shadow;
+            border-color: $primary-border;
+        }
+        
+        input {
+            flex: 1;
+            border: none;
+            background-color: transparent;
+            outline: none;
+            font-size: 16px;
+            color: $text-primary;
+            margin: 0 15px;
+            height: 24px;
+        }
+
+        i {
+            font-size: 18px;
+            color: $primary-color;
+        }
+        
+        .search-text {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            background-color: $primary-color;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
             transition: all 0.3s ease;
-            padding: 10px 20px;
+            text-align: center;
             
-            &:hover, &:focus-within {
-                box-shadow: 0 6px 16px rgba(255, 87, 34, 0.12);
-                border-color: rgba(255, 87, 34, 0.2);
-            }
-            
-            i {
-                font-size: 18px;
-                color: #ff5722;
-            }
-            
-            input {
-                flex: 1;
-                border: none;
-                background-color: transparent;
-                outline: none;
-                font-size: 16px;
-                color: #333;
-                margin: 0 15px;
-                height: 24px;
-            }
-            
-            .search-text {
-                display: inline-block;
-                padding: 6px 16px;
-                border-radius: 20px;
-                background-color: #ff5722;
-                color: white;
-                font-size: 14px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                text-align: center;
-                
-                &:hover {
-                    background-color: #f4511e;
-                    transform: translateY(-1px);
-                }
+            &:hover {
+                background-color: darken($primary-color, 5%);
+                transform: translateY(-1px);
             }
         }
     }
 }
 
+// 分类标签样式
 .category-container {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     gap: 10px;
+    justify-content: center;
 }
 
 .category {
     padding: 8px 16px;
     border-radius: 10px;
-    background-color: #f8f9fa;
-    color: #606266;
+    background-color: white;
+    color: $text-secondary;
     font-size: 14px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    @include hover-transform;
+    border: 1px solid $border-light;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
     
     &:hover {
-        background-color: rgba(255, 87, 34, 0.08);
-        color: #ff5722;
-        transform: translateY(-2px);
+        background-color: $primary-light;
+        color: $primary-color;
+        border-color: $primary-border;
     }
     
     &.active-category {
-        background-color: rgba(255, 87, 34, 0.1);
-        color: #ff5722;
+        background-color: $primary-light;
+        color: $primary-color;
         font-weight: 500;
+        border-color: $primary-border;
     }
 }
 
+// 内容区域样式
 .content-section {
-    min-height: 300px;
+    background-color: transparent;
+    min-height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 20px;
 }
 
+// 卡片列表样式
 .card-list {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
+// 页面标题样式
+.page-title {
+    margin-bottom: 30px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    
+    .title-text {
+        font-size: 20px;
+        font-weight: 600;
+        color: $text-primary;
+        margin-right: 20px;
+        position: relative;
+        
+        &:after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: $primary-color;
+            border-radius: 3px;
+        }
+    }
+    
+    .line-decoration {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(to right, rgba(0,0,0,0.1), rgba(0,0,0,0.02));
+    }
+}
+
+// 留言卡片样式
 .message-card {
-    border-radius: 10px;
+    display: flex;
+    margin-bottom: 20px;
+    border-radius: 16px;
     overflow: hidden;
     transition: all 0.3s ease;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    width: 100%;
+    background-color: white;
+    border: 1px solid #f0f0f0;
     position: relative;
     
     &:hover {
@@ -458,49 +558,68 @@ export default {
         box-shadow: 0 5px 15px rgba(0,0,0,0.08);
     }
     
-    &.blue-card {
-        border-left: 4px solid #409EFF;
+    // 根据列表位置交替背景色
+    &:nth-child(odd) {
+        background-color: #f8fbff;
     }
     
-    &.green-card {
-        border-left: 4px solid #67C23A;
+    &:nth-child(even) {
+        background-color: #f5fcf5;
     }
     
-    &.orange-card {
-        border-left: 4px solid #ff5722;
-    }
-    
-    &.purple-card {
-        border-left: 4px solid #915EFB;
-    }
-    
-    &.cyan-card {
-        border-left: 4px solid #5ECBFB;
-    }
-    
-    &.replied {
-        &::after {
-            content: '已回复';
-            position: absolute;
-            top: 6px;
-            right: 12px;
-            font-size: 12px;
-            padding: 3px 10px;
-            border-radius: 12px;
-            background-color: rgba(103, 194, 58, 0.1);
-            color: #67C23A;
-            font-weight: 500;
-            box-shadow: 0 2px 4px rgba(103, 194, 58, 0.1);
+    // 图标区域
+    .message-icon {
+        width: 80px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $primary-light;
+        color: $primary-color;
+        
+        i {
+            font-size: 30px;
         }
+    }
+    
+    // 内容区域
+    .message-main {
+        flex: 1;
+        padding: 20px;
+    }
+    
+    // 颜色变体
+    &.blue-card .message-icon {
+        background-color: rgba(64, 158, 255, 0.15);
+        color: #409EFF;
+    }
+    
+    &.green-card .message-icon {
+        background-color: rgba(103, 194, 58, 0.15);
+        color: #67C23A;
+    }
+    
+    &.orange-card .message-icon {
+        background-color: rgba(255, 87, 34, 0.15);
+        color: $primary-color;
+    }
+    
+    &.purple-card .message-icon {
+        background-color: rgba(145, 94, 251, 0.15);
+        color: #915EFB;
+    }
+    
+    &.cyan-card .message-icon {
+        background-color: rgba(94, 203, 251, 0.15);
+        color: #5ECBFB;
     }
 }
 
+// 卡片头部样式
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
-    padding-top: 10px;
+    margin-bottom: 15px;
     
     .user-info {
         display: flex;
@@ -509,7 +628,7 @@ export default {
         
         .user-name {
             font-weight: 500;
-            color: #333;
+            color: $text-primary;
         }
     }
     
@@ -519,23 +638,41 @@ export default {
         gap: 10px;
         
         .message-time {
-            color: #999;
+            color: $text-light;
             font-size: 12px;
-            margin-right: 10px;
+            margin-right: 5px;
+        }
+        
+        .reply-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background-color: rgba(103, 194, 58, 0.1);
+            color: #67C23A;
+            font-size: 12px;
+            font-weight: 500;
         }
     }
 }
 
+// 卡片内容样式
 .card-content {
     margin-bottom: 15px;
     line-height: 1.6;
-    color: #333;
+    color: $text-primary;
+    position: relative;
+    padding: 12px 16px;
+    background: rgba(0,0,0,0.02);
+    border-radius: 8px;
+    border-left: 3px solid rgba(255, 87, 34, 0.3);
 }
 
+// 回复区域样式
 .card-reply {
-    background-color: #f8f9fa;
+    background-color: #f9f9f9;
     border-radius: 10px;
     padding: 12px;
+    margin-top: 10px;
     
     .reply-header {
         display: flex;
@@ -551,7 +688,7 @@ export default {
         
         .reply-time {
             font-size: 12px;
-            color: #999;
+            color: $text-light;
             margin-left: auto;
         }
     }
@@ -559,50 +696,22 @@ export default {
     .reply-content {
         color: #555;
         line-height: 1.6;
+        position: relative;
+        padding: 12px 16px;
+        background: rgba(0,0,0,0.01);
+        border-radius: 8px;
+        border-left: 3px solid rgba(64, 158, 255, 0.3);
     }
 }
 
+// 分页样式
 .pager {
     margin-top: 20px;
     display: flex;
     justify-content: center;
 }
 
-.channel-button, .edit-button {
-    padding: 8px 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 500;
-}
-
-.channel-button {
-    background-color: #f0f2f5;
-    color: #606266;
-    
-    &:hover {
-        background-color: #e0e2e5;
-        transform: translateY(-2px);
-    }
-}
-
-.edit-button {
-    background-color: #ff5722;
-    color: white;
-    
-    &:hover {
-        background-color: #ff7043;
-        transform: translateY(-2px);
-    }
-}
-
-.dialog-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-/* 现代化对话框样式 */
+// 对话框样式
 ::v-deep .modern-dialog {
     border-radius: 14px;
     overflow: hidden;
@@ -622,11 +731,12 @@ export default {
     padding: 0;
 }
 
+// 对话框头部
 .dialog-header {
     display: flex;
     align-items: center;
     padding: 18px 22px;
-    background: linear-gradient(135deg, #ff7043 0%, #ff5722 100%);
+    background: linear-gradient(135deg, #ff7043 0%, $primary-color 100%);
     color: white;
     position: relative;
     overflow: hidden;
@@ -682,6 +792,7 @@ export default {
     }
 }
 
+// 表单样式
 .proposal-form {
     padding: 18px 22px;
 }
@@ -702,13 +813,13 @@ export default {
         }
         
         &:focus {
-            border-color: #ff5722;
+            border-color: $primary-color;
             box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.1);
         }
     }
     
     ::v-deep .el-textarea__word-count {
-        color: #999;
+        color: $text-light;
         font-size: 12px;
         background: rgba(0,0,0,0.04);
         padding: 2px 8px;
@@ -718,6 +829,7 @@ export default {
     }
 }
 
+// 可见性设置区域
 .visibility-section {
     background-color: #f9f9f9;
     border-radius: 12px;
@@ -731,18 +843,19 @@ export default {
         
         i {
             font-size: 16px;
-            color: #ff5722;
+            color: $primary-color;
             margin-right: 6px;
         }
         
         span {
             font-size: 14px;
             font-weight: 500;
-            color: #333;
+            color: $text-primary;
         }
     }
 }
 
+// 可见性选项卡片
 .option-cards {
     display: flex;
     gap: 12px;
@@ -784,11 +897,11 @@ export default {
     }
     
     &.active {
-        border-color: #ff5722;
-        background-color: rgba(255,87,34,0.05);
+        border-color: $primary-color;
+        background-color: $primary-light;
         
         .card-icon {
-            background-color: #ff5722;
+            background-color: $primary-color;
             
             i {
                 color: white;
@@ -796,7 +909,7 @@ export default {
         }
         
         h4 {
-            color: #ff5722;
+            color: $primary-color;
         }
     }
     
@@ -812,25 +925,29 @@ export default {
         
         i {
             font-size: 16px;
-            color: #666;
+            color: $text-secondary;
         }
     }
     
     .card-content {
         flex: 1;
+        padding: 0;
+        margin: 0;
+        background: none;
+        border: none;
         
         h4 {
             margin: 0 0 2px 0;
             font-size: 14px;
             font-weight: 500;
-            color: #333;
+            color: $text-primary;
             transition: color 0.3s;
         }
         
         p {
             margin: 0;
             font-size: 12px;
-            color: #999;
+            color: $text-light;
         }
     }
     
@@ -848,15 +965,16 @@ export default {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background-color: #ff5722;
+            background-color: $primary-color;
         }
     }
     
     &.active .card-radio {
-        border-color: #ff5722;
+        border-color: $primary-color;
     }
 }
 
+// 操作按钮
 .action-buttons {
     display: flex;
     justify-content: flex-end;
@@ -884,7 +1002,7 @@ export default {
     
     .cancel-button {
         background-color: #f5f5f5;
-        color: #666;
+        color: $text-secondary;
         font-size: 14px;
         
         &:hover {
@@ -894,7 +1012,7 @@ export default {
     }
     
     .submit-button {
-        background: linear-gradient(to right, #ff7043, #ff5722);
+        background: linear-gradient(to right, #ff7043, $primary-color);
         color: white;
         font-size: 14px;
         box-shadow: 0 3px 8px rgba(255,87,34,0.3);
@@ -906,7 +1024,7 @@ export default {
     }
 }
 
-/* 分页组件样式 */
+// Element UI 组件样式覆盖
 ::v-deep .el-pagination {
     padding: 15px 0;
     
@@ -916,7 +1034,7 @@ export default {
     }
     
     .el-pager li.active {
-        background-color: #ff5722;
+        background-color: $primary-color;
         color: white;
     }
 }
@@ -929,16 +1047,16 @@ export default {
     border-radius: 10px;
     
     &:focus {
-        border-color: #ff5722;
+        border-color: $primary-color;
     }
 }
 
 ::v-deep .el-radio__input.is-checked .el-radio__inner {
-    background-color: #ff5722;
-    border-color: #ff5722;
+    background-color: $primary-color;
+    border-color: $primary-color;
 }
 
 ::v-deep .el-radio__input.is-checked + .el-radio__label {
-    color: #ff5722;
+    color: $primary-color;
 }
 </style>

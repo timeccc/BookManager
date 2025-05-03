@@ -1,29 +1,33 @@
 <template>
-    <el-row style="background-color: #FFFFFF;padding: 20px 0;border-radius: 5px;">
-        <el-row style="padding: 10px;margin: 0 10px;">
-            <el-row>
+    <el-row class="common-container">
+        <el-row style="padding: 10px 16px;">
+            <el-row class="search-bar-container">
                 <el-date-picker size="small" @change="fetchFreshData" style="width: 220px;" v-model="searchTime" type="daterange"
-                    range-separator="至" start-placeholder="起始时间" end-placeholder="结束时间">
+                    range-separator="-" start-placeholder="起始时间" end-placeholder="结束时间">
                 </el-date-picker>
-                <el-input size="small" style="width: 166px;margin-left: 5px;" v-model="rssNotificationQueryDto.content" placeholder="消息" clearable
+                <el-input size="small" style="width: 166px;margin-left: 5px; margin-right: 5px;" v-model="rssNotificationQueryDto.content" placeholder="消息" clearable
                     @clear="handleFilterClear">
-                    <el-button slot="append" @click="handleFilter" icon="el-icon-search"></el-button>
                 </el-input>
+                <el-button size="small" @click="handleFilter" icon="el-icon-search"></el-button>
             </el-row>
         </el-row>
-        <el-row style="margin: 10px 20px;">
-            <el-table :data="tableData">
+        <el-row style="margin: 10px 16px;">
+            <el-table :data="tableData" class="custom-table">
                 <el-table-column prop="content" label="消息体"></el-table-column>
                 <el-table-column prop="userName" width="98" label="订阅者"></el-table-column>
                 <el-table-column prop="isRead" width="88" label="已读状态">
                     <template slot-scope="scope">
-                        <span>{{ scope.row.isRead ? '已读' : '未读' }}</span>
+                        <el-tag :type="scope.row.isRead ? 'success' : 'warning'" size="small">
+                            {{ scope.row.isRead ? '已读' : '未读' }}
+                        </el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column prop="createTime" width="168" label="发送时间"></el-table-column>
-                <el-table-column label="操作" fixed="right" width="90">
+                <el-table-column label="操作" width="90" align="center">
                     <template slot-scope="scope">
-                        <span class="text-button" style="color: #F56C6C;" @click="handleDelete(scope.row)">删除</span>
+                        <el-tag type="danger" size="small" @click.native="handleDelete(scope.row)" class="delete-tag">
+                            删除
+                        </el-tag>
                     </template>
                 </el-table-column>
             </el-table>
@@ -191,9 +195,122 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.common-container {
+    background-color: #FFFFFF;
+    padding: 20px 0;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+}
+
 .list-cover {
     width: 50px;
     height: 70px;
     border-radius: 5px;
+}
+
+.delete-btn {
+    color: #F56C6C;
+    font-size: 13px;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    
+    &:hover {
+        color: #ff8c8c;
+    }
+}
+
+/* 表格样式 */
+.custom-table {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    
+    ::v-deep .el-table__header-wrapper {
+        th {
+            background-color: #f5f7fa;
+            color: #606266;
+            font-weight: 600;
+            padding: 12px 0;
+        }
+    }
+    
+    ::v-deep .el-table__body-wrapper {
+        .el-table__row {
+            transition: all 0.3s;
+            
+            &:hover {
+                background-color: #f0f9ff !important;
+            }
+            
+            td {
+                padding: 10px 0;
+                vertical-align: middle;
+                height: 40px;
+                line-height: 20px;
+            }
+        }
+    }
+}
+
+/* 分页样式美化 */
+::v-deep .el-pagination {
+    .el-pagination__total {
+        font-weight: 500;
+    }
+    
+    .el-pagination__sizes {
+        .el-input .el-input__inner {
+            border-radius: 4px;
+            transition: all 0.3s;
+            
+            &:hover, &:focus {
+                border-color: #409EFF;
+            }
+        }
+    }
+    
+    .el-pager li {
+        border-radius: 4px;
+        transition: all 0.3s;
+        
+        &:hover {
+            color: #409EFF;
+        }
+        
+        &.active {
+            background-color: #409EFF;
+            color: #fff;
+        }
+    }
+    
+    .btn-prev, .btn-next {
+        border-radius: 4px;
+        
+        &:hover {
+            color: #409EFF;
+        }
+    }
+}
+
+.delete-tag {
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
 }
 </style>

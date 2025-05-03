@@ -36,7 +36,7 @@
                         <i class="icon-lock"></i>
                         <input v-model="pwd" class="input-field" type="password" placeholder="请输入密码" />
                         <span class="input-focus-border"></span>
-                    </div>
+                </div>
                 </div>
                 
                 <div class="login-action">
@@ -345,8 +345,8 @@ export default {
     animation-delay: 2s;
 }
 
-.login-panel {
-    display: flex;
+    .login-panel {
+        display: flex;
     border-radius: 24px;
     width: 840px;
     height: 500px;
@@ -427,7 +427,7 @@ export default {
         
         img.floating {
             width: 100%;
-            height: auto;
+        height: auto;
             max-width: 350px;
             object-fit: contain;
             animation: float 6s ease-in-out infinite;
@@ -451,7 +451,7 @@ export default {
         }
     }
 
-    .right-login {
+        .right-login {
         width: 50%;
         padding: 50px 40px;
         display: flex;
@@ -498,11 +498,11 @@ export default {
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
             font-family: '造字工房舒雅体（非商用）','PingFang SC', sans-serif;
         }
-    }
+        }
 
     .input-group {
         margin-bottom: 25px;
-    }
+        }
 
     .input-item {
         position: relative;
@@ -701,7 +701,7 @@ export default {
         .left-image {
             padding: 40px 0;
             height: 200px;
-        }
+            }
 
         .right-login {
             padding: 30px;

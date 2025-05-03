@@ -12,22 +12,22 @@
                     </el-option>
                 </el-select>
             <el-date-picker style="width: 240px; margin-right: 10px;" @change="fetchFreshData" size="small"
-                    v-model="searchTime" type="daterange" range-separator="至" start-placeholder="注册开始"
+                    v-model="searchTime" type="daterange" range-separator="-" start-placeholder="注册开始"
                     end-placeholder="注册结束">
                 </el-date-picker>
-            <el-input size="small" style="width: 180px;" v-model="userQueryDto.userName" placeholder="用户名" clearable
+            <el-input size="small" style="width: 180px; margin-right: 5px;" v-model="userQueryDto.userName" placeholder="用户名" clearable
                     @clear="handleFilterClear">
-                    <el-button slot="append" @click="handleFilter" icon="el-icon-search"></el-button>
-                </el-input>
+            </el-input>
+            <el-button size="small" @click="handleFilter" icon="el-icon-search"></el-button>
             <span class="new-user-btn" @click="add()">
                     新增用户
                 </span>
         </el-row>
-        <el-row style="margin: 10px 16px;border-top: 1px solid rgb(245,245,245);">
-            <el-table :stripe="true" :data="tableData" class="custom-table">
+        <el-row class="table-container">
+            <el-table :data="tableData" class="custom-table">
                 <el-table-column prop="userAvatar" width="68" label="头像">
                     <template slot-scope="scope">
-                        <el-avatar :size="25" :src="scope.row.userAvatar" style="margin-top: 10px;"></el-avatar>
+                        <el-avatar :size="25" :src="scope.row.userAvatar"></el-avatar>
                     </template>
                 </el-table-column>
                 <el-table-column prop="userName" label="名称"></el-table-column>
@@ -61,15 +61,23 @@
                     </template>
                 </el-table-column>
                 <el-table-column :sortable="true" prop="createTime" width="168" label="注册于"></el-table-column>
-                <el-table-column label="操作" width="170">
+                <el-table-column label="操作" width="200" align="center">
                     <template slot-scope="scope">
-                        <span class="text-button" style="color: #E6A23C;" @click="handleStatus(scope.row)">账号状态</span>
-                        <span class="text-button" @click="handleEdit(scope.row)">编辑</span>
-                        <span class="text-button" style="color: #F56C6C;" @click="handleDelete(scope.row)">删除</span>
+                        <div class="action-buttons">
+                            <el-tag type="warning" size="small" @click.native="handleStatus(scope.row)" class="action-tag status-tag">
+                                账号状态
+                            </el-tag>
+                            <el-tag type="primary" size="small" @click.native="handleEdit(scope.row)" class="action-tag edit-tag">
+                                编辑
+                            </el-tag>
+                            <el-tag type="danger" size="small" @click.native="handleDelete(scope.row)" class="action-tag delete-tag">
+                                删除
+                            </el-tag>
+                        </div>
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination style="margin:10px 0;float: right;" @size-change="handleSizeChange"
+            <el-pagination style="margin: 20px 0;float: right;" @size-change="handleSizeChange"
                 @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20]"
                 :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
                 :total="totalItems"></el-pagination>
@@ -425,21 +433,28 @@ export default {
 <style scoped lang="scss">
 .common-container {
     background-color: #FFFFFF;
-    padding: 20px;
-    border-radius: 8px;
+    padding: 20px 0;
+    border-radius: 16px;
     width: 100%;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
 }
 
 .filter-row {
     display: flex;
     align-items: center;
-    padding: 10px 0;
-    margin-bottom: 15px;
+    padding: 10px 16px;
+    margin-bottom: 5px;
+}
+
+.table-container {
+    margin: 10px 16px;
+    border-top: none;
 }
 
 .new-user-btn {
-    display: inline-block;
     padding: 7px 20px;
     background-color: #409EFF;
     color: white;
@@ -448,36 +463,149 @@ export default {
     transition: all 0.3s;
     margin-left: auto;
     font-size: 14px;
+    box-shadow: 0 2px 6px rgba(64, 158, 255, 0.3);
     
     &:hover {
         background-color: #66b1ff;
+        transform: translateY(-1px);
     }
 }
 
+/* 按钮统一样式 */
 .text-button {
-    color: #409EFF;
     margin-right: 10px;
     cursor: pointer;
+    font-size: 13px;
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
     
     &:hover {
-        color: #66b1ff;
         text-decoration: underline;
+    }
+    
+    &.status-btn {
+        color: #E6A23C;
+        
+        &:hover {
+            color: #f0b556;
+        }
+    }
+    
+    &.edit-btn {
+        color: #409EFF;
+        
+        &:hover {
+            color: #66b1ff;
+        }
+    }
+    
+    &.delete-btn {
+        color: #F56C6C;
+        
+        &:hover {
+            color: #ff8c8c;
+        }
     }
 }
 
+/* 表格样式 */
 .custom-table {
+    border-radius: 8px;
+    overflow: hidden;
     margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    border: none;
 }
 
+/* 优化深度选择器使用 */
+:deep(.el-table) {
+    border: none;
+    
+    &::before, 
+    &::after {
+        display: none;
+    }
+    
+    .el-table__header-wrapper th {
+        background-color: #f5f7fa;
+        color: #606266;
+        font-weight: 600;
+        padding: 12px 0;
+        border-bottom: 1px solid #ebeef5;
+    }
+    
+    .el-table__body-wrapper .el-table__row {
+        transition: all 0.3s;
+        
+        &:hover {
+            background-color: #f0f9ff !important;
+        }
+        
+        td {
+            padding: 10px 0;
+            vertical-align: middle;
+            height: 40px;
+            line-height: 20px;
+            border-bottom: 1px solid #ebeef5;
+        }
+    }
+    
+    .el-table__empty-block {
+        min-height: 60px;
+    }
+    
+    .el-table__header, 
+    .el-table__body {
+        border: none;
+    }
+    
+    .el-table--border::after, 
+    .el-table--group::after {
+        display: none;
+    }
+}
+
+:deep(.el-pagination) {
+    .el-pagination__total {
+        font-weight: 500;
+    }
+    
+    .el-pagination__sizes .el-input .el-input__inner {
+        border-radius: 4px;
+        transition: all 0.3s;
+        
+        &:hover, &:focus {
+            border-color: #409EFF;
+        }
+    }
+    
+    .el-pager li {
+        border-radius: 4px;
+        transition: all 0.3s;
+        
+        &:hover {
+            color: #409EFF;
+        }
+        
+        &.active {
+            background-color: #409EFF;
+            color: #fff;
+        }
+    }
+    
+    .btn-prev, .btn-next {
+        border-radius: 4px;
+        
+        &:hover {
+            color: #409EFF;
+        }
+    }
+}
+
+/* 对话框样式 */
 .dialog-content {
     padding: 20px;
-}
-
-.dialog-footer {
-    text-align: right;
-    padding: 10px 20px 20px;
-    border-top: 1px solid #ebeef5;
-    margin-top: 10px;
 }
 
 .dialog-title {
@@ -491,107 +619,11 @@ export default {
     border-bottom: 2px solid #409EFF;
 }
 
-.dialog-input {
-    width: 100%;
-    padding: 8px 10px;
-    margin-bottom: 15px;
-    border: 1px solid #dcdfe6;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: normal;
-    color: #606266;
-    
-    &:focus {
-        outline: none;
-        border-color: #409EFF;
-    }
-    
-    &::placeholder {
-        color: #c0c4cc;
-        font-size: 14px;
-        font-weight: normal;
-    }
-}
-
-.point {
-    margin-bottom: 8px;
-    font-size: 14px;
-    color: #606266;
-    display: block;
-}
-
-.form-col {
-    padding: 0 5px;
-    margin-bottom: 5px;
-}
-
-.user-dialog {
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.dialog-btn {
-    display: inline-block;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-left: 10px;
-    font-size: 14px;
-}
-
-.cancel-btn {
-    background-color: #f5f7fa;
-    color: #606266;
-    border: 1px solid #dcdfe6;
-
-    &:hover {
-    color: #409EFF;
-    border-color: #c6e2ff;
-        background-color: #ecf5ff;
-    }
-}
-
-.confirm-btn {
-    background-color: #409EFF;
-    color: white;
-    border: none;
-
-    &:hover {
-    background-color: #66b1ff;
-    }
-}
-
-.dialog-avatar {
-    width: 100px;
-    height: 100px;
-    display: block;
-    margin: 0 auto;
-    border-radius: 4px;
-    object-fit: cover;
-    border: 1px solid #ebeef5;
-}
-
-.avatar-uploader {
-    text-align: center;
-    margin-bottom: 15px;
-}
-
-.custom-upload-btn {
-    width: 100px;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    color: #c0c4cc;
-    border: 1px dashed #d9d9d9;
-    border-radius: 4px;
-    background-color: #fafafa;
-
-    &:hover {
-        border-color: #409EFF;
-        color: #409EFF;
-    }
+.dialog-footer {
+    text-align: right;
+    padding: 10px 20px 20px;
+    border-top: 1px solid #ebeef5;
+    margin-top: 10px;
 }
 
 .user-form {
@@ -625,6 +657,31 @@ export default {
     padding: 0 5px;
 }
 
+.dialog-input {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 15px;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #606266;
+    
+    &:focus {
+        outline: none;
+        border-color: #409EFF;
+    }
+}
+
+.dialog-avatar {
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 4px;
+    object-fit: cover;
+    border: 1px solid #ebeef5;
+}
+
 .custom-upload-placeholder {
     width: 100px;
     height: 100px;
@@ -636,11 +693,7 @@ export default {
     background-color: #fafafa;
 }
 
-.status-dialog {
-    border-radius: 4px;
-    overflow: hidden;
-}
-
+/* 状态对话框 */
 .dialog-header {
     background-color: #f0f0f0;
     padding: 10px 20px;
@@ -659,5 +712,83 @@ export default {
     display: flex;
     align-items: center;
     margin-bottom: 8px;
+}
+
+/* 按钮样式 */
+.cancel-btn, .confirm-btn {
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+.cancel-btn {
+    background-color: #f5f7fa;
+    color: #606266;
+    border: 1px solid #dcdfe6;
+
+    &:hover {
+        color: #409EFF;
+        border-color: #c6e2ff;
+        background-color: #ecf5ff;
+    }
+}
+
+.confirm-btn {
+    background-color: #409EFF;
+    color: white;
+    border: none;
+
+    &:hover {
+        background-color: #66b1ff;
+    }
+}
+
+/* 标签样式 */
+.action-tag {
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 0 4px;
+    
+    &:hover {
+        transform: translateY(-1px);
+    }
+    
+    &.status-tag {
+        background-color: #fdf6ec;
+        color: #E6A23C;
+        border-color: #faecd8;
+        
+        &:hover {
+            background-color: #faecd8;
+        }
+    }
+    
+    &.edit-tag {
+        background-color: #ecf5ff;
+        color: #409EFF;
+        border-color: #d9ecff;
+        
+        &:hover {
+            background-color: #d9ecff;
+        }
+    }
+    
+    &.delete-tag {
+        background-color: #fef0f0;
+        color: #F56C6C;
+        border-color: #fde2e2;
+        
+        &:hover {
+            background-color: #fde2e2;
+        }
+    }
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
 }
 </style>

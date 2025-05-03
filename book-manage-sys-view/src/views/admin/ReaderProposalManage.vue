@@ -6,7 +6,7 @@
                 <el-input size="small" style="width: 188px;margin-right: 10px;"
                     v-model="readingProposalQueryDto.content" placeholder="问题" clearable @clear="handleFilterClear">
                 </el-input>
-                <el-button size="mini" class="search-btn" @click="handleFilter">立即查询</el-button>
+                <el-button type="primary" size="small" @click="handleFilter" class="no-icon" style="padding-left: 15px; padding-right: 15px;">立即查询</el-button>
             </el-row>
         </el-row>
         
@@ -100,7 +100,6 @@ export default {
             pageSize: 7,
             totalItems: 0,
             dialogOperation: false, // 开关
-            isOperation: false, // 开关-标识新增或修改
             tableData: [],
             selectedRows: [],
             readingProposalQueryDto: {}, // 搜索条件
@@ -126,10 +125,6 @@ export default {
         getReplyColorClass(index) {
             const replyClasses = ['reply-red', 'reply-yellow', 'reply-green', 'reply-blue'];
             return replyClasses[index % 4];
-        },
-        // 多选框选中
-        handleSelectionChange(selection) {
-            this.selectedRows = selection;
         },
         // 批量删除数据
         async batchDelete() {
@@ -188,10 +183,6 @@ export default {
                 }
             }
         },
-        resetQueryCondition() {
-            this.readingProposalQueryDto = {};
-            this.fetchFreshData();
-        },
         // 修改信息
         async updateOperation() {
             try {
@@ -203,21 +194,6 @@ export default {
                     showConfirmButton: false,
                     timer: 1000,
                 });
-                if (response.data.code === 200) {
-                    this.closeDialog();
-                    this.fetchFreshData();
-                    this.clearFormData();
-                }
-            } catch (error) {
-                console.error('提交表单时出错:', error);
-                this.$message.error('提交失败，请稍后再试！');
-            }
-        },
-        // 信息新增
-        async addOperation() {
-            try {
-                const response = await this.$axios.post('/readerProposal/save', this.data);
-                this.$message[response.data.code === 200 ? 'success' : 'error'](response.data.msg);
                 if (response.data.code === 200) {
                     this.closeDialog();
                     this.fetchFreshData();
@@ -276,12 +252,8 @@ export default {
             this.currentPage = val;
             this.fetchFreshData();
         },
-        messagePush(row) {
-            this.data = { ...row };
-        },
         handleEdit(row) {
             this.dialogOperation = true;
-            this.isOperation = true;
             row.userPwd = null;
             this.data = { ...row }
         },
@@ -307,44 +279,11 @@ export default {
 }
 
 .top-bar {
-    font-size: 18px;
-    font-weight: 600;
-    color: #303133;
-    margin-right: 20px;
-}
-
-.search-btn {
-    background-color: #64B5F6;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 7px 12px;
-    font-size: 12px;
-    transition: all 0.2s;
-    
-    &:hover {
-        background-color: #42A5F5;
-    }
-}
-
-// 修复按钮图标问题
-::v-deep .search-btn {
-    i {
-        display: none !important;
-    }
-    
-    .el-button-icon {
-        display: none !important;
-    }
-    
-    .el-icon-search {
-        display: none !important;
-    }
-    
-    // 确保文本居中
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #606266;
+    margin-right: 8px;
+    line-height: 32px;
 }
 
 // 卡片容器
@@ -675,5 +614,12 @@ export default {
 
 ::v-deep .el-button--mini {
     font-size: 10px;
+}
+
+// 隐藏按钮图标
+.no-icon {
+    ::v-deep i {
+        display: none !important;
+    }
 }
 </style>

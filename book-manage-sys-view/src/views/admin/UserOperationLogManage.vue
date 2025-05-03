@@ -1,28 +1,40 @@
 <template>
-    <el-row style="background-color: #FFFFFF;padding: 20px 0;border-radius: 5px;">
-        <el-row style="padding: 10px;margin: 0 10px;">
-            <el-row>
-                <el-date-picker class="custom-date-picker" size="small" style="width: 240px;" @change="fetchFreshData" v-model="searchTime"
-                    type="daterange" value-format="yyyy-MM-dd" range-separator=" 至 " 
+    <el-row class="common-container">
+        <el-row style="padding: 10px 16px;">
+            <el-row class="search-bar-container">
+                <span class="top-bar">日期范围</span>
+                <el-date-picker size="small" style="width: 240px;" @change="fetchFreshData" v-model="searchTime"
+                    type="daterange" value-format="yyyy-MM-dd" range-separator="-" 
                     start-placeholder="起始日期" end-placeholder="结束日期">
                 </el-date-picker>
-                <el-input size="small" style="width: 166px;margin-left: 5px;" v-model="userOperationLogQueryDto.userId"
+                <el-input size="small" style="width: 166px;margin-left: 5px; margin-right: 5px;" v-model="userOperationLogQueryDto.userId"
                     placeholder="用户ID" clearable @clear="handleFilterClear">
-                    <el-button slot="append" @click="handleFilter" icon="el-icon-search"></el-button>
                 </el-input>
+                <el-button size="small" @click="handleFilter" icon="el-icon-search"></el-button>
+                <el-button size="small" class="customer"
+                    style="margin-left: 5px;background-color: #3a8ee6;color: #ffffff;border: none;font-weight: 500;box-shadow: 0 2px 6px rgba(58, 142, 230, 0.3);" 
+                    @click="resetQueryCondition">重置</el-button>
             </el-row>
         </el-row>
-        <el-row style="margin: 10px 20px;">
-            <el-table :data="tableData">
-                <el-table-column prop="content" label="行为"></el-table-column>
-                <el-table-column prop="userName" width="148" label="操作者"></el-table-column>
-                <el-table-column prop="createTime" width="168" label="发生时间"></el-table-column>
-                <el-table-column label="操作" fixed="right" width="90">
+        <el-row style="margin: 10px 16px;">
+            <el-table :data="tableData" class="custom-table" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="50"></el-table-column>
+                <el-table-column prop="content" label="行为" min-width="200"></el-table-column>
+                <el-table-column prop="userName" width="130" label="操作者"></el-table-column>
+                <el-table-column prop="createTime" width="160" label="发生时间"></el-table-column>
+                <el-table-column label="操作" width="80" align="center">
                     <template slot-scope="scope">
-                        <span class="text-button" style="color: #F56C6C;" @click="handleDelete(scope.row)">删除</span>
+                        <el-tag type="danger" size="small" @click.native="handleDelete(scope.row)" class="delete-tag">
+                            删除
+                        </el-tag>
                     </template>
                 </el-table-column>
             </el-table>
+            
+            <div class="operation-bar" v-if="selectedRows.length > 0">
+                <el-button size="small" type="danger" @click="batchDelete">批量删除 ({{selectedRows.length}})</el-button>
+            </div>
+            
             <el-pagination style="margin: 20px 0;float: right;" @size-change="handleSizeChange"
                 @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[20, 50]"
                 :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
@@ -180,60 +192,135 @@ export default {
             this.cover = row.cover;
         },
         handleDelete(row) {
-            this.selectedRows.push(row);
+            this.selectedRows = [row];
             this.batchDelete();
         }
     },
 };
 </script>
 <style scoped lang="scss">
-.list-cover {
-    width: 50px;
-    height: 70px;
-    border-radius: 5px;
+.common-container {
+    background-color: #FFFFFF;
+    padding: 20px 0;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
 }
 
-/* 日期选择器美化样式 */
-.custom-date-picker {
-    ::v-deep .el-input__inner {
-        border-radius: 4px;
-        border-color: #dcdfe6;
-        transition: all 0.2s;
-        
+.search-bar-container {
+    display: flex;
+    align-items: center;
+}
+
+.top-bar {
+    color: #606266;
+    font-size: 14px;
+    margin-right: 8px;
+    line-height: 1;
+    font-weight: 500;
+}
+
+.operation-bar {
+    margin: 15px 0;
+}
+
+.text-button {
+    cursor: pointer;
+    font-size: 13px;
+    
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.delete-tag {
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+/* 添加表格样式 */
+.custom-table {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+
+    ::v-deep .el-table__header-wrapper {
+        th {
+    background-color: #f5f7fa;
+    color: #606266;
+    font-weight: 600;
+    padding: 12px 0;
+}
+}
+
+    ::v-deep .el-table__body-wrapper {
+        .el-table__row {
+    transition: all 0.3s;
+
+            &:hover {
+    background-color: #f0f9ff !important;
+}
+
+            td {
+    padding: 10px 0;
+                vertical-align: middle;
+                height: 40px;
+                line-height: 20px;
+            }
+        }
+    }
+}
+
+/* 分页样式美化 */
+::v-deep .el-pagination {
+    .el-pagination__total {
+    font-weight: 500;
+}
+
+    .el-pagination__sizes {
+        .el-input .el-input__inner {
+    border-radius: 4px;
+    transition: all 0.3s;
+
+            &:hover, &:focus {
+    border-color: #409EFF;
+            }
+        }
+}
+
+    .el-pager li {
+    border-radius: 4px;
+    transition: all 0.3s;
+
         &:hover {
-            border-color: #c0c4cc;
-        }
-        
-        &:focus {
-            border-color: #409EFF;
-            box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
-        }
-    }
-    
-    ::v-deep .el-range-separator {
-        color: #606266;
-        padding: 0 5px;
-        font-weight: 500;
-        display: inline-flex;
-        align-items: center;
-    }
-    
-    ::v-deep .el-range-input {
-        font-size: 13px;
-        color: #606266;
-    }
-    
-    ::v-deep .el-range__icon {
-        color: #c0c4cc;
-    }
-    
-    ::v-deep .el-range__close-icon {
-        color: #c0c4cc;
-        font-size: 14px;
-        
+    color: #409EFF;
+}
+
+        &.active {
+    background-color: #409EFF;
+    color: #fff;
+}
+}
+
+    .btn-prev, .btn-next {
+    border-radius: 4px;
+
         &:hover {
-            color: #909399;
+    color: #409EFF;
         }
     }
+}
+
+.customer {
+    font-size: 12px;
 }
 </style>

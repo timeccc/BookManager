@@ -1,5 +1,5 @@
 <template>
-    <el-row style="margin-top: 10px;">
+    <el-row class="book-save-view-container">
         <div class="word-search" v-if="tableData.length !== 0">
             <div class="item">
                 <i class="el-icon-search"></i>
@@ -232,8 +232,8 @@ export default {
                 // 请求参数
                 const params = {
                     current: this.current,
-                    size: this.pageSize,
-                    ...this.size
+                    size: this.size,
+                    ...this.bookSaveQueryDto
                 };
                 const response = await this.$axios.post('/bookSave/queryUser', params);
                 const { data } = response;
@@ -254,12 +254,12 @@ export default {
             this.handleFilter();
         },
         handleSizeChange(val) {
-            this.pageSize = val;
-            this.currentPage = 1;
+            this.size = val;
+            this.current = 1;
             this.fetchFreshData();
         },
         handleCurrentChange(val) {
-            this.currentPage = val;
+            this.current = val;
             this.fetchFreshData();
         },
         messagePush(row) {
@@ -307,6 +307,13 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.book-save-view-container {
+    width: 100%;
+    padding: 10px 20px 20px 20px;
+    box-sizing: border-box;
+    background-color: #fafafa;
+}
+
 .word-search {
     display: flex;
     justify-content: center;

@@ -2,7 +2,7 @@
 	<el-menu :collapse-transition="false" :collapse="flag" class="admin-menu"
 		:default-active="currentRoute" :background-color="bag" text-color="#333" @select="handleSelect">
 		<el-menu-item v-for="(item, index) in routes" :key="index" v-if="!item.isHidden" :index="item.path"
-			:class="{ 'active-menu-item': isActive(item.path) }">
+			:class="isActive(item.path)">
 			<i :class="item.icon"></i>
 			<span slot="title">{{ item.name }}</span>
 		</el-menu-item>
@@ -13,7 +13,8 @@ export default {
 	name: 'AdminMenu',
 	data() {
 		return {
-			activeIndex: "1"
+			activeIndex: "1",
+			justSelectedPath: null
 		}
 	},
 	computed: {
@@ -45,12 +46,22 @@ export default {
 	methods: {
 		isActive(path) {
 			// 判断当前路径是否为活动路径
-			return this.$route.path === path;
+			const isActivePath = this.$route.path === path;
+			return {
+				'active-menu-item': isActivePath,
+				'just-selected': isActivePath && this.justSelectedPath === path
+			};
 		},
 		handleSelect(index) {
 			this.activeIndex = index;
+			this.justSelectedPath = index;
 			this.$emit('select', this.activeIndex);
 			sessionStorage.setItem('activeMenuItem', this.activeIndex);
+			
+			// 添加刷新波动效果，并在动画结束后移除类
+			setTimeout(() => {
+				this.justSelectedPath = null;
+			}, 500);
 		},
 	},
 };
@@ -60,11 +71,13 @@ export default {
 // 定义变量
 $primary-color: #409EFF;
 $secondary-color: #64B5F6;
+$hover-color: #FF6B9A;
 $transition-bezier: cubic-bezier(0.34, 1.56, 0.64, 1);
 $border-radius: 16px;
 $shadow-normal: 0 6px 20px rgba(0, 0, 0, 0.06);
 $shadow-active: 0 8px 24px rgba(64, 158, 255, 0.3);
 $shadow-active-pulse: 0 10px 30px rgba(64, 158, 255, 0.5);
+$shadow-hover: 0 6px 20px rgba(255, 107, 154, 0.2);
 
 // 共用动画
 @keyframes subtle-bounce {
@@ -84,6 +97,34 @@ $shadow-active-pulse: 0 10px 30px rgba(64, 158, 255, 0.5);
 
 @keyframes menu-item-slide {
     to { opacity: 1; transform: translateX(0); }
+}
+
+// 新增波纹动画
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+// 新增选中后的刷新动画
+@keyframes refresh-wave {
+    0% {
+        transform: scale(0.97);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.03);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 // 基本菜单样式
@@ -112,6 +153,26 @@ $shadow-active-pulse: 0 10px 30px rgba(64, 158, 255, 0.5);
         justify-content: flex-start;
         box-sizing: border-box;
         
+        // 波纹效果容器
+        &::after {
+            content: '';
+            display: block;
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        // 触发波纹效果
+        &:active::after {
+            animation: ripple 0.6s ease-out;
+        }
+        
         // 悬浮背景
         &::before {
             content: '';
@@ -121,15 +182,15 @@ $shadow-active-pulse: 0 10px 30px rgba(64, 158, 255, 0.5);
             z-index: -1;
             opacity: 0;
             transition: opacity 0.3s ease, transform 0.4s $transition-bezier;
-            background: linear-gradient(135deg, rgba(235, 242, 255, 0.9), rgba(235, 242, 255, 0.7));
+            background: linear-gradient(135deg, rgba(255, 235, 240, 0.9), rgba(255, 225, 235, 0.7));
             transform: scale(0.96);
         }
         
         // 悬浮效果
         &:hover {
             background-color: transparent;
-            color: $primary-color;
-            box-shadow: $shadow-normal;
+            color: $hover-color;
+            box-shadow: $shadow-hover;
             transform: translateY(-2px);
             
             &::before {
@@ -138,7 +199,7 @@ $shadow-active-pulse: 0 10px 30px rgba(64, 158, 255, 0.5);
             }
             
             i {
-                color: $primary-color;
+                color: $hover-color;
                 transform: scale(1.1) rotate(5deg);
             }
         }
@@ -181,6 +242,10 @@ $shadow-active-pulse: 0 10px 30px rgba(64, 158, 255, 0.5);
         transform: translateY(-2px);
         animation: pulseActive 2s infinite;
         
+        &.just-selected {
+            animation: refresh-wave 0.5s ease-in-out, pulseActive 2s infinite 0.5s;
+        }
+        
         &::before {
             opacity: 0;
         }
@@ -190,7 +255,8 @@ $shadow-active-pulse: 0 10px 30px rgba(64, 158, 255, 0.5);
         }
         
         i {
-            animation: subtle-bounce 2s infinite;
+            // 移除图标跳动动画
+            // animation: subtle-bounce 2s infinite;
         }
     }
 }
@@ -216,6 +282,17 @@ $shadow-active-pulse: 0 10px 30px rgba(64, 158, 255, 0.5);
         min-width: 60px;
         transition: all 0.4s $transition-bezier;
         
+        // 波纹效果在折叠状态下的位置调整
+        &::after {
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0);
+        }
+        
+        &:active::after {
+            animation: ripple 0.6s ease-out;
+        }
+        
         i {
             margin: 0;
             font-size: 22px;
@@ -234,8 +311,10 @@ $shadow-active-pulse: 0 10px 30px rgba(64, 158, 255, 0.5);
         
         &:hover {
             transform: translateY(-2px) scale(1.05);
+            box-shadow: $shadow-hover;
             
             i {
+                color: $hover-color;
                 transform: scale(1.15) rotate(5deg);
             }
         }
@@ -246,9 +325,14 @@ $shadow-active-pulse: 0 10px 30px rgba(64, 158, 255, 0.5);
         box-shadow: $shadow-active;
         animation: pulseActive 2s infinite;
         
+        &.just-selected {
+            animation: refresh-wave 0.5s ease-in-out, pulseActive 2s infinite 0.5s;
+        }
+        
         i {
             color: white;
-            animation: subtle-bounce 2s infinite;
+            // 移除图标跳动动画
+            // animation: subtle-bounce 2s infinite;
         }
     }
 }

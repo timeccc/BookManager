@@ -18,17 +18,17 @@
                     <i class="icon-profile"></i>
                     <input v-model="name" class="input-field" placeholder="请输入用户名" />
                     <span class="input-focus-border"></span>
-                </div>
+            </div>
                 <div class="input-item">
                     <i class="icon-lock"></i>
                     <input v-model="pwd" class="input-field" type="password" placeholder="请输入密码" />
                     <span class="input-focus-border"></span>
-                </div>
+            </div>
                 <div class="input-item">
                     <i class="icon-lock"></i>
                     <input v-model="pwdConfirm" class="input-field" type="password" placeholder="请确认密码" />
                     <span class="input-focus-border"></span>
-                </div>
+            </div>
             </div>
             
             <div class="register-action">
@@ -170,7 +170,7 @@ export default {
     overflow: hidden;
 }
 
-.register-panel {
+    .register-panel {
     width: 450px;
     padding: 40px;
     border-radius: 24px;
@@ -186,7 +186,7 @@ export default {
     &:hover {
         box-shadow: 0 20px 40px rgba(31, 38, 135, 0.3);
         transform: translateY(-5px);
-    }
+        }
 
     .register-header {
         margin-bottom: 25px;
@@ -407,8 +407,8 @@ export default {
                 }
             }
         }
+        }
     }
-}
 
 /* 响应式设计 */
 @media screen and (max-width: 500px) {

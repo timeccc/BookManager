@@ -140,7 +140,7 @@ export default {
                 const rolePath = role === 1 ? '/admin' : '/user';
                 const targetMenu = router.options.routes.find(route => route.path === rolePath);
                 if (targetMenu) {
-                    this.routers = targetMenu.children;
+                    this.userRoutes = targetMenu.children;
                 }
             } catch (error) {
                 console.error('获取用户认证信息时发生错误:', error);

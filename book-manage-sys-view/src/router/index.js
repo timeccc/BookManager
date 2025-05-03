@@ -19,17 +19,17 @@ const routes = [
     meta: { requireAuth: true },
     redirect: "/adminLayout",
     children: [
-      { path: "/adminLayout", name: '数据总览', icon: 'el-icon-pie-chart', component: () => import(`@/views/admin/Main.vue`), meta: { requireAuth: true } },
+      { path: "/adminLayout", name: '数据总览', icon: 'el-icon-odometer', component: () => import(`@/views/admin/Main.vue`), meta: { requireAuth: true } },
       { path: "/userManage", name: '用户管理', icon: 'el-icon-user-solid', component: () => import(`@/views/admin/UserManage.vue`), meta: { requireAuth: true } },
-      { path: "/bookManage", name: '书籍管理', icon: 'el-icon-tickets', component: () => import(`@/views/admin/BookManage.vue`), meta: { requireAuth: true } },
+      { path: "/bookManage", name: '书籍管理', icon: 'el-icon-reading', component: () => import(`@/views/admin/BookManage.vue`), meta: { requireAuth: true } },
       { path: "/bookOrderHistoryManage", name: '借阅记录', icon: 'el-icon-view', component: () => import(`@/views/admin/BookOrderHistoryManage.vue`), meta: { requireAuth: true } },
-      { path: "/bookRssHistoryManage", name: '图书订阅', icon: 'el-icon-s-marketing', component: () => import(`@/views/admin/BookRssHistoryManage.vue`), meta: { requireAuth: true } },
+      { path: "/bookRssHistoryManage", name: '图书订阅', icon: 'el-icon-connection', component: () => import(`@/views/admin/BookRssHistoryManage.vue`), meta: { requireAuth: true } },
       { path: "/rssNotificationManage", name: '订阅通知', icon: 'el-icon-message-solid', component: () => import(`@/views/admin/RssNotificationManage.vue`), meta: { requireAuth: true } },
-      { path: "/bookshelfManage", name: '书架管理', icon: 'el-icon-film', component: () => import(`@/views/admin/BookshelfManage.vue`), meta: { requireAuth: true } },
-      { path: "/categoryManage", name: '类别管理', icon: 'el-icon-share', component: () => import(`@/views/admin/CategoryManage.vue`), meta: { requireAuth: true } },
+      { path: "/bookshelfManage", name: '书架管理', icon: 'el-icon-folder', component: () => import(`@/views/admin/BookshelfManage.vue`), meta: { requireAuth: true } },
+      { path: "/categoryManage", name: '类别管理', icon: 'el-icon-collection-tag', component: () => import(`@/views/admin/CategoryManage.vue`), meta: { requireAuth: true } },
       { path: "/readerProposalManage", name: '读者建议', icon: 'el-icon-edit-outline', component: () => import(`@/views/admin/ReaderProposalManage.vue`), meta: { requireAuth: true } },
-      { path: "/noticeManage", name: '公告管理', icon: 'el-icon-edit-outline', component: () => import(`@/views/admin/NoticeManage.vue`), meta: { requireAuth: true } },
-      { path: "/userOperationLogManage", name: '行为日志', icon: 'el-icon-s-promotion', component: () => import(`@/views/admin/UserOperationLogManage.vue`), meta: { requireAuth: true } },
+      { path: "/noticeManage", name: '公告管理', icon: 'el-icon-bell', component: () => import(`@/views/admin/NoticeManage.vue`), meta: { requireAuth: true } },
+      { path: "/userOperationLogManage", name: '行为日志', icon: 'el-icon-notebook-2', component: () => import(`@/views/admin/UserOperationLogManage.vue`), meta: { requireAuth: true } },
     ]
   },
   {
@@ -39,15 +39,15 @@ const routes = [
     redirect: "/main",
     children: [
       { name: '留言', path: "/main", show: true, icon: 'el-icon-chat-dot-round', component: () => import(`@/views/user/Main.vue`), meta: { requireAuth: true } },
-      { name: '借阅', path: "/bookOperation", show: true, icon: 'el-icon-tickets', component: () => import(`@/views/user/BookOperation.vue`), meta: { requireAuth: true } },
-      { name: '历史', path: "/bookOrderHistory", show: true, icon: 'el-icon-pie-chart', component: () => import(`@/views/user/BookOrderHistory.vue`), meta: { requireAuth: true } },
-      { name: '收藏', path: "/bookSave", show: true, icon: 'el-icon-star-on', component: () => import(`@/views/user/BookSave.vue`), meta: { requireAuth: true } },
-      { name: '订阅', path: "/bookRssHistory", show: true, icon: 'el-icon-bell', component: () => import(`@/views/user/BookRssHistory.vue`), meta: { requireAuth: true } },
-      { name: '通知', path: "/rssNotification", show: true, icon: 'el-icon-chat-round', component: () => import(`@/views/user/RssNotification.vue`), meta: { requireAuth: true } },
-      { name: '日志', path: "/userOperationLog", show: true, icon: 'el-icon-document', component: () => import(`@/views/user/UserOperationLog.vue`), meta: { requireAuth: true } },
-      { name: '公告', path: "/notice", show: true, icon: 'el-icon-document-remove', component: () => import(`@/views/user/Notice.vue`), meta: { requireAuth: true } },
+      { name: '借阅', path: "/bookOperation", show: true, icon: 'el-icon-reading', component: () => import(`@/views/user/BookOperation.vue`), meta: { requireAuth: true } },
+      { name: '历史', path: "/bookOrderHistory", show: true, icon: 'el-icon-time', component: () => import(`@/views/user/BookOrderHistory.vue`), meta: { requireAuth: true } },
+      { name: '收藏', path: "/bookSave", show: true, icon: 'el-icon-collection', component: () => import(`@/views/user/BookSave.vue`), meta: { requireAuth: true } },
+      { name: '订阅', path: "/bookRssHistory", show: true, icon: 'el-icon-connection', component: () => import(`@/views/user/BookRssHistory.vue`), meta: { requireAuth: true } },
+      { name: '通知', path: "/rssNotification", show: true, icon: 'el-icon-message', component: () => import(`@/views/user/RssNotification.vue`), meta: { requireAuth: true } },
+      { name: '日志', path: "/userOperationLog", show: true, icon: 'el-icon-notebook-2', component: () => import(`@/views/user/UserOperationLog.vue`), meta: { requireAuth: true } },
+      { name: '公告', path: "/notice", show: true, icon: 'el-icon-bell', component: () => import(`@/views/user/Notice.vue`), meta: { requireAuth: true } },
       { name: '公告详情', path: "/noticeDetail", show: false, icon: 'el-icon-document-remove', component: () => import(`@/views/user/NoticeDetail.vue`), meta: { requireAuth: true } },
-      { name: '我的中心', path: "/mySelf", show: false, icon: 'el-icon-document-remove', component: () => import(`@/views/user/MySelf.vue`), meta: { requireAuth: true } },
+      { name: '我的中心', path: "/mySelf", show: false, icon: 'el-icon-user', component: () => import(`@/views/user/MySelf.vue`), meta: { requireAuth: true } },
     ]
   }
 ];

@@ -1,32 +1,35 @@
 <template>
-    <el-row style="background-color: #FFFFFF;padding: 20px 0;border-radius: 5px;">
-        <el-row style="padding: 10px;margin: 0 10px;">
-            <el-row>
-                <span class="top-bar">借阅时间</span>
-                <el-date-picker class="custom-date-picker" size="small" style="width: 240px;" v-model="searchTime" type="daterange"
-                    value-format="yyyy-MM-dd"
-                    range-separator=" 至 " start-placeholder="起始日期" end-placeholder="结束日期">
-                </el-date-picker>
-                <el-button size="small" class="customer"
-                    style="margin-left: 10px;background-color: rgb(235, 237, 245);color: white;border: none;" type="primary"
-                    @click="handleFilter">立即查询</el-button>
-            </el-row>
+    <el-row class="common-container">
+        <el-row class="filter-row">
+            <span class="top-bar">借阅时间</span>
+            <el-date-picker size="small" style="width: 240px;" v-model="searchTime" type="daterange"
+                value-format="yyyy-MM-dd"
+                range-separator="-" start-placeholder="起始日期" end-placeholder="结束日期">
+            </el-date-picker>
+            <el-button size="small" class="query-btn" type="primary"
+                @click="handleFilter">立即查询</el-button>
         </el-row>
-        <el-row style="margin: 10px 20px;">
-            <el-table :data="tableData">
+        <el-row class="table-container">
+            <el-table :data="tableData" class="custom-table">
                 <el-table-column prop="bookName" label="书籍名"></el-table-column>
                 <el-table-column prop="userName" width="98" label="订阅者"></el-table-column>
                 <el-table-column prop="deadlineNum" width="88" label="馆藏数"></el-table-column>
                 <el-table-column prop="isReturn" width="130" label="是否归还">
                     <template slot-scope="scope">
-                        <span>{{ scope.row.isReturn ? '已归还' : '未归还' }}</span>
+                        <el-tag :type="scope.row.isReturn ? 'success' : 'warning'" size="small">
+                            {{ scope.row.isReturn ? '已归还' : '未归还' }}
+                        </el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column prop="returnTime" width="168" label="归还时间"></el-table-column>
                 <el-table-column prop="createTime" width="168" label="借阅时间"></el-table-column>
-                <el-table-column label="操作" fixed="right" width="90">
+                <el-table-column label="操作" width="100" align="center">
                     <template slot-scope="scope">
-                        <span class="text-button" style="color: #F56C6C;" @click="handleDelete(scope.row)">删除</span>
+                        <div class="action-buttons">
+                            <el-tag type="danger" size="small" @click.native="handleDelete(scope.row)" class="action-tag delete-tag">
+                                删除
+                            </el-tag>
+                        </div>
                     </template>
                 </el-table-column>
             </el-table>
@@ -194,10 +197,25 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.list-cover {
-    width: 50px;
-    height: 70px;
-    border-radius: 5px;
+.common-container {
+    background-color: #FFFFFF;
+    padding: 20px 0;
+    border-radius: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
+}
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 16px;
+    margin-bottom: 5px;
+}
+
+.table-container {
+    margin: 10px 16px;
+    border-top: none;
 }
 
 .top-bar {
@@ -208,46 +226,131 @@ export default {
     font-weight: 500;
 }
 
-/* 日期选择器美化样式 */
-.custom-date-picker {
-    ::v-deep .el-input__inner {
-        border-radius: 4px;
-        border-color: #dcdfe6;
-        transition: all 0.2s;
+.query-btn {
+    margin-left: 10px;
+    background-color: #3a8ee6;
+    color: #ffffff;
+    border: none;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(58, 142, 230, 0.3);
+}
+
+/* 添加表格样式 */
+.custom-table {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    border: none;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+.action-tag {
+    cursor: pointer;
+    transition: all 0.2s;
+    
+    &:hover {
+        transform: translateY(-1px);
+    }
+    
+    &.delete-tag {
+        background-color: #fef0f0;
+        color: #F56C6C;
+        border-color: #fde2e2;
         
         &:hover {
-            border-color: #c0c4cc;
+            background-color: #fde2e2;
+        }
+    }
+}
+
+/* 优化深度选择器使用 */
+:deep(.el-table) {
+    &::before, 
+    &::after {
+        display: none;
+    }
+    
+    .el-table__header-wrapper th {
+        background-color: #f5f7fa;
+        color: #606266;
+        font-weight: 600;
+        padding: 12px 0;
+        border-bottom: 1px solid #ebeef5;
+    }
+    
+    .el-table__body-wrapper .el-table__row {
+        transition: all 0.3s;
+        
+        &:hover {
+            background-color: #f0f9ff !important;
         }
         
-        &:focus {
-            border-color: #409EFF;
-            box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+        td {
+            padding: 10px 0;
+            vertical-align: middle;
+            height: 40px;
+            line-height: 20px;
+            border-bottom: 1px solid #ebeef5;
         }
     }
     
-    ::v-deep .el-range-separator {
-        color: #606266;
-        padding: 0 5px;
+    .el-table__empty-block {
+        min-height: 60px;
+    }
+    
+    .el-table__header, 
+    .el-table__body {
+        border: none;
+    }
+    
+    .el-table--border::after, 
+    .el-table--group::after {
+        display: none;
+    }
+}
+
+/* 分页样式美化 */
+:deep(.el-pagination) {
+    .el-pagination__total {
         font-weight: 500;
-        display: inline-flex;
-        align-items: center;
     }
     
-    ::v-deep .el-range-input {
-        font-size: 13px;
-        color: #606266;
+    .el-pagination__sizes {
+        .el-input .el-input__inner {
+            border-radius: 4px;
+            transition: all 0.3s;
+            
+            &:hover, &:focus {
+                border-color: #409EFF;
+            }
+        }
     }
     
-    ::v-deep .el-range__icon {
-        color: #c0c4cc;
-    }
-    
-    ::v-deep .el-range__close-icon {
-        color: #c0c4cc;
-        font-size: 14px;
+    .el-pager li {
+        border-radius: 4px;
+        transition: all 0.3s;
         
         &:hover {
-            color: #909399;
+            color: #409EFF;
+        }
+        
+        &.active {
+            background-color: #409EFF;
+            color: #fff;
+        }
+    }
+    
+    .btn-prev, .btn-next {
+        border-radius: 4px;
+        
+        &:hover {
+            color: #409EFF;
         }
     }
 }

@@ -1,28 +1,32 @@
 <template>
-    <el-row style="background-color: #FFFFFF;padding: 20px 0;border-radius: 5px;">
-        <el-row style="padding: 10px;margin: 0 10px;">
+    <el-row class="common-container">
+        <el-row style="padding: 10px 16px;">
             <el-row>
                 <span class="top-bar">楼层</span>
                 <el-input size="small" style="width: 188px;margin-right: 10px;" v-model="bookshelfQueryDto.floor"
                     placeholder="楼层" clearable @clear="handleFilterClear">
                 </el-input>
                 <el-button size="small" class="customer"
-                    style="background-color: rgb(235, 237, 245);color: white;border: none;" type="primary"
+                    style="background-color: #3a8ee6;color: #ffffff;border: none;font-weight: 500;box-shadow: 0 2px 6px rgba(58, 142, 230, 0.3);" type="primary"
                     @click="handleFilter">立即查询</el-button>
                 <el-button size="small"
-                    style="background-color: rgb(235, 237, 245);color: white;border: none;" class="customer"
+                    style="background-color: #67c23a;color: #ffffff;border: none;font-weight: 500;box-shadow: 0 2px 6px rgba(103, 194, 58, 0.3);" class="customer"
                     type="info" @click="add()">新增书架</el-button>
             </el-row>
         </el-row>
-        <el-row style="margin: 10px 20px;">
-            <el-table :data="tableData">
+        <el-row style="margin: 10px 16px;">
+            <el-table :data="tableData" class="custom-table">
                 <el-table-column prop="floor" label="书架所在楼层"></el-table-column>
                 <el-table-column prop="area" width="188" label="书架所在区域"></el-table-column>
                 <el-table-column prop="frame" width="148" label="书架名"></el-table-column>
-                <el-table-column label="操作">
-                    <template slot-scope="scope" width="120">
-                        <span class="text-button" style="color: #409EFF;" @click="handleEdit(scope.row)">编辑</span>
-                        <span class="text-button" style="color: #F56C6C;" @click="handleDelete(scope.row)">删除</span>
+                <el-table-column label="操作" width="160" align="center">
+                    <template slot-scope="scope">
+                        <el-tag type="primary" size="small" @click.native="handleEdit(scope.row)" class="action-tag edit-tag" style="min-width: 42px; margin-right: 8px;">
+                            编辑
+                        </el-tag>
+                        <el-tag type="danger" size="small" @click.native="handleDelete(scope.row)" class="action-tag delete-tag" style="min-width: 42px;">
+                            删除
+                        </el-tag>
                     </template>
                 </el-table-column>
             </el-table>
@@ -251,10 +255,37 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.common-container {
+    background-color: #FFFFFF;
+    padding: 20px 0;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
+}
+
 .list-cover {
     width: 50px;
     height: 70px;
     border-radius: 5px;
+}
+
+.top-bar {
+    color: #606266;
+    font-size: 14px;
+    margin-right: 8px;
+    line-height: 32px;
+    font-weight: 500;
+}
+
+.edit-btn {
+    color: #409EFF;
+}
+
+.delete-btn {
+    color: #F56C6C;
 }
 
 /* 日期选择器美化样式 */
@@ -420,5 +451,124 @@ export default {
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(64, 158, 255, 0.3);
     }
+}
+
+/* 添加表格样式 */
+.custom-table {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    
+    ::v-deep .el-table__header-wrapper {
+        th {
+            background-color: #f5f7fa;
+            color: #606266;
+            font-weight: 600;
+            padding: 12px 0;
+        }
+    }
+    
+    ::v-deep .el-table__body-wrapper {
+        .el-table__row {
+            transition: all 0.3s;
+            
+            &:hover {
+                background-color: #f0f9ff !important;
+            }
+            
+            td {
+                padding: 10px 0;
+                vertical-align: middle;
+                height: 40px;
+                line-height: 20px;
+            }
+        }
+    }
+}
+
+/* 添加文本按钮样式 */
+.text-button {
+    margin-right: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.3s;
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    
+    &:hover {
+        text-decoration: underline;
+        
+        &.edit-btn {
+            color: #66b1ff;
+        }
+        
+        &.delete-btn {
+            color: #ff8c8c;
+        }
+    }
+}
+
+/* 分页样式美化 */
+::v-deep .el-pagination {
+    .el-pagination__total {
+        font-weight: 500;
+    }
+    
+    .el-pagination__sizes {
+        .el-input .el-input__inner {
+            border-radius: 4px;
+            transition: all 0.3s;
+            
+            &:hover, &:focus {
+                border-color: #409EFF;
+            }
+        }
+    }
+    
+    .el-pager li {
+        border-radius: 4px;
+        transition: all 0.3s;
+        
+        &:hover {
+            color: #409EFF;
+        }
+        
+        &.active {
+            background-color: #409EFF;
+            color: #fff;
+        }
+    }
+    
+    .btn-prev, .btn-next {
+        border-radius: 4px;
+        
+        &:hover {
+            color: #409EFF;
+        }
+    }
+}
+
+.action-tag {
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 0 8px;
+    line-height: 22px;
+    color: #fff;
+    display: inline-block;
+    
+    &:hover {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+.edit-tag {
+    background-color: #409EFF;
+}
+
+.delete-tag {
+    background-color: #F56C6C;
 }
 </style>

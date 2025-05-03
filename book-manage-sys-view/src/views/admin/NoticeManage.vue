@@ -7,15 +7,15 @@
                     @clear="handleFilterClear">
                 </el-input>
                 <span class="top-bar">发布时间</span>
-                <el-date-picker class="custom-date-picker" size="small" style="width: 240px;" v-model="searchTime"
-                    type="daterange" value-format="yyyy-MM-dd" range-separator=" 至 " 
+                <el-date-picker size="small" style="width: 240px;" v-model="searchTime"
+                    type="daterange" value-format="yyyy-MM-dd" range-separator="-" 
                     start-placeholder="起始日期" end-placeholder="结束日期">
                 </el-date-picker>
                 <el-button size="small" class="customer"
-                    style="margin-left: 10px;background-color: rgb(235, 237, 245);color: rgb(43, 121, 203);border: none;" type="primary"
+                    style="margin-left: 10px;background-color: #3a8ee6;color: #ffffff;border: none;font-weight: 500;box-shadow: 0 2px 6px rgba(58, 142, 230, 0.3);" type="primary"
                     @click="handleFilter">立即查询</el-button>
                 <el-button size="small"
-                    style="background-color: rgb(235, 237, 245);color: rgb(43, 121, 203);border: none;" class="customer"
+                    style="background-color: #67c23a;color: #ffffff;border: none;font-weight: 500;box-shadow: 0 2px 6px rgba(103, 194, 58, 0.3);" class="customer"
                     type="info" @click="addNotice">新增公告</el-button>
             </el-row>
         </el-row>
@@ -23,10 +23,14 @@
             <el-table :data="tableData" class="custom-table">
                 <el-table-column prop="name"  label="公告"></el-table-column>
                 <el-table-column prop="createTime" width="188" label="发布时间"></el-table-column>
-                <el-table-column label="操作" width="120">
+                <el-table-column label="操作" width="160" align="center">
                     <template slot-scope="scope">
-                        <span class="text-button" style="color: #409EFF;" @click="handleEdit(scope.row)">修改</span>
-                        <span class="text-button" style="color: #F56C6C;" @click="handleDelete(scope.row)">删除</span>
+                        <el-tag type="primary" size="small" @click.native="handleEdit(scope.row)" class="action-tag edit-tag" style="min-width: 42px; margin-right: 8px;">
+                            修改
+                        </el-tag>
+                        <el-tag type="danger" size="small" @click.native="handleDelete(scope.row)" class="action-tag delete-tag" style="min-width: 42px;">
+                            删除
+                        </el-tag>
                     </template>
                 </el-table-column>
             </el-table>
@@ -224,49 +228,90 @@ export default {
     overflow: hidden;
     margin-bottom: 20px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    
+    ::v-deep .el-table__header-wrapper {
+        th {
+            background-color: #f5f7fa;
+            color: #606266;
+            font-weight: 600;
+            padding: 12px 0;
+        }
+    }
+    
+    ::v-deep .el-table__body-wrapper {
+        .el-table__row {
+            transition: all 0.3s;
+            
+            &:hover {
+                background-color: #f0f9ff !important;
+            }
+            
+            td {
+                padding: 10px 0;
+            }
+        }
+    }
 }
 
-/* 日期选择器美化样式 */
-.custom-date-picker {
-    ::v-deep .el-input__inner {
-        border-radius: 4px;
-        border-color: #dcdfe6;
-        transition: all 0.2s;
-        
-        &:hover {
-            border-color: #c0c4cc;
-        }
-        
-        &:focus {
-            border-color: #409EFF;
-            box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
-        }
-    }
-    
-    ::v-deep .el-range-separator {
-        color: #606266;
-        padding: 0 5px;
+// 分页样式美化
+::v-deep .el-pagination {
+    .el-pagination__total {
         font-weight: 500;
-        display: inline-flex;
-        align-items: center;
     }
     
-    ::v-deep .el-range-input {
-        font-size: 13px;
-        color: #606266;
-    }
-    
-    ::v-deep .el-range__icon {
-        color: #c0c4cc;
-    }
-    
-    ::v-deep .el-range__close-icon {
-        color: #c0c4cc;
-        font-size: 14px;
-        
-        &:hover {
-            color: #909399;
+    .el-pagination__sizes {
+        .el-input .el-input__inner {
+            border-radius: 4px;
+            transition: all 0.3s;
+            
+            &:hover, &:focus {
+                border-color: #409EFF;
+            }
         }
     }
+    
+    .el-pager li {
+        border-radius: 4px;
+        transition: all 0.3s;
+        
+        &:hover {
+            color: #409EFF;
+        }
+        
+        &.active {
+            background-color: #409EFF;
+            color: #fff;
+        }
+    }
+    
+    .btn-prev, .btn-next {
+        border-radius: 4px;
+        
+        &:hover {
+            color: #409EFF;
+        }
+    }
+}
+
+.action-tag {
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 0 8px;
+    line-height: 22px;
+    color: #fff;
+    display: inline-block;
+    
+    &:hover {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+.edit-tag {
+    background-color: #409EFF;
+}
+
+.delete-tag {
+    background-color: #F56C6C;
 }
 </style>

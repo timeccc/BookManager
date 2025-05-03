@@ -171,9 +171,9 @@ export default {
 <style scoped lang="scss">
 .history-container {
     width: 100%;
-    padding: 20px;
+    padding: 10px 20px 20px 20px;
+    box-sizing: border-box;
     background-color: #fafafa;
-    min-height: 100vh;
 }
 
 .books-wrapper {
@@ -364,7 +364,8 @@ export default {
 .word-search {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    margin-top: -5px;
 
     .item {
         padding: 10px 20px;

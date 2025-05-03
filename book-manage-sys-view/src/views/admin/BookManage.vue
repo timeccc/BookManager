@@ -1,17 +1,17 @@
 <template>
     <el-row class="book-manage-container">
         <el-row style="padding: 10px 16px;margin: 0;">
-            <el-row>
-                <el-date-picker style="width: 216px;margin-right: 5px;" @change="fetchFreshData" size="small"
-                    v-model="searchTime" type="daterange" range-separator="至" start-placeholder="创建开始"
+            <el-row class="search-bar-container">
+                <el-date-picker style="width: 216px;margin-right: 10px;" @change="fetchFreshData" size="small"
+                    v-model="searchTime" type="daterange" range-separator="-" start-placeholder="创建开始"
                     end-placeholder="创建结束">
                 </el-date-picker>
-                <el-input size="small" style="width: 166px;" v-model="bookQueryDto.name" placeholder="书名" clearable
+                <el-input size="small" style="width: 166px; margin-right: 5px;" v-model="bookQueryDto.name" placeholder="书名" clearable
                     @clear="handleFilterClear">
-                    <el-button slot="append" @click="handleFilter" icon="el-icon-search"></el-button>
                 </el-input>
-                <span class="edit-button" style="float: right;" @click="add()">
-                    <i class="el-icon-plus" style="margin-right: 5px;"></i>新增书籍
+                <el-button size="small" @click="handleFilter" icon="el-icon-search"></el-button>
+                <span class="new-book-btn" @click="add()">
+                    <i class="el-icon-plus"></i>新增书籍
                 </span>
             </el-row>
         </el-row>
@@ -19,43 +19,41 @@
             <div class="book-grid">
                 <div v-for="(book, index) in tableData" :key="index" class="book-col">
                     <div class="item-book">
-                        <div style="display: flex;justify-content: center;">
+                        <div style="display: flex;flex-direction: column;align-items: center;">
                             <img style="width: 120px;max-height: 140px;border-radius: 8px;box-shadow: 0 4px 12px rgba(0,0,0,0.1);" :src="book.cover" alt="">
-                        </div>
-                        <div style="padding: 10px 10px; text-align: center;">
-                            <div style="color: rgb(51,51,51);font-size: 16px;font-weight: bold;margin-bottom: 5px;">
+                        
+                            <div style="width: 100%; padding: 10px 0;">
+                                <div style="color: rgb(51,51,51);font-size: 16px;font-weight: bold;margin-bottom: 10px; text-align: center;">
                                 <el-tooltip class="item" effect="dark" :content="book.name" placement="top">
                                     <div class="title" style="margin: 0 auto;">{{ book.name }}</div>
                                 </el-tooltip>
                             </div>
-                            <div style="font-size: 12px;color: rgb(51,51,51);margin-bottom: 8px;">
-                                <div class="title" style="margin: 0 auto 5px auto;">
+                                <div style="font-size: 12px;color: rgb(51,51,51);margin-bottom: 8px; text-align: left; padding-left: 12px;">
+                                    <div class="title" style="margin: 0 0 5px 0;">
                                     <i v-if="book.isPlanBuy" style="margin-right: 5px;color: #E6A23C;" class="el-icon-warning"></i>
                                     <i v-else style="margin-right: 5px;color: #67C23A;" class="el-icon-success"></i>
                                     <el-tooltip v-if="book.isPlanBuy" class="item" effect="dark"
                                         content="计划上架的书籍，为预售书籍。用户可以订阅，书籍上架之后将做通知" placement="top">
-                                        <span
-                                            style="text-decoration: underline;text-decoration-style: dashed;">预售书籍</span>
+                                            <span style="text-decoration: underline;text-decoration-style: dashed;">预售书籍</span>
                                     </el-tooltip>
                                     <span v-else>书籍已上架</span>
                                     <span> - {{ book.categoryName }}</span>
                                 </div>
                                 <div style="font-size: 12px; margin-bottom: 4px;">
-                                    <el-tooltip class="item" effect="dark" :content="book.publisher"
-                                        placement="top">
-                                        <div class="title" style="margin: 0 auto;">由【{{ book.publisher }}】出版</div>
+                                        <el-tooltip class="item" effect="dark" :content="book.publisher" placement="top">
+                                            <div class="title" style="margin: 0;">由【{{ book.publisher }}】出版</div>
                                     </el-tooltip>
                                 </div>
                                 <div style="margin-bottom: 8px;">
-                                    <el-tooltip class="item" effect="dark" :content="book.author"
-                                        placement="top">
-                                        <div class="title" style="margin: 0 auto;">
+                                        <el-tooltip class="item" effect="dark" :content="book.author" placement="top">
+                                            <div class="title" style="margin: 0;">
                                             <span style="margin-right: 4px;">作者：{{ book.author }}</span>
                                             <span>【库存{{ book.num }}本】</span>
                                         </div>
                                     </el-tooltip>
                                 </div>
-                                <div class="book-actions" style="gap: 8px;">
+                                </div>
+                                <div class="book-actions" style="padding-left: 12px; justify-content: flex-start;">
                                     <button @click="handleEdit(book)" class="book-btn edit-btn">修改</button>
                                     <button @click="handleDelete(book)" class="book-btn delete-btn">删除</button>
                                 </div>
@@ -372,6 +370,9 @@ export default {
     },
 };
 </script>
+<style lang="scss">
+/* 全局样式移除，使用Element UI原生样式 */
+</style>
 <style scoped lang="scss">
 .book-manage-container {
     background-color: #FFFFFF;
@@ -382,6 +383,11 @@ export default {
     margin: 0 auto;
     box-sizing: border-box;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
 }
 
 .list-cover {
@@ -417,22 +423,22 @@ export default {
 .book-actions {
     display: flex;
     justify-content: center;
-    gap: 8px;
-    margin-top: 8px;
+    gap: 12px;
+    margin-top: 12px;
 }
 
 .book-btn {
-    padding: 2px 10px !important;
+    padding: 4px 12px !important;
     border: none !important;
     border-radius: 10px !important;
-    font-size: 9px !important;
-    font-weight: 400 !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
     color: white !important;
     outline: none !important;
-    min-width: 36px !important;
-    height: 18px !important;
+    min-width: 44px !important;
+    height: 24px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -579,13 +585,19 @@ export default {
 }
 
 // 响应式调整
-@media (max-width: 1400px) {
+@media (max-width: 1500px) {
+    .book-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (max-width: 1300px) {
     .book-grid {
         grid-template-columns: repeat(4, 1fr);
     }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1000px) {
     .book-grid {
         grid-template-columns: repeat(3, 1fr);
     }
@@ -757,6 +769,79 @@ export default {
     &:hover {
         background-color: #66b1ff;
         border-color: #66b1ff;
+    }
+}
+
+// 添加按钮悬停效果
+.add-button {
+    &:hover {
+        background-color: #85ce61;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(103, 194, 58, 0.4);
+    }
+}
+
+// 分页样式美化
+::v-deep .el-pagination {
+    .el-pagination__total {
+        font-weight: 500;
+    }
+    
+    .el-pagination__sizes {
+        .el-input .el-input__inner {
+            border-radius: 4px;
+            transition: all 0.3s;
+            
+            &:hover, &:focus {
+                border-color: #409EFF;
+            }
+        }
+    }
+    
+    .el-pager li {
+        border-radius: 4px;
+        transition: all 0.3s;
+        
+        &:hover {
+            color: #409EFF;
+        }
+        
+        &.active {
+            background-color: #409EFF;
+            color: #fff;
+        }
+    }
+    
+    .btn-prev, .btn-next {
+        border-radius: 4px;
+        
+        &:hover {
+            color: #409EFF;
+        }
+    }
+}
+
+.new-book-btn {
+    padding: 7px 20px;
+    background-color: #67c23a;
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-left: auto;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(103, 194, 58, 0.3);
+    float: right;
+    
+    i {
+        margin-right: 5px;
+        font-size: 12px;
+    }
+    
+    &:hover {
+        background-color: #85ce61;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(103, 194, 58, 0.4);
     }
 }
 </style>

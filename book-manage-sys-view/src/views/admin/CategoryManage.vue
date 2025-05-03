@@ -7,20 +7,24 @@
                     placeholder="书籍类别名" clearable @clear="handleFilterClear">
                 </el-input>
                 <el-button size="small" class="customer"
-                    style="background-color: rgb(235, 237, 245);color: white;border: none;" type="primary"
+                    style="background-color: #3a8ee6;color: #ffffff;border: none;font-weight: 500;box-shadow: 0 2px 6px rgba(58, 142, 230, 0.3);" type="primary"
                     @click="handleFilter">立即查询</el-button>
                 <el-button size="small"
-                    style="background-color: rgb(235, 237, 245);color: white;border: none;" class="customer"
-                    type="info" @click="add()">新增书籍类别</el-button>
+                    style="background-color: #67c23a;color: #ffffff;border: none;font-weight: 500;box-shadow: 0 2px 6px rgba(103, 194, 58, 0.3);" class="customer"
+                    type="info" @click="add()">新增类别</el-button>
             </el-row>
         </el-row>
         <el-row style="margin: 10px 20px;">
-            <el-table :data="tableData">
+            <el-table :data="tableData" class="custom-table">
                 <el-table-column prop="name"  label="书籍类别名"></el-table-column>
-                <el-table-column label="操作">
-                    <template slot-scope="scope" width="90">
-                        <span class="text-button" style="color: #409EFF;" @click="handleEdit(scope.row)">编辑</span>
-                        <span class="text-button" style="color: #F56C6C;" @click="handleDelete(scope.row)">删除</span>
+                <el-table-column label="操作" width="160" align="center">
+                    <template slot-scope="scope">
+                        <el-tag type="primary" size="small" @click.native="handleEdit(scope.row)" class="action-tag edit-tag" style="min-width: 42px; margin-right: 8px;">
+                            编辑
+                        </el-tag>
+                        <el-tag type="danger" size="small" @click.native="handleDelete(scope.row)" class="action-tag delete-tag" style="min-width: 42px;">
+                            删除
+                        </el-tag>
                     </template>
                 </el-table-column>
             </el-table>
@@ -238,6 +242,14 @@ export default {
 };
 </script>
 <style scoped lang="scss">
+.top-bar {
+    color: #606266;
+    font-size: 14px;
+    margin-right: 8px;
+    line-height: 32px;
+    font-weight: 500;
+}
+
 .tag-tip {
     display: inline-block;
     padding: 5px 10px;
@@ -255,50 +267,6 @@ export default {
     color: rgb(102, 102, 102);
     font-weight: 900;
     width: 100%;
-}
-
-/* 日期选择器美化样式 */
-.custom-date-picker {
-    ::v-deep .el-input__inner {
-        border-radius: 4px;
-        border-color: #dcdfe6;
-        transition: all 0.2s;
-        
-        &:hover {
-            border-color: #c0c4cc;
-        }
-        
-        &:focus {
-            border-color: #409EFF;
-            box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
-        }
-    }
-    
-    ::v-deep .el-range-separator {
-        color: #606266;
-        padding: 0 5px;
-        font-weight: 500;
-        display: inline-flex;
-        align-items: center;
-    }
-    
-    ::v-deep .el-range-input {
-        font-size: 13px;
-        color: #606266;
-    }
-    
-    ::v-deep .el-range__icon {
-        color: #c0c4cc;
-    }
-    
-    ::v-deep .el-range__close-icon {
-        color: #c0c4cc;
-        font-size: 14px;
-        
-        &:hover {
-            color: #909399;
-        }
-    }
 }
 
 /* 对话框样式 */
@@ -421,5 +389,112 @@ export default {
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(64, 158, 255, 0.3);
     }
+}
+
+/* 添加表格样式 */
+.custom-table {
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    
+    ::v-deep .el-table__header-wrapper {
+        th {
+            background-color: #f5f7fa;
+            color: #606266;
+            font-weight: 600;
+            padding: 12px 0;
+        }
+    }
+    
+    ::v-deep .el-table__body-wrapper {
+        .el-table__row {
+            transition: all 0.3s;
+            
+            &:hover {
+                background-color: #f0f9ff !important;
+            }
+            
+            td {
+                padding: 10px 0;
+            }
+        }
+    }
+}
+
+/* 添加文本按钮样式 */
+.text-button {
+    color: #409EFF;
+    margin-right: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+    
+    &:hover {
+        color: #66b1ff;
+        text-decoration: underline;
+    }
+}
+
+/* 分页样式美化 */
+::v-deep .el-pagination {
+    .el-pagination__total {
+        font-weight: 500;
+    }
+    
+    .el-pagination__sizes {
+        .el-input .el-input__inner {
+            border-radius: 4px;
+            transition: all 0.3s;
+            
+            &:hover, &:focus {
+                border-color: #409EFF;
+            }
+        }
+    }
+    
+    .el-pager li {
+        border-radius: 4px;
+        transition: all 0.3s;
+        
+        &:hover {
+            color: #409EFF;
+        }
+        
+        &.active {
+            background-color: #409EFF;
+            color: #fff;
+        }
+    }
+    
+    .btn-prev, .btn-next {
+        border-radius: 4px;
+        
+        &:hover {
+            color: #409EFF;
+        }
+    }
+}
+
+.action-tag {
+    cursor: pointer;
+    transition: all 0.2s;
+    padding: 0 8px;
+    line-height: 22px;
+    color: #fff;
+    display: inline-block;
+    
+    &:hover {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+.edit-tag {
+    background-color: #409EFF;
+}
+
+.delete-tag {
+    background-color: #F56C6C;
 }
 </style>

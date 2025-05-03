@@ -16,12 +16,9 @@
                 </div>
             </div>
             
-            <div class="custom-divider">
-                <span></span>
-            </div>
-            
             <div class="notice-content">
-                <div v-html="notice.content" class="rich-content"></div>
+                <div v-if="notice.content" v-html="notice.content" class="rich-content"></div>
+                <div v-else class="no-content">暂无内容</div>
             </div>
         </el-card>
     </div>
@@ -29,6 +26,7 @@
 
 <script>
 export default {
+    name: 'NoticeDetail',
     data() {
         return {
             notice: {},
@@ -38,34 +36,44 @@ export default {
         this.loadNoticeInfo();
     },
     methods: {
-        returnPage(){
+        returnPage() {
             this.$router.go(-1);
         },
         loadNoticeInfo() {
-            const jsonNiticeInfo = sessionStorage.getItem('noticeInfo');
-            this.notice = JSON.parse(jsonNiticeInfo);
+            try {
+                const jsonNoticeInfo = sessionStorage.getItem('noticeInfo');
+                if (!jsonNoticeInfo) {
+                    this.$message.error('公告信息获取失败');
+                    setTimeout(() => this.returnPage(), 1000);
+                    return;
+                }
+                this.notice = JSON.parse(jsonNoticeInfo);
+            } catch (error) {
+                console.error('解析公告信息失败:', error);
+                this.$message.error('公告信息解析失败');
+                setTimeout(() => this.returnPage(), 1000);
+            }
         },
     },
 };
 </script>
 <style scoped lang="scss">
 .notice-detail-container {
-    padding: 20px;
+    padding: 15px;
     max-width: 900px;
     margin: 0 auto;
     
     .notice-card {
         border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(255, 87, 34, 0.08);
+        box-shadow: 0 4px 16px rgba(255, 87, 34, 0.08);
         background-color: #fff;
         position: relative;
         overflow: hidden;
         border: none;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        transition: transform 0.3s ease;
         
         &:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(255, 87, 34, 0.15);
         }
         
         .card-decoration {
@@ -78,7 +86,7 @@ export default {
         }
         
         ::v-deep .el-card__body {
-            padding: 25px;
+            padding: 20px;
         }
     }
     
@@ -95,7 +103,7 @@ export default {
             color: #ff5722;
             cursor: pointer;
             transition: all 0.2s ease;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-weight: 500;
             
             i {
@@ -105,15 +113,14 @@ export default {
             &:hover {
                 background-color: rgba(255, 87, 34, 0.15);
                 transform: translateX(-3px);
-                box-shadow: 0 3px 10px rgba(255, 87, 34, 0.1);
             }
         }
         
         .notice-title {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 600;
             color: #333;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             line-height: 1.4;
             position: relative;
             padding-left: 12px;
@@ -148,28 +155,20 @@ export default {
         }
     }
     
-    .custom-divider {
-        height: 1px;
-        background: #f0f0f0;
-        margin: 20px 0;
-        position: relative;
-        
-        span {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100px;
-            height: 100%;
-            background: linear-gradient(90deg, #ff5722, rgba(255, 87, 34, 0));
-        }
-    }
-    
     .notice-content {
-        padding: 20px;
-        line-height: 1.8;
+        margin-top: 10px;
+        padding: 15px;
+        line-height: 1.7;
         color: #333;
         background-color: #fafafa;
         border-radius: 8px;
+        
+        .no-content {
+            text-align: center;
+            color: #909399;
+            font-style: italic;
+            padding: 10px 0;
+        }
         
         .rich-content {
             ::v-deep img {
@@ -185,7 +184,6 @@ export default {
             ::v-deep a {
                 color: #ff5722;
                 text-decoration: none;
-                transition: color 0.2s;
                 
                 &:hover {
                     color: #ff9800;
@@ -200,7 +198,7 @@ export default {
             
             ::v-deep h1, ::v-deep h2, ::v-deep h3, ::v-deep h4 {
                 color: #ff5722;
-                margin: 20px 0 15px;
+                margin: 15px 0 10px;
             }
             
             ::v-deep blockquote {
@@ -231,7 +229,7 @@ export default {
         }
         
         .notice-content {
-            padding: 15px;
+            padding: 12px;
         }
     }
 }
