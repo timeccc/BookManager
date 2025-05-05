@@ -17,10 +17,10 @@
 本项目是前后端分离开发的，前端使用 **VScode**，后端使用 **IDEA**。
 
 - **Node.js**: 14.16.0  
-  ![Node.js版本](./assets/image-20250428142717469.png)
+  ![image-20250505144114751](./assets/image-20250505144114751.png)
   
 - **MySQL**: 5.7.41  
-  ![MySQL版本](./assets/image-20250428143413644.png)
+  <img src="./assets/image-20250505144339723.png" alt="image-20250505144339723" style="zoom: 67%;" />
 
 > 注意：这两个环境版本要一样，不然容易出问题。
 

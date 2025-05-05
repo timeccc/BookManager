@@ -245,27 +245,27 @@ export default {
     
     ::v-deep .el-table__header-wrapper {
         th {
-            background-color: #f5f7fa;
-            color: #606266;
-            font-weight: 600;
-            padding: 12px 0;
+        background-color: #f5f7fa;
+        color: #606266;
+        font-weight: 600;
+        padding: 12px 0;
         }
     }
     
     ::v-deep .el-table__body-wrapper {
         .el-table__row {
-            transition: all 0.3s;
-            
-            &:hover {
-                background-color: #f0f9ff !important;
-            }
-            
-            td {
-                padding: 10px 0;
-                vertical-align: middle;
-                height: 40px;
-                line-height: 20px;
-                border-bottom: 1px solid #ebeef5;
+        transition: all 0.3s;
+        
+        &:hover {
+            background-color: #f0f9ff !important;
+        }
+        
+        td {
+            padding: 10px 0;
+            vertical-align: middle;
+            height: 40px;
+            line-height: 20px;
+            border-bottom: 1px solid #ebeef5;
             }
         }
     }

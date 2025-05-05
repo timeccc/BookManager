@@ -1,11 +1,11 @@
 <template>
     <el-row class="main-proposal-container">
             <!-- 搜索框 -->
-            <div class="word-search">
-                <div class="item">
-                    <i class="el-icon-search"></i>
-                    <input type="text" placeholder="搜索用户留言" v-model="readerProposalQueryDto.content">
-                    <span class="search-text" @click="fetchReaderProposal">搜索</span>
+        <div class="word-search">
+            <div class="item">
+                        <i class="el-icon-search"></i>
+                        <input type="text" placeholder="搜索用户留言" v-model="readerProposalQueryDto.content">
+                        <span class="search-text" @click="fetchReaderProposal">搜索</span>
                 </div>
             </div>
             
@@ -30,55 +30,55 @@
                 
                 <div v-else class="card-list">
                     <div class="list-title">
-                        <span class="title-text">用户留言</span>
-                        <div class="line-decoration"></div>
-                    </div>
+                    <span class="title-text">用户留言</span>
+                    <div class="line-decoration"></div>
+                </div>
 
                     <div v-for="(proposal, index) in proposals" 
                         :key="index"
                         class="message-card"
                         :class="getCardClass(index, proposal)">
                         
-                        <div class="message-icon">
-                            <i class="el-icon-chat-dot-square"></i>
+                    <div class="message-icon">
+                        <i class="el-icon-chat-dot-square"></i>
+                    </div>
+                    <div class="message-main">
+                        <!-- 卡片头部 -->
+                        <div class="card-header">
+                            <div class="user-info">
+                                <el-avatar :src="proposal.userAvatar" :size="36"></el-avatar>
+                                <div class="user-name">{{ proposal.userName }}</div>
+                            </div>
+                            <div class="message-actions">
+                                <span class="message-time">{{ proposal.createTime }}</span>
+                                <span v-if="proposal.replyTime !== null" class="reply-tag">已回复</span>
+                                <el-popconfirm 
+                                    v-if="myContent(proposal)" 
+                                    title="确定删除这条留言吗？" 
+                                    @confirm="confirmDel(proposal)">
+                                    <el-button slot="reference" type="danger" size="mini" icon="el-icon-delete" circle></el-button>
+                                </el-popconfirm>
+                            </div>
                         </div>
-                        <div class="message-main">
-                            <!-- 卡片头部 -->
-                            <div class="card-header">
-                                <div class="user-info">
-                                    <el-avatar :src="proposal.userAvatar" :size="36"></el-avatar>
-                                    <div class="user-name">{{ proposal.userName }}</div>
-                                </div>
-                                <div class="message-actions">
-                                    <span class="message-time">{{ proposal.createTime }}</span>
-                                    <span v-if="proposal.replyTime !== null" class="reply-tag">已回复</span>
-                                    <el-popconfirm 
-                                        v-if="myContent(proposal)" 
-                                        title="确定删除这条留言吗？" 
-                                        @confirm="confirmDel(proposal)">
-                                        <el-button slot="reference" type="danger" size="mini" icon="el-icon-delete" circle></el-button>
-                                    </el-popconfirm>
-                                </div>
+                        
+                        <!-- 留言内容 -->
+                        <div class="card-content">
+                            {{ proposal.content }}
+                        </div>
+                        
+                        <!-- 回复内容 -->
+                        <div v-if="proposal.replyTime !== null" class="card-reply">
+                            <div class="reply-header">
+                                <i class="el-icon-s-custom"></i>
+                                <span>管理员回复</span>
+                                <span class="reply-time">{{ proposal.replyTime }}</span>
                             </div>
-                            
-                            <!-- 留言内容 -->
-                            <div class="card-content">
-                                {{ proposal.content }}
-                            </div>
-                            
-                            <!-- 回复内容 -->
-                            <div v-if="proposal.replyTime !== null" class="card-reply">
-                                <div class="reply-header">
-                                    <i class="el-icon-s-custom"></i>
-                                    <span>管理员回复</span>
-                                    <span class="reply-time">{{ proposal.replyTime }}</span>
-                                </div>
-                                <div class="reply-content">
-                                    {{ proposal.replyContent }}
-                                </div>
+                            <div class="reply-content">
+                                {{ proposal.replyContent }}
                             </div>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
             
@@ -431,10 +431,10 @@ $background-light: #f8f9fa;
 
 // 搜索框样式
 .word-search {
-    display: flex;
+        display: flex;
     justify-content: center;
     margin-bottom: 15px;
-    margin-top: 0;
+    margin-top: 15px;
         
     .item {
         padding: 10px 20px;

@@ -30,7 +30,7 @@
                     <div class="time-marker"></div>
                     <div class="notice-content">
                         <div class="notice-date">{{ notice.createTime }}</div>
-                        <h3 class="notice-title">{{ notice.name }}</h3>
+                            <h3 class="notice-title">{{ notice.name }}</h3>
                         <div class="notice-summary">
                             <div v-if="notice.content" class="preview-content" v-html="getContentPreview(notice.content)"></div>
                             <div v-else class="preview-placeholder">暂无内容预览，点击查看详情...</div>
@@ -281,7 +281,7 @@ export default {
                     .time-marker {
                         transform: scale(1.1);
                         box-shadow: 0 0 12px rgba(255, 183, 77, 0.3);
-                    }
+                }
                 }
                 
                 /* 时间标记点 */
@@ -318,13 +318,13 @@ export default {
                         margin-bottom: 10px;
                         font-weight: 500;
                     }
-                    
-                    .notice-title {
-                        font-size: 18px;
-                        font-weight: 600;
+                        
+                        .notice-title {
+                            font-size: 18px;
+                            font-weight: 600;
                         color: #E65100;
                         margin: 0 0 12px 0;
-                        line-height: 1.4;
+                            line-height: 1.4;
                     }
                     
                     .notice-summary {
@@ -382,7 +382,7 @@ export default {
             
             .el-pagination__sizes .el-input .el-input__inner {
                 border-radius: 4px;
-                background-color: rgba(255, 255, 255, 0.7);
+            background-color: rgba(255, 255, 255, 0.7);
                 border-color: #FFE0B2;
             }
             

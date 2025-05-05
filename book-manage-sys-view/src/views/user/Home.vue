@@ -287,10 +287,12 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 20px 0 20px;
+    padding: 20px 20px 15px 20px;
     background-color: transparent;
     position: relative;
     z-index: 1;
+    height: 60px;
+    box-sizing: border-box;
     
     .header-title {
         display: flex;
