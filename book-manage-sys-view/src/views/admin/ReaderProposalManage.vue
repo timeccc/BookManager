@@ -242,6 +242,26 @@ export default {
                 };
                 const response = await this.$axios.post('/readerProposal/query', params);
                 const { data } = response;
+                
+                // 调试输出，检查isPublish字段
+                console.log('返回的反馈数据:', data.data);
+                if (data.data && data.data.length > 0) {
+                    console.log('第一条数据的isPublish值:', data.data[0].isPublish);
+                    console.log('第一条数据的完整内容:', data.data[0]);
+                    
+                    // 修复isPublish字段，确保是布尔值
+                    data.data.forEach(item => {
+                        // 如果isPublish是字符串(如"true"/"false")或数字(如0/1)，将其转换为布尔值
+                        if (typeof item.isPublish !== 'boolean') {
+                            if (item.isPublish === 'true' || item.isPublish === 1 || item.isPublish === '1') {
+                                item.isPublish = true;
+                            } else {
+                                item.isPublish = false;
+                            }
+                        }
+                    });
+                }
+                
                 this.tableData = data.data;
                 this.totalItems = data.total;
             } catch (error) {

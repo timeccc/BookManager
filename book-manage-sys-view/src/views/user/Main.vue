@@ -231,6 +231,9 @@ export default {
             this.$refs.proposalForm.validate(valid => {
                 if (!valid) return;
                 
+                // 设置isPublish值
+                this.proposal.isPublish = this.publishItemSelected === '公开';
+                
                 this.$axios.post(`/readerProposal/save`, this.proposal)
                     .then(res => {
                         const { data } = res;
