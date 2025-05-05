@@ -84,6 +84,9 @@
         SELECT u.*
         FROM user u
         <where>
+            <if test="id != null">
+                AND u.id = #{id}
+            </if>
             <if test="userAccount != null and userAccount != ''">
                 AND u.user_account LIKE concat('%',#{userAccount},'%')
             </if>
