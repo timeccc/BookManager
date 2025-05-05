@@ -16,17 +16,25 @@
 
 本项目是前后端分离开发的，前端使用 **VScode**，后端使用 **IDEA**。
 
+- **JDK**: 1.8
+  
 - **Node.js**: 14.16.0  
-  ![image-20250505144114751](./assets/image-20250505144114751.png)
   
 - **MySQL**: 5.7.41  
-  <img src="./assets/image-20250505144339723.png" alt="image-20250505144339723" style="zoom: 67%;" />
+  
+- **Maven**: 3.6.1
+  
+- **Navicat**
+  
+  
 
-> 注意：这两个环境版本要一样，不然容易出问题。
+> 注意：Node.js和MySQL这两个环境版本要一样，不然容易出问题。
 
 ### 后端部署
 
-后端项目名为 `books-manage-sys`，用 IDEA 打开后，配置好 Maven 和数据库。
+Navicat导入`book-manage-sys.sql`文件连接上本机数据库
+
+后端项目名为 `books-manage-sys`，用 IDEA 打开后，配置好 Maven 。
 
 ![image-20250503005911461](./assets/image-20250503005911461.png)
 
