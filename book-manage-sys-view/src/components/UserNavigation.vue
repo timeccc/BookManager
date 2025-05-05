@@ -109,17 +109,18 @@ export default {
   min-width: 120px !important;
   height: 100vh;
   box-sizing: border-box;
-  transition: width 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-  border-right: 1px solid rgba(0,0,0,0.05);
-  background-color: white;
-  box-shadow: 0 0 20px rgba(0,0,0,0.06);
+  transition: width 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+  background-image: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+  backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
-  border-radius: 0 16px 16px 0;
+  border-radius: 0 20px 20px 0;
   overflow: hidden;
   position: relative;
   flex-shrink: 0;
   z-index: 1000;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
 }
 
 .logo-container {
@@ -129,26 +130,27 @@ export default {
   padding-left: 30px;
   margin-bottom: 10px;
   position: relative;
-  transition: padding 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: padding 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  background-color: transparent;
   
   .logo-image {
     width: 48px;
     height: 48px;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(255, 87, 34, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
     object-fit: cover;
     
     &:hover {
       transform: scale(1.05);
-      box-shadow: 0 6px 16px rgba(255, 87, 34, 0.25);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
     }
   }
   
   .logo-text {
     margin-left: 12px;
     font-size: 20px;
-    color: #ff5722;
+    color: white;
     font-weight: 600;
     letter-spacing: 1px;
     flex: 1;
@@ -165,21 +167,21 @@ export default {
     width: 32px;
     height: 32px;
     border-radius: 8px;
-    background-color: rgba(255, 87, 34, 0.08);
+    background-color: rgba(255, 199, 199, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    color: #ff5722;
+    transition: all 0.3s ease;
     
     &:hover {
-      background-color: rgba(255, 87, 34, 0.15);
+      background-color: rgba(255, 199, 199, 0.6);
       transform: translateY(-50%) scale(1.05);
     }
     
     i {
       font-size: 18px;
+      color: white;
     }
   }
 }
@@ -201,7 +203,7 @@ export default {
   }
   
   &::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 123, 0, 0.15);
     border-radius: 10px;
   }
 }
@@ -216,21 +218,22 @@ export default {
   position: relative;
   padding: 12px 14px;
   margin: 4px 0;
-  border-radius: 12px;
+  border-radius: 15px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   height: 48px;
   box-sizing: border-box;
   width: 100%;
   text-align: center;
   display: flex;
   justify-content: center;
+  border: none;
   
   .item-content {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
     position: relative;
     z-index: 2;
     width: 100%;
@@ -243,8 +246,8 @@ export default {
     left: 50%;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 87, 34, 0.08);
-    border-radius: 12px;
+    background-color: rgba(255, 226, 226, 0.4);
+    border-radius: 15px;
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.5);
     transition: transform 0.3s ease, opacity 0.3s ease;
@@ -256,28 +259,32 @@ export default {
     transform: translate(-50%, -50%) scale(1);
   }
   
-  &:active::after {
-    background-color: rgba(255, 87, 34, 0.15);
+  &:hover {
+    i, .route-text {
+      color: #61c0bf;
+    }
   }
   
   i {
-    font-size: 18px;
-    color: #606266;
-    transition: color 0.3s ease;
+    font-size: 20px;
+    color: white;
+    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
     display: inline-block;
     text-align: center;
+    text-shadow: none;
   }
 
   .route-text {
-    font-size: 15px;
-    color: #606266;
-    font-weight: 500;
-    transition: color 0.3s ease;
+    font-size: 16px;
+    color: white;
+    font-weight: 600;
+    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
     flex: 0 1 auto;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
+    text-shadow: none;
   }
   
   .tooltip-trigger {
@@ -295,24 +302,28 @@ export default {
     top: 0;
     height: 100%;
     width: 4px;
-    background-color: #ff5722;
+    background-color: #FF7B00;
     border-radius: 0 4px 4px 0;
     transform: translateX(-4px);
-    transition: transform 0.3s ease;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
     z-index: 2;
   }
 }
 
 .active-route {
-  background-color: rgba(255, 87, 34, 0.08);
+  background-color: #bbded6;
+  box-shadow: 0 2px 8px rgba(187, 222, 214, 0.5);
+  border: none;
   
   .active-indicator {
     transform: translateX(0);
+    background-color: #61c0bf;
   }
   
   i, .route-text {
-    color: #ff5722;
+    color: #f38181;
     font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
 }
 
@@ -321,17 +332,18 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 20px;
 }
 
 .divider {
   height: 1px;
-  background-color: rgba(0, 0, 0, 0.06);
+  background-color: rgba(255, 226, 226, 0.6);
   margin: 10px 0;
   width: 100%;
 }
 
 .user-info-item {
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: rgba(187, 222, 214, 0.4);
   height: auto !important;
   padding-top: 8px !important;
   padding-bottom: 8px !important;
@@ -339,14 +351,16 @@ export default {
   .item-content {
     width: 100%;
     align-items: center;
+    gap: 10px;
+    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   }
   
   .user-avatar {
     width: 36px;
     height: 36px;
-    border-radius: 10px;
+    border-radius: 12px;
     object-fit: cover;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     border: 2px solid #fff;
   }
 
@@ -357,33 +371,35 @@ export default {
     .username {
       font-weight: 600;
       font-size: 14px;
-      color: #303133;
+      color: white;
       line-height: 1.2;
       margin-bottom: 2px;
     }
     
     .user-role {
       font-size: 12px;
-      color: #909399;
+      color: white;
     }
   }
 }
 
 .logout-item {
   i {
-    color: #f56c6c;
+    color: white;
   }
   
   .route-text {
-    color: #f56c6c;
+    color: white;
   }
   
   &:hover::after {
-    background-color: rgba(245, 108, 108, 0.08);
+    background-color: rgba(252, 227, 138, 0.4);
   }
   
-  &:active::after {
-    background-color: rgba(245, 108, 108, 0.15);
+  &:hover {
+    i, .route-text {
+      color: #61c0bf;
+    }
   }
 }
 
@@ -399,7 +415,9 @@ export default {
       width: 0;
       margin-left: 0;
       opacity: 0;
-      display: none;
+      visibility: hidden;
+      position: absolute;
+      transition: opacity 0.2s cubic-bezier(0.22, 1, 0.36, 1), margin 0.25s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.2s;
     }
     
     .logo-image {
@@ -420,13 +438,16 @@ export default {
     i {
       margin: 0 auto;
       font-size: 20px;
+      transition: margin 0.25s cubic-bezier(0.22, 1, 0.36, 1);
     }
     
     .route-text {
       width: 0;
       margin-left: 0;
       opacity: 0;
-      display: none;
+      visibility: hidden;
+      position: absolute;
+      transition: opacity 0.2s cubic-bezier(0.22, 1, 0.36, 1), width 0.25s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.2s;
     }
   }
   
@@ -435,13 +456,15 @@ export default {
       width: 0;
       margin-left: 0;
       opacity: 0;
-      display: none;
+      visibility: hidden;
+      position: absolute;
+      transition: opacity 0.2s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.2s;
     }
     
     .user-avatar {
       width: 30px;
       height: 30px;
-      border-radius: 8px;
+      border-radius: 10px;
       margin: 0 auto;
     }
   }

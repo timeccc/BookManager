@@ -1,5 +1,5 @@
 <template>
-    <el-row class="book-operation-container">
+    <div class="book-operation-container">
         <!-- 条件搜索 -->
         <div class="word-search">
             <div class="item">
@@ -17,11 +17,11 @@
                 {{ categoryItem.name }}
             </span>
         </div>
-        <div class="books-container">
+        <div class="books-grid">
             <el-row v-if="tableData.length === 0">
                 <el-empty description="暂无书籍"></el-empty>
             </el-row>
-            <el-row v-else class="books-grid">
+            <el-row v-else>
                 <el-col v-for="(book, index) in tableData" :key="index" :xs="12" :sm="8" :md="6" :lg="4" :xl="4">
                     <div class="item-book">
                         <div class="book-cover">
@@ -119,7 +119,7 @@
                       @click="addOperation()">确定</span>
             </div>
         </el-dialog>
-    </el-row>
+    </div>
 </template>
 
 <script>
@@ -325,29 +325,30 @@ export default {
 </script>
 <style scoped lang="scss">
 .book-operation-container {
-    width: 100%;
-    padding: 10px 20px 20px 20px;
-    box-sizing: border-box;
-    background-color: #fafafa;
+    padding: 10px;
+    border-radius: 16px;
+    background-color: transparent;
+    backdrop-filter: none;
+    box-shadow: none;
 }
 
 .word-search {
     display: flex;
     justify-content: center;
-    margin-bottom: 15px;
-    margin-top: -5px;
+    margin-bottom: 20px;
 
     .item {
         padding: 10px 20px;
         width: 500px;
-        background-color: white;
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
         border-radius: 40px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         box-sizing: border-box;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        border: 1px solid #eee;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        border: 1px solid rgba(255, 255, 255, 0.3);
         transition: all 0.3s ease;
 
         &:hover, &:focus-within {
@@ -387,18 +388,12 @@ export default {
                 transform: translateY(-1px);
             }
         }
-
-        .search-btn {
-            display: none;
-        }
     }
 }
 
 .category-container {
-    width: 100%;
     max-width: 1200px;
-    margin: 0 auto 15px;
-    padding: 10px;
+    margin: 0 auto 20px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -413,13 +408,14 @@ export default {
     transition: all 0.3s ease;
     padding: 6px 14px;
     border-radius: 20px;
-    background-color: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 
 .category:hover {
     color: #ff5722;
-    background-color: rgba(255, 87, 34, 0.05);
+    background-color: rgba(255, 255, 255, 0.9);
     transform: translateY(-2px);
 }
 
@@ -434,20 +430,16 @@ export default {
     background-color: #ff5722;
 }
 
-.books-container {
-    width: 100%;
+.books-grid {
     max-width: 1200px;
     margin: 0 auto;
-}
-
-.books-grid {
-    margin: 0 -10px;
 }
 
 .item-book {
     border-radius: 16px;
     margin: 10px;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     overflow: hidden;
     transition: all 0.3s ease;
@@ -459,13 +451,13 @@ export default {
 .item-book:hover {
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    background-color: rgba(255, 255, 255, 0.95);
 }
 
 .book-cover {
     display: flex;
     justify-content: center;
     padding: 15px;
-    background-color: #f9f9f9;
     
     img {
         width: 140px;
@@ -539,8 +531,8 @@ export default {
 }
 
 .edit-round {
-    background-color: white;
-    border: 1px solid #dcdfe6;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(220, 223, 230, 0.5);
     padding: 6px 12px;
     border-radius: 16px;
     font-size: 12px;
@@ -565,12 +557,6 @@ export default {
     background-color: rgba(255, 87, 34, 0.08);
 }
 
-.edit-round.status:hover {
-    color: #ff5722;
-    border-color: rgba(255, 87, 34, 0.2);
-    background-color: rgba(255, 87, 34, 0.05);
-}
-
 .action-divider {
     display: inline-block;
     width: 5px;
@@ -585,7 +571,6 @@ export default {
     display: flex;
     margin: 30px 0;
     justify-content: center;
-    align-items: center;
 }
 
 .point {
@@ -595,102 +580,15 @@ export default {
     font-weight: 500;
 }
 
-.channel-button {
-    background-color: #f4f4f5;
-    color: #606266;
-    display: inline-block;
-    padding: 8px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    margin: 0 5px;
-}
-
-.channel-button:hover {
-    background-color: #e9e9eb;
-}
-
-.confirm-button {
-    background-color: #ff5722;
-    color: white;
-}
-
-.confirm-button:hover {
-    background-color: #ff7043;
-}
-
-.dialog-footer {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-}
-
 /* 对话框样式 */
+.borrow-dialog {
 ::v-deep .el-dialog {
     border-radius: 16px;
     overflow: hidden;
-}
-
-::v-deep .el-dialog__body {
-    padding: 20px;
-}
-
-::v-deep .el-input-number {
-    width: 100%;
-}
-
-/* 修改日期选择器样式，隐藏图标 */
-::v-deep .custom-date-picker .el-input__icon {
-    display: none;
-}
-
-::v-deep .custom-date-picker .el-input__inner {
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    padding-left: 12px;
-    transition: all 0.3s;
-}
-
-/* 分页组件样式 */
-::v-deep .el-pagination {
-    padding: 15px 0;
-    text-align: center;
-}
-
-::v-deep .el-pagination .btn-prev,
-::v-deep .el-pagination .btn-next,
-::v-deep .el-pager li {
-    border-radius: 8px;
-    transition: all 0.3s ease;
-        }
-
-::v-deep .el-pager li.active {
-    background-color: #ff5722;
-    color: white;
-        }
-
-::v-deep .el-pagination .el-select .el-input {
-    border-radius: 8px;
-}
-
-/* 修复日期选择器文字重叠问题 */
-::v-deep .custom-date-picker .el-input__inner {
-    padding-left: 30px;
-}
-
-::v-deep .custom-date-picker .el-input__icon {
-    width: 25px;
-}
-
-/* 弹出框样式优化 */
-.borrow-dialog {
-    overflow: hidden;
-}
-
-::v-deep .el-dialog {
-    border-radius: 12px;
-    overflow: hidden;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
 }
 
 .dialog-content {
@@ -704,7 +602,7 @@ export default {
     text-align: center;
     margin: 0 0 15px;
     padding-bottom: 8px;
-    border-bottom: 1px dashed #eee;
+    border-bottom: 1px dashed rgba(238, 238, 238, 0.5);
 }
 
 .form-container {
@@ -715,53 +613,46 @@ export default {
     margin-bottom: 15px;
 }
 
-.point {
-    font-size: 14px;
-    margin-bottom: 8px;
-}
-
 .custom-input {
     width: 100%;
 }
 
+/* 修改分页组件样式 */
+::v-deep .el-pagination {
+    padding: 15px 0;
+    text-align: center;
+}
+
+::v-deep .el-pagination .btn-prev,
+::v-deep .el-pagination .btn-next,
+::v-deep .el-pager li {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+::v-deep .el-pager li.active {
+    background-color: #ff5722;
+    color: white;
+}
+
 /* 日期选择器样式 */
-::v-deep .custom-date-picker .el-input__icon {
-    display: none;
-}
-
 ::v-deep .custom-date-picker .el-input__inner {
+    border-radius: 8px;
+    border: 1px solid rgba(224, 224, 224, 0.7);
     padding-left: 12px;
+    background-color: rgba(255, 255, 255, 0.7);
 }
 
-::v-deep .custom-input .el-input__inner {
-    border-radius: 6px;
+::v-deep .el-input-number {
+    width: 100%;
 }
 
 .dialog-footer {
     display: flex;
     justify-content: center;
     padding: 12px 0;
-    border-top: 1px solid #f0f0f0;
-    background-color: #fafafa;
-}
-
-.dialog-btn {
-    display: inline-block;
-    padding: 6px 16px;
-    border-radius: 16px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s;
-    margin: 0 8px;
-}
-
-.cancel-btn {
-    background-color: #f4f4f5;
-    color: #606266;
-}
-
-.confirm-btn {
-    background-color: #ff5722;
-    color: white;
+    border-top: 1px solid rgba(240, 240, 240, 0.5);
+    background-color: rgba(250, 250, 250, 0.5);
 }
 </style>

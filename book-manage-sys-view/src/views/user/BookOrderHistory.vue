@@ -1,5 +1,5 @@
 <template>
-    <el-row class="history-container">
+    <div class="history-container">
         <!-- 条件搜索 -->
         <div class="word-search">
             <div class="item">
@@ -8,11 +8,11 @@
                 <span class="search-text" @click="fetchFreshData">搜索</span>
             </div>
         </div>
-        <div class="books-wrapper">
+        <div class="books-grid">
             <el-row v-if="tableData.length === 0">
                 <el-empty description="暂无书籍借阅历史" class="empty-data"></el-empty>
             </el-row>
-            <el-row v-else class="books-grid">
+            <el-row v-else>
                 <el-col v-for="(book, index) in tableData" :key="index" :sm="12" :md="8" :lg="6" :xl="6">
                     <div class="book-card" :class="{'returned': book.isReturn}">
                         <div class="book-cover">
@@ -59,7 +59,7 @@
                 :total="totalCount">
             </el-pagination>
         </div>
-    </el-row>
+    </div>
 </template>
 
 <script>
@@ -170,24 +170,21 @@ export default {
 </script>
 <style scoped lang="scss">
 .history-container {
-    width: 100%;
-    padding: 10px 20px 20px 20px;
-    box-sizing: border-box;
-    background-color: #fafafa;
+    padding: 10px;
+    border-radius: 16px;
+    background-color: transparent;
+    box-shadow: none;
 }
 
-.books-wrapper {
+.books-grid {
     max-width: 1200px;
     margin: 0 auto;
 }
 
-.books-grid {
-    margin: 0 -12px;
-}
-
 .book-card {
     margin: 12px;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -200,21 +197,22 @@ export default {
     &:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        background-color: rgba(255, 255, 255, 0.9);
     }
     
     &.returned {
-        border-left: 4px solid #67c23a;
+        border-left: 4px solid rgba(103, 194, 58, 0.8);
     }
     
     &:not(.returned) {
-        border-left: 4px solid #e6a23c;
+        border-left: 4px solid rgba(230, 162, 60, 0.8);
     }
 }
 
 .book-cover {
     position: relative;
     overflow: hidden;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.5);
     aspect-ratio: 1/1;
     display: flex;
     align-items: center;
@@ -237,7 +235,7 @@ export default {
         position: absolute;
         top: 12px;
         right: 0;
-        background-color: #67c23a;
+        background-color: rgba(103, 194, 58, 0.9);
         color: white;
         padding: 4px 12px;
         font-size: 12px;
@@ -246,7 +244,7 @@ export default {
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         
         &.return-pending {
-            background-color: #e6a23c;
+            background-color: rgba(230, 162, 60, 0.9);
         }
     }
 }
@@ -332,20 +330,22 @@ export default {
     }
     
     &.return-btn {
-        background-color: #e6a23c;
+        background-color: rgba(230, 162, 60, 0.9);
         color: white;
         
         &:hover {
-            background-color: darken(#e6a23c, 5%);
+            background-color: rgba(230, 162, 60, 1);
+            transform: translateY(-1px);
         }
     }
     
     &.delete-btn {
-        background-color: #f56c6c;
+        background-color: rgba(245, 108, 108, 0.9);
         color: white;
         
         &:hover {
-            background-color: darken(#f56c6c, 5%);
+            background-color: rgba(245, 108, 108, 1);
+            transform: translateY(-1px);
         }
     }
 }
@@ -364,20 +364,20 @@ export default {
 .word-search {
     display: flex;
     justify-content: center;
-    margin-bottom: 15px;
-    margin-top: -5px;
+    margin-bottom: 20px;
 
     .item {
         padding: 10px 20px;
         width: 500px;
-        background-color: white;
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
         border-radius: 40px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         box-sizing: border-box;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        border: 1px solid #eee;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        border: 1px solid rgba(255, 255, 255, 0.3);
         transition: all 0.3s ease;
 
         &:hover, &:focus-within {
@@ -418,6 +418,25 @@ export default {
             }
         }
     }
+}
+
+// 分页样式
+::v-deep .el-pagination {
+    padding: 15px 0;
+    text-align: center;
+}
+
+::v-deep .el-pagination .btn-prev,
+::v-deep .el-pagination .btn-next,
+::v-deep .el-pager li {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+::v-deep .el-pager li.active {
+    background-color: #ff5722;
+    color: white;
 }
 
 // 响应式调整

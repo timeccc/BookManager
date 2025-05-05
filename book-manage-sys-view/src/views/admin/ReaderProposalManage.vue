@@ -71,22 +71,34 @@
             :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
             :total="totalItems"></el-pagination>
             
-        <el-dialog :visible.sync="dialogOperation" width="30%" custom-class="reply-dialog">
-            <div slot="title">
-                <p class="dialog-title">回复反馈</p>
+        <el-dialog :visible.sync="dialogOperation" width="460px" custom-class="reply-dialog" :show-close="false">
+            <div class="dialog-header">
+                <div class="dialog-title-wrapper">
+                    <i class="el-icon-s-comment dialog-icon"></i>
+                    <span class="dialog-title">回复反馈</span>
+                </div>
+                <i class="el-icon-close close-btn" @click="dialogOperation = false"></i>
             </div>
             <div class="dialog-content">
                 <div class="original-content">
-                    <h5>原反馈内容：</h5>
-                    <p>{{ data.content }}</p>
+                    <div class="content-label">原反馈内容：</div>
+                    <div class="content-text">{{ data.content }}</div>
                 </div>
-                <el-input type="textarea" :rows="4" placeholder="请输入回复内容..." v-model="data.replyContent">
-                </el-input>
+                <div class="reply-area">
+                    <div class="content-label">回复内容</div>
+                    <el-input 
+                        type="textarea" 
+                        :rows="4" 
+                        placeholder="请输入回复内容..." 
+                        v-model="data.replyContent">
+                    </el-input>
+                    <div class="char-counter">{{ data.replyContent ? data.replyContent.length : 0 }}/500</div>
+                </div>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button size="small" class="cancel-btn" @click="dialogOperation = false">取 消</el-button>
-                <el-button size="small" class="confirm-btn" type="primary" @click="updateOperation">确 定</el-button>
-            </span>
+            <div class="dialog-footer">
+                <el-button class="cancel-btn" size="small" @click="dialogOperation = false">取 消</el-button>
+                <el-button class="confirm-btn" type="primary" size="small" @click="updateOperation">确 定</el-button>
+            </div>
         </el-dialog>
     </el-row>
 </template>
@@ -521,85 +533,139 @@ export default {
 
 // 对话框样式
 .reply-dialog {
-    border-radius: 8px;
-    overflow: hidden;
-    
-    ::v-deep .el-dialog__header {
-        padding: 15px 20px;
-        border-bottom: 1px solid #f0f0f0;
+    ::v-deep .el-dialog {
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
     }
     
+    ::v-deep .el-dialog__header,
     ::v-deep .el-dialog__body {
-        padding: 20px;
+        padding: 0;
+        margin: 0;
     }
     
-    ::v-deep .el-dialog__footer {
-        padding: 10px 20px 20px;
-        text-align: right;
+    ::v-deep .el-dialog__headerbtn {
+        display: none;
     }
+}
+
+.dialog-header {
+    position: relative;
+    padding: 16px 20px;
+    background-color: #FF8C69;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dialog-title-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.dialog-icon {
+    color: white;
+    font-size: 18px;
+    margin-right: 8px;
 }
 
 .dialog-title {
-    font-size: 18px;
+    color: white;
+    font-size: 16px;
     font-weight: 600;
-    color: #303133;
-    margin: 0;
+}
+
+.close-btn {
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+    
+    &:hover {
+        opacity: 1;
+    }
 }
 
 .dialog-content {
-    margin-bottom: 10px;
+    padding: 20px;
     
     .original-content {
-        margin-bottom: 15px;
-        padding: 12px;
-        background-color: #f5f7fa;
+        background-color: #FFF8F0;
         border-radius: 6px;
+        padding: 15px;
+        margin-bottom: 16px;
+        border-left: 3px solid #FF8C69;
+    }
+    
+    .content-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #666;
+        margin-bottom: 8px;
+    }
+    
+    .content-text {
+        color: #333;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    
+    .reply-area {
+        position: relative;
         
-        h5 {
-            margin: 0 0 8px 0;
-            font-size: 14px;
-            color: #606266;
-        }
-        
-        p {
-            margin: 0;
-            color: #606266;
+        .char-counter {
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+            font-size: 12px;
+            color: #999;
         }
     }
     
     ::v-deep .el-textarea__inner {
-        padding: 12px;
-        border-radius: 6px;
-        border-color: #e0e0e0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 10px;
         font-size: 14px;
         
         &:focus {
-            border-color: #8e9aeb;
-            box-shadow: 0 0 0 2px rgba(142, 154, 235, 0.2);
+            border-color: #FF8C69;
+            box-shadow: 0 0 0 2px rgba(255, 140, 105, 0.2);
         }
     }
 }
 
-.confirm-btn {
-    background-color: #64B5F6;
-    border-color: #64B5F6;
-    transition: all 0.2s;
+.dialog-footer {
+    padding: 10px 20px 20px;
+    text-align: right;
     
-    &:hover {
-        background-color: #42A5F5;
-        border-color: #42A5F5;
+    .cancel-btn {
+        background-color: #f5f5f5;
+        border-color: #ddd;
+        color: #666;
+        padding: 8px 15px;
+        margin-right: 10px;
+        font-size: 14px;
+        
+        &:hover {
+            background-color: #e8e8e8;
+            color: #333;
+        }
     }
-}
-
-.cancel-btn {
-    background-color: #f5f5f5;
-    border-color: #e0e0e0;
-    color: #606266;
-    transition: all 0.2s;
     
-    &:hover {
-        background-color: #e0e0e0;
-        color: #303133;
+    .confirm-btn {
+        background-color: #FF8C69;
+        border-color: #FF7F50;
+        color: white;
+        padding: 8px 15px;
+        font-size: 14px;
+        
+        &:hover {
+            background-color: #FF7F50;
+            border-color: #FF6347;
+        }
     }
 }
 

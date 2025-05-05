@@ -1,5 +1,6 @@
 <template>
-    <div class="menu-container">
+    <div class="menu-container" :class="{'collapsed-menu': flag}">
+        <div class="nav-wrapper">
         <UserNavigation 
             :routes="userRoutes" 
             :current-route-name="nowRoute.name" 
@@ -10,7 +11,9 @@
             @toggle-collapse="toggleSidebar"
             @logout="loginOut"
         />
-        <div class="main" :class="{'main-expanded': flag}">
+        </div>
+        <div class="main-wrapper" :class="{'main-wrapper-expanded': flag}">
+            <div class="main">
             <div class="page-header">
                 <div class="header-title">
                     <i :class="nowRoute.icon" v-if="nowRoute.icon"></i>
@@ -28,6 +31,7 @@
             </div>
             <div class="content-section">
                 <router-view ref="currentView"></router-view>
+                </div>
             </div>
         </div>
     </div>
@@ -164,30 +168,102 @@ export default {
     display: flex;
     height: 100vh;
     width: 100%;
-    background-color: #f8f9fa;
     overflow: hidden;
+    position: relative;
+    background-color: #FFFFFF;
+    
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 228px; /* 与导航栏宽度相近的位置 */
+        height: 100%;
+        width: 2px;
+        background: linear-gradient(to bottom, 
+            rgba(255, 123, 0, 0.03), 
+            rgba(255, 123, 0, 0.1) 50%, 
+            rgba(255, 123, 0, 0.03)
+        );
+        z-index: 999;
+        pointer-events: none;
+        transition: left 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+        opacity: 0.8;
+    }
+    
+    &.collapsed-menu::after {
+        left: 118px; /* 当菜单收起时的位置 */
+    }
+}
+
+.nav-wrapper {
+    position: relative;
+    z-index: 1000;
+    height: 100%;
+    margin-right: 2px;
+}
+
+// 用更优雅的方式为UserNavigation组件添加样式
+:deep(.menu-side) {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    border-radius: 0 20px 20px 0;
+    border: none;
+    height: 100vh;
+}
+
+.main-wrapper {
+    flex-grow: 1;
+    height: 100vh;
+    position: relative;
+    transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow: hidden;
+    background: #FFFFFF;
+    margin-left: 3px;
+}
+
+.main-wrapper-expanded {
+    margin-left: 0;
 }
 
 .main {
-    flex-grow: 1;
-    overflow-x: hidden;
-    background-color: #f8f9fa;
-    border-radius: 16px 0 0 16px;
-    margin-left: -16px;
-    padding-left: 16px;
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    height: 100%;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    position: relative;
-    min-width: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: 0;
+    background-image: linear-gradient(to top, #fad0c4 0%, #fad0c4 1%, #ffd1ff 100%);
+    background-attachment: fixed;
+    border-radius: 16px 0 0 16px;
+    box-shadow: -6px 0 15px rgba(0, 0, 0, 0.05);
+    border-left: 1px solid rgba(255, 123, 0, 0.15);
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 20% 30%, rgba(84, 182, 229, 0.04) 0%, rgba(84, 182, 229, 0) 40%),
+            radial-gradient(circle at 80% 60%, rgba(255, 160, 100, 0.03) 0%, rgba(255, 160, 100, 0) 40%);
+        pointer-events: none;
+        z-index: 0;
+    }
+}
     
     .content-section {
-        overflow-x: hidden;
         flex-grow: 1;
         padding: 20px;
         box-sizing: border-box;
         overflow-y: auto;
         width: 100%;
+    position: relative;
+    z-index: 1;
         
         &::-webkit-scrollbar {
             width: 4px;
@@ -198,15 +274,13 @@ export default {
         }
   
         &::-webkit-scrollbar-thumb {
-            background-color: rgba(0, 0, 0, 0.1);
+        background-color: rgba(255, 123, 0, 0.12);
             border-radius: 10px;
+        
+        &:hover {
+            background-color: rgba(255, 123, 0, 0.18);
         }
     }
-}
-
-.main-expanded {
-    margin-left: 0;
-    border-radius: 0;
 }
 
 .page-header {
@@ -214,6 +288,9 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 20px 20px 0 20px;
+    background-color: transparent;
+    position: relative;
+    z-index: 1;
     
     .header-title {
         display: flex;

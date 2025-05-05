@@ -112,8 +112,8 @@
                             <input class="dialog-input" v-model="data.name" placeholder="请输入书籍名称" />
                         </div>
                         <div class="form-group">
-                            <label class="form-label"><i class="el-icon-office-building"></i> 出版商</label>
-                            <input class="dialog-input" v-model="data.publisher" placeholder="请输入出版商" />
+                            <label class="form-label"><i class="el-icon-office-building"></i> 出版社</label>
+                            <input class="dialog-input" v-model="data.publisher" placeholder="请输入出版社" />
                         </div>
                         <div class="form-group">
                             <label class="form-label"><i class="el-icon-user"></i> 作者</label>

@@ -182,14 +182,14 @@ $shadow-hover: 0 6px 20px rgba(255, 107, 154, 0.2);
             z-index: -1;
             opacity: 0;
             transition: opacity 0.3s ease, transform 0.4s $transition-bezier;
-            background: linear-gradient(135deg, rgba(255, 235, 240, 0.9), rgba(255, 225, 235, 0.7));
+            background: linear-gradient(135deg, #ff77a9, #ff9ed4);
             transform: scale(0.96);
         }
         
         // 悬浮效果
         &:hover {
             background-color: transparent;
-            color: $hover-color;
+            color: white;
             box-shadow: $shadow-hover;
             transform: translateY(-2px);
             
@@ -199,8 +199,12 @@ $shadow-hover: 0 6px 20px rgba(255, 107, 154, 0.2);
             }
             
             i {
-                color: $hover-color;
+                color: white;
                 transform: scale(1.1) rotate(5deg);
+            }
+
+            span {
+                color: white;
             }
         }
         

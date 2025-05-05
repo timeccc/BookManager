@@ -1,5 +1,5 @@
 <template>
-    <el-row class="book-rss-history-container">
+    <div class="book-rss-history-container">
         <div class="word-search" v-if="tableData.length !== 0">
             <div class="item">
                 <i class="el-icon-search"></i>
@@ -46,7 +46,7 @@
                 </el-pagination>
             </div>
         </div>
-    </el-row>
+    </div>
 </template>
 
 <script>
@@ -270,26 +270,25 @@ export default {
     width: 100%;
     padding: 10px 20px 20px 20px;
     box-sizing: border-box;
-    background-color: #fafafa;
 }
 
 .word-search {
     display: flex;
     justify-content: center;
-    margin-bottom: 15px;
-    margin-top: -5px;
+    margin-bottom: 20px;
 
     .item {
         padding: 10px 20px;
         width: 500px;
-        background-color: white;
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
         border-radius: 40px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         box-sizing: border-box;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        border: 1px solid #eee;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        border: 1px solid rgba(255, 255, 255, 0.3);
         transition: all 0.3s ease;
 
         &:hover, &:focus-within {
@@ -329,10 +328,6 @@ export default {
                 transform: translateY(-1px);
             }
         }
-        
-        .search-btn {
-            display: none;
-        }
     }
 }
 
@@ -349,13 +344,15 @@ export default {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
 }
 
 .save-book {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid rgba(240, 240, 240, 0.5);
     transition: all 0.3s ease;
     
     &:last-child {
@@ -397,21 +394,22 @@ export default {
             &:hover {
                 background-color: rgba(103, 58, 183, 0.12);
                 transform: translateY(-1px);
+                box-shadow: 0 2px 6px rgba(103, 58, 183, 0.15);
             }
         }
     }
 }
 
 .save-book:hover {
-    background-color: #f9f9f9;
+    background-color: rgba(249, 249, 249, 0.5);
 }
 
 .save-book.header {
-    background-color: #f5f7fa;
-    border-bottom: 1px solid #ebeef5;
+    background-color: rgba(245, 247, 250, 0.6);
+    border-bottom: 1px solid rgba(235, 238, 245, 0.5);
     
     &:hover {
-        background-color: #f5f7fa;
+        background-color: rgba(245, 247, 250, 0.6);
     }
 }
 
@@ -433,6 +431,7 @@ export default {
 ::v-deep .el-pager li {
     border-radius: 8px;
     transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.7);
 }
 
 ::v-deep .el-pager li.active {

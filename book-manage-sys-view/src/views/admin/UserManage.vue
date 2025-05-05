@@ -83,87 +83,95 @@
                 :total="totalItems"></el-pagination>
         </el-row>
         <!-- 操作面板 -->
-        <el-dialog :show-close="false" :visible.sync="dialogUserOperaion" width="460px" custom-class="user-dialog">
-            <div class="dialog-content">
-                <h3 class="dialog-title">用户信息</h3>
-                <div class="user-form">
-                    <div class="avatar-section">
-                        <p class="form-label"><i class="el-icon-user"></i> 用户头像</p>
-                        <el-upload 
-                            class="avatar-uploader"
-                            :action="uploadUrl" 
-                            :show-file-list="false"
-                            :on-success="handleAvatarSuccess">
-                            <template v-if="userAvatar">
-                                <img :src="userAvatar" class="dialog-avatar">
-                            </template>
-                            <template v-else>
-                                <div class="custom-upload-placeholder">
-                                    <i class="el-icon-plus"></i>
+        <el-dialog :show-close="false" :visible.sync="dialogUserOperaion" width="460px" custom-class="user-dialog" top="20vh" append-to-body>
+            <div class="dialog-wrapper">
+                <div class="dialog-header">
+                    <h3 class="dialog-title">用户信息</h3>
+                </div>
+                <div class="dialog-content">
+                    <div class="user-form">
+                        <div class="avatar-section">
+                            <p class="form-label"><i class="el-icon-user"></i> 用户头像</p>
+                            <el-upload 
+                                class="avatar-uploader"
+                                :action="uploadUrl" 
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccess">
+                                <div class="avatar-container">
+                                    <img v-if="userAvatar" :src="userAvatar" class="dialog-avatar">
+                                    <div v-else class="avatar-placeholder">
+                                        <i class="el-icon-plus"></i>
+                                    </div>
+                                    <div class="avatar-hover">
+                                        <i class="el-icon-camera"></i>
+                                        <span>更换头像</span>
+                                    </div>
                                 </div>
-                            </template>
-                        </el-upload>
-                    </div>
-                    <div class="form-section">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label"><i class="el-icon-user-solid"></i> 用户名</label>
-                                <input class="dialog-input" v-model="data.userName" placeholder="请输入用户名" />
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label"><i class="el-icon-medal"></i> 账号</label>
-                                <input class="dialog-input" v-model="data.userAccount" placeholder="请输入账号" />
-                            </div>
+                            </el-upload>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label"><i class="el-icon-message"></i> 邮箱</label>
-                                <input class="dialog-input" v-model="data.userEmail" placeholder="请输入邮箱" />
+                        <div class="form-section">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label"><i class="el-icon-user-solid"></i> 用户名</label>
+                                    <el-input v-model="data.userName" placeholder="请输入用户名" size="medium"></el-input>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><i class="el-icon-medal"></i> 账号</label>
+                                    <el-input v-model="data.userAccount" placeholder="请输入账号" size="medium"></el-input>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label"><i class="el-icon-lock"></i> 密码</label>
-                                <input class="dialog-input" v-model="userPwd" type="password" placeholder="请输入密码" />
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label"><i class="el-icon-message"></i> 邮箱</label>
+                                    <el-input v-model="data.userEmail" placeholder="请输入邮箱" size="medium"></el-input>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label"><i class="el-icon-lock"></i> 密码</label>
+                                    <el-input v-model="userPwd" type="password" placeholder="请输入密码" size="medium" show-password></el-input>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="dialog-footer">
-                <el-button class="cancel-btn" size="small" @click="cannel()">取消操作</el-button>
-                <el-button v-if="!isOperation" class="confirm-btn" type="primary" size="small" @click="addOperation()">确定新增</el-button>
-                <el-button v-else class="confirm-btn" type="primary" size="small" @click="updateOperation()">确定修改</el-button>
+                <div class="dialog-footer">
+                    <el-button class="cancel-btn" size="small" @click="cannel()">取消操作</el-button>
+                    <el-button v-if="!isOperation" class="confirm-btn" type="primary" size="small" @click="addOperation()">确定新增</el-button>
+                    <el-button v-else class="confirm-btn" type="primary" size="small" @click="updateOperation()">确定修改</el-button>
+                </div>
             </div>
         </el-dialog>
-        <el-dialog :show-close="false" :visible.sync="dialogStatusOperation" width="360px" custom-class="status-dialog">
-            <div class="dialog-header">
-                <h3 class="dialog-title">账号状态设置</h3>
-            </div>
-            <div class="dialog-body">
-                <div class="switch-item">
-                    <div class="switch-label">
-                        <i class="el-icon-lock"></i>
-                        <span>封号状态</span>
-                    </div>
-                    <el-switch v-model="data.isLogin" active-text="封号" inactive-text="正常状态"></el-switch>
+        <el-dialog :show-close="false" :visible.sync="dialogStatusOperation" width="360px" custom-class="status-dialog" top="20vh" append-to-body>
+            <div class="dialog-wrapper">
+                <div class="dialog-header">
+                    <h3 class="dialog-title">账号状态设置</h3>
                 </div>
-                <div class="switch-item">
-                    <div class="switch-label">
-                        <i class="el-icon-turn-off"></i>
-                        <span>禁言状态</span>
+                <div class="dialog-content">
+                    <div class="switch-item">
+                        <div class="switch-label">
+                            <i class="el-icon-lock"></i>
+                            <span>封号状态</span>
+                        </div>
+                        <el-switch v-model="data.isLogin" active-text="封号" inactive-text="正常状态"></el-switch>
                     </div>
-                    <el-switch v-model="data.isWord" active-text="禁言" inactive-text="正常状态"></el-switch>
-                </div>
-                <div class="switch-item">
-                    <div class="switch-label">
-                        <i class="el-icon-user"></i>
-                        <span>用户角色</span>
+                    <div class="switch-item">
+                        <div class="switch-label">
+                            <i class="el-icon-turn-off"></i>
+                            <span>禁言状态</span>
+                        </div>
+                        <el-switch v-model="data.isWord" active-text="禁言" inactive-text="正常状态"></el-switch>
                     </div>
-                    <el-switch v-model="isAdmin" active-text="管理员" inactive-text="普通用户"></el-switch>
+                    <div class="switch-item">
+                        <div class="switch-label">
+                            <i class="el-icon-user"></i>
+                            <span>用户角色</span>
+                        </div>
+                        <el-switch v-model="isAdmin" active-text="管理员" inactive-text="普通用户"></el-switch>
+                    </div>
                 </div>
-            </div>
-            <div class="dialog-footer">
-                <el-button class="cancel-btn" size="small" @click="cannel()">取消操作</el-button>
-                <el-button class="confirm-btn" type="primary" size="small" @click="comfirmStatus()">确认设置</el-button>
+                <div class="dialog-footer">
+                    <el-button class="cancel-btn" size="small" @click="cannel()">取消操作</el-button>
+                    <el-button class="confirm-btn" type="primary" size="small" @click="comfirmStatus()">确认设置</el-button>
+                </div>
             </div>
         </el-dialog>
     </el-row>
@@ -216,6 +224,8 @@ export default {
                         modals[i].parentNode.removeChild(modals[i]);
                     }
                 }
+                // 移除body上的dialog样式
+                document.body.classList.remove('el-popup-parent--hidden');
             });
         },
         comfirmStatus() {
@@ -432,14 +442,11 @@ export default {
 </script>
 <style scoped lang="scss">
 .common-container {
-    background-color: #FFFFFF;
-    padding: 20px 0;
+    padding: 10px;
     border-radius: 16px;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    box-sizing: border-box;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 .filter-row {
@@ -516,67 +523,65 @@ export default {
     margin-bottom: 20px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
     border: none;
-}
-
-/* 优化深度选择器使用 */
-:deep(.el-table) {
-    border: none;
     
-    &::before, 
-    &::after {
-        display: none;
-    }
-    
-    .el-table__header-wrapper th {
-        background-color: #f5f7fa;
-        color: #606266;
-        font-weight: 600;
-        padding: 12px 0;
-        border-bottom: 1px solid #ebeef5;
-    }
-    
-    .el-table__body-wrapper .el-table__row {
-        transition: all 0.3s;
-        
-        &:hover {
-            background-color: #f0f9ff !important;
-        }
-        
-        td {
-            padding: 10px 0;
-            vertical-align: middle;
-            height: 40px;
-            line-height: 20px;
-            border-bottom: 1px solid #ebeef5;
+    ::v-deep .el-table__header-wrapper {
+        th {
+            background-color: #f5f7fa;
+            color: #606266;
+            font-weight: 600;
+            padding: 12px 0;
         }
     }
     
-    .el-table__empty-block {
+    ::v-deep .el-table__body-wrapper {
+        .el-table__row {
+            transition: all 0.3s;
+            
+            &:hover {
+                background-color: #f0f9ff !important;
+            }
+            
+            td {
+                padding: 10px 0;
+                vertical-align: middle;
+                height: 40px;
+                line-height: 20px;
+                border-bottom: 1px solid #ebeef5;
+            }
+        }
+    }
+    
+    ::v-deep .el-table__empty-block {
         min-height: 60px;
     }
     
-    .el-table__header, 
-    .el-table__body {
+    ::v-deep .el-table__header, 
+    ::v-deep .el-table__body {
         border: none;
     }
     
-    .el-table--border::after, 
-    .el-table--group::after {
+    &::before, 
+    &::after,
+    ::v-deep .el-table--border::after, 
+    ::v-deep .el-table--group::after {
         display: none;
     }
 }
 
-:deep(.el-pagination) {
+/* 分页样式美化 */
+::v-deep .el-pagination {
     .el-pagination__total {
         font-weight: 500;
     }
     
-    .el-pagination__sizes .el-input .el-input__inner {
-        border-radius: 4px;
-        transition: all 0.3s;
-        
-        &:hover, &:focus {
-            border-color: #409EFF;
+    .el-pagination__sizes {
+        .el-input .el-input__inner {
+            border-radius: 4px;
+            transition: all 0.3s;
+            
+            &:hover, &:focus {
+                border-color: #409EFF;
+            }
         }
     }
     
@@ -603,124 +608,191 @@ export default {
     }
 }
 
-/* 对话框样式 */
-.dialog-content {
-    padding: 20px;
+/* 用户信息对话框样式 */
+.user-dialog, .status-dialog {
+    ::v-deep .el-dialog {
+        border-radius: 16px;
+        overflow: hidden;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        margin-top: 0 !important;
+        position: relative;
+        z-index: 3000 !important;
+    }
+    
+    ::v-deep .v-modal {
+        z-index: 2999 !important;
+    }
+}
+
+.dialog-wrapper {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: 80vh;
+}
+
+.dialog-header {
+    background: linear-gradient(135deg, #e0eaff, #f2e6ff);
+    padding: 16px 20px;
+    position: relative;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .dialog-title {
     font-size: 18px;
     font-weight: 600;
-    color: #303133;
-    margin: 0 0 20px 0;
-    padding-bottom: 10px;
+    color: #333;
+    margin: 0;
     position: relative;
-    display: inline-block;
-    border-bottom: 2px solid #409EFF;
+    padding-left: 12px;
+    
+    &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 18px;
+        background: linear-gradient(to bottom, #409EFF, #a18cd1);
+        border-radius: 2px;
+    }
+}
+
+.dialog-content {
+    padding: 20px;
+    background-color: white;
+    overflow-y: auto;
 }
 
 .dialog-footer {
+    padding: 16px 20px;
+    background-color: rgba(245, 247, 250, 0.8);
     text-align: right;
-    padding: 10px 20px 20px;
-    border-top: 1px solid #ebeef5;
-    margin-top: 10px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .user-form {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
 }
 
 .avatar-section {
-    width: 40%;
-    padding: 0 10px;
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .form-section {
-    width: 60%;
-    padding: 0 10px;
+    width: 100%;
 }
 
 .form-label {
-    display: block;
+    display: flex;
+    align-items: center;
     margin-bottom: 8px;
-    font-weight: 600;
+    font-weight: 500;
+    color: #606266;
+    
+    i {
+        margin-right: 5px;
+        color: #409EFF;
+    }
 }
 
 .form-row {
     display: flex;
+    gap: 15px;
     margin-bottom: 15px;
 }
 
 .form-group {
-    width: 50%;
-    padding: 0 5px;
+    flex: 1;
 }
 
-.dialog-input {
-    width: 100%;
-    padding: 8px 10px;
-    margin-bottom: 15px;
-    border: 1px solid #dcdfe6;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #606266;
+.avatar-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s;
     
-    &:focus {
-        outline: none;
-        border-color: #409EFF;
+    &:hover {
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        
+        .avatar-hover {
+            opacity: 1;
+        }
     }
 }
 
 .dialog-avatar {
-    width: 100px;
-    height: 100px;
-    display: block;
-    margin: 0 auto;
-    border-radius: 4px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border: 1px solid #ebeef5;
 }
 
-.custom-upload-placeholder {
-    width: 100px;
-    height: 100px;
+.avatar-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px dashed #d9d9d9;
-    border-radius: 4px;
+    border: 2px dashed #d9d9d9;
+    border-radius: 50%;
     background-color: #fafafa;
+    
+    i {
+        font-size: 30px;
+        color: #c0c4cc;
+    }
 }
 
-/* 状态对话框 */
-.dialog-header {
-    background-color: #f0f0f0;
-    padding: 10px 20px;
-    border-bottom: 1px solid #dcdfe6;
-}
-
-.dialog-body {
-    padding: 20px;
-}
-
-.switch-item {
-    margin-bottom: 15px;
-}
-
-.switch-label {
+.avatar-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 8px;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s;
+    
+    i {
+        color: white;
+        font-size: 20px;
+        margin-bottom: 4px;
+    }
+    
+    span {
+        color: white;
+        font-size: 12px;
+    }
 }
 
 /* 按钮样式 */
 .cancel-btn, .confirm-btn {
-    padding: 8px 15px;
-    border-radius: 4px;
+    padding: 8px 20px;
+    border-radius: 20px;
     cursor: pointer;
     margin-left: 10px;
     font-size: 14px;
+    transition: all 0.3s;
 }
 
 .cancel-btn {
@@ -732,16 +804,58 @@ export default {
         color: #409EFF;
         border-color: #c6e2ff;
         background-color: #ecf5ff;
+        transform: translateY(-1px);
     }
 }
 
 .confirm-btn {
-    background-color: #409EFF;
+    background: linear-gradient(to right, #409EFF, #64b0ff);
     color: white;
     border: none;
+    box-shadow: 0 2px 8px rgba(64, 158, 255, 0.3);
 
     &:hover {
-        background-color: #66b1ff;
+        background: linear-gradient(to right, #48a6ff, #70baff);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(64, 158, 255, 0.4);
+    }
+}
+
+/* 状态对话框样式 */
+.status-dialog {
+    ::v-deep .el-switch__label {
+        color: #606266;
+        
+        &.is-active {
+            color: #409EFF;
+        }
+    }
+}
+
+.switch-item {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.switch-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-weight: 500;
+    
+    i {
+        font-size: 16px;
+        margin-right: 8px;
+        color: #409EFF;
+    }
+    
+    span {
+        color: #606266;
     }
 }
 
@@ -752,37 +866,26 @@ export default {
     margin: 0 4px;
     
     &:hover {
-        transform: translateY(-1px);
+        opacity: 0.8;
+        transform: scale(1.05);
     }
     
     &.status-tag {
         background-color: #fdf6ec;
         color: #E6A23C;
         border-color: #faecd8;
-        
-        &:hover {
-            background-color: #faecd8;
-        }
     }
     
     &.edit-tag {
         background-color: #ecf5ff;
         color: #409EFF;
         border-color: #d9ecff;
-        
-        &:hover {
-            background-color: #d9ecff;
-        }
     }
     
     &.delete-tag {
         background-color: #fef0f0;
         color: #F56C6C;
         border-color: #fde2e2;
-        
-        &:hover {
-            background-color: #fde2e2;
-        }
     }
 }
 

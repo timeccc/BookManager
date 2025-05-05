@@ -6,7 +6,7 @@
                 value-format="yyyy-MM-dd"
                 range-separator="-" start-placeholder="起始日期" end-placeholder="结束日期">
             </el-date-picker>
-            <el-button size="small" class="query-btn" type="primary"
+            <el-button size="small" class="query-btn no-icon" type="primary"
                 @click="handleFilter">立即查询</el-button>
         </el-row>
         <el-row class="table-container">
@@ -242,6 +242,49 @@ export default {
     margin-bottom: 20px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
     border: none;
+    
+    ::v-deep .el-table__header-wrapper {
+        th {
+            background-color: #f5f7fa;
+            color: #606266;
+            font-weight: 600;
+            padding: 12px 0;
+        }
+    }
+    
+    ::v-deep .el-table__body-wrapper {
+        .el-table__row {
+            transition: all 0.3s;
+            
+            &:hover {
+                background-color: #f0f9ff !important;
+            }
+            
+            td {
+                padding: 10px 0;
+                vertical-align: middle;
+                height: 40px;
+                line-height: 20px;
+                border-bottom: 1px solid #ebeef5;
+            }
+        }
+    }
+    
+    ::v-deep .el-table__empty-block {
+        min-height: 60px;
+    }
+    
+    ::v-deep .el-table__header, 
+    ::v-deep .el-table__body {
+        border: none;
+    }
+    
+    &::before, 
+    &::after,
+    ::v-deep .el-table--border::after, 
+    ::v-deep .el-table--group::after {
+        display: none;
+    }
 }
 
 .action-buttons {
@@ -253,70 +296,22 @@ export default {
 .action-tag {
     cursor: pointer;
     transition: all 0.2s;
+    margin: 0 4px;
     
     &:hover {
-        transform: translateY(-1px);
+        opacity: 0.8;
+        transform: scale(1.05);
     }
     
     &.delete-tag {
         background-color: #fef0f0;
         color: #F56C6C;
         border-color: #fde2e2;
-        
-        &:hover {
-            background-color: #fde2e2;
-        }
-    }
-}
-
-/* 优化深度选择器使用 */
-:deep(.el-table) {
-    &::before, 
-    &::after {
-        display: none;
-    }
-    
-    .el-table__header-wrapper th {
-        background-color: #f5f7fa;
-        color: #606266;
-        font-weight: 600;
-        padding: 12px 0;
-        border-bottom: 1px solid #ebeef5;
-    }
-    
-    .el-table__body-wrapper .el-table__row {
-        transition: all 0.3s;
-        
-        &:hover {
-            background-color: #f0f9ff !important;
-        }
-        
-        td {
-            padding: 10px 0;
-            vertical-align: middle;
-            height: 40px;
-            line-height: 20px;
-            border-bottom: 1px solid #ebeef5;
-        }
-    }
-    
-    .el-table__empty-block {
-        min-height: 60px;
-    }
-    
-    .el-table__header, 
-    .el-table__body {
-        border: none;
-    }
-    
-    .el-table--border::after, 
-    .el-table--group::after {
-        display: none;
     }
 }
 
 /* 分页样式美化 */
-:deep(.el-pagination) {
+::v-deep .el-pagination {
     .el-pagination__total {
         font-weight: 500;
     }
@@ -352,6 +347,13 @@ export default {
         &:hover {
             color: #409EFF;
         }
+    }
+}
+
+/* 隐藏按钮图标 */
+.no-icon {
+    ::v-deep i {
+        display: none !important;
     }
 }
 </style>

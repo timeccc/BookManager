@@ -1,5 +1,5 @@
 <template>
-    <el-row class="book-save-view-container">
+    <div class="book-save-view-container">
         <div class="word-search" v-if="tableData.length !== 0">
             <div class="item">
                 <i class="el-icon-search"></i>
@@ -77,7 +77,7 @@
                 <el-button class="confirm-btn" type="primary" size="small" @click="addOperation">确定借书</el-button>
             </div>
         </el-dialog>
-    </el-row>
+    </div>
 </template>
 
 <script>
@@ -308,29 +308,30 @@ export default {
 </script>
 <style scoped lang="scss">
 .book-save-view-container {
-    width: 100%;
-    padding: 10px 20px 20px 20px;
-    box-sizing: border-box;
-    background-color: #fafafa;
+    padding: 10px;
+    border-radius: 16px;
+    background-color: transparent;
+    backdrop-filter: none;
+    box-shadow: none;
 }
 
 .word-search {
     display: flex;
     justify-content: center;
-    margin-bottom: 15px;
-    margin-top: -5px;
+    margin-bottom: 20px;
 
     .item {
         padding: 10px 20px;
         width: 500px;
-        background-color: white;
+        background-color: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
         border-radius: 40px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         box-sizing: border-box;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        border: 1px solid #eee;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        border: 1px solid rgba(255, 255, 255, 0.3);
         transition: all 0.3s ease;
 
         &:hover, &:focus-within {
@@ -370,10 +371,6 @@ export default {
                 transform: translateY(-1px);
             }
         }
-        
-        .search-btn {
-            display: none;
-        }
     }
 }
 
@@ -390,13 +387,15 @@ export default {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
 }
 
 .save-book {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid rgba(240, 240, 240, 0.5);
     transition: all 0.3s ease;
     
     &:last-child {
@@ -475,15 +474,15 @@ export default {
 }
 
 .save-book:hover {
-    background-color: #f9f9f9;
+    background-color: rgba(249, 249, 249, 0.5);
 }
 
 .save-book.header {
-    background-color: #f5f7fa;
-    border-bottom: 1px solid #ebeef5;
+    background-color: rgba(245, 247, 250, 0.6);
+    border-bottom: 1px solid rgba(235, 238, 245, 0.5);
     
     &:hover {
-        background-color: #f5f7fa;
+        background-color: rgba(245, 247, 250, 0.6);
     }
 }
 
@@ -495,22 +494,27 @@ export default {
 }
 
 .borrow-dialog {
-    border-radius: 8px;
-    overflow: hidden;
+    ::v-deep .el-dialog {
+        border-radius: 16px;
+        overflow: hidden;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
     
-    .el-dialog__header {
+    ::v-deep .el-dialog__header {
         display: none;
     }
     
-    .el-dialog__body {
+    ::v-deep .el-dialog__body {
         padding: 0;
     }
 }
 
 .dialog-header {
-    background-color: #f9f9f9;
+    background-color: rgba(249, 249, 249, 0.7);
     padding: 14px 20px;
-    border-bottom: 1px solid #ebeef5;
+    border-bottom: 1px solid rgba(235, 238, 245, 0.5);
 }
 
 .dialog-title {
@@ -540,7 +544,8 @@ export default {
 .dialog-footer {
     padding: 10px 20px 16px;
     text-align: right;
-    border-top: 1px solid #ebeef5;
+    border-top: 1px solid rgba(235, 238, 245, 0.5);
+    background-color: rgba(249, 249, 249, 0.3);
 }
 
 .form-group {
@@ -561,7 +566,7 @@ export default {
 }
 
 .borrow-notice {
-    background-color: #fff8e6;
+    background-color: rgba(255, 248, 230, 0.8);
     border-radius: 4px;
     padding: 10px 12px;
     font-size: 12px;
@@ -591,14 +596,14 @@ export default {
 }
 
 .cancel-btn {
-    background-color: #f5f7fa;
+    background-color: rgba(245, 247, 250, 0.8);
     color: #606266;
-    border: 1px solid #dcdfe6;
+    border: 1px solid rgba(220, 223, 230, 0.7);
     
     &:hover {
         color: #409EFF;
-        border-color: #c6e2ff;
-        background-color: #ecf5ff;
+        border-color: rgba(198, 226, 255, 0.7);
+        background-color: rgba(236, 245, 255, 0.8);
     }
 }
 
@@ -626,6 +631,7 @@ export default {
 ::v-deep .el-pager li {
     border-radius: 8px;
     transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.7);
 }
 
 ::v-deep .el-pager li.active {

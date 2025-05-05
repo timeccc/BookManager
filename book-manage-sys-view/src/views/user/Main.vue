@@ -1,99 +1,98 @@
 <template>
     <el-row class="main-proposal-container">
-        <!-- 搜索框 -->
-        <div class="word-search">
-            <div class="item">
-                <i class="el-icon-search"></i>
-                <input type="text" placeholder="搜索用户留言" v-model="readerProposalQueryDto.content">
-                <span class="search-text" @click="fetchReaderProposal">搜索</span>
+            <!-- 搜索框 -->
+            <div class="word-search">
+                <div class="item">
+                    <i class="el-icon-search"></i>
+                    <input type="text" placeholder="搜索用户留言" v-model="readerProposalQueryDto.content">
+                    <span class="search-text" @click="fetchReaderProposal">搜索</span>
+                </div>
             </div>
-        </div>
-        
-        <!-- 筛选标签 -->
-        <div class="category-container">
-            <span class="category" 
-                  :class="{'active-category': tagSelected === tagItem}" 
-                  @click="condition(tagItem)" 
-                  v-for="(tagItem, index) in tags" 
-                  :key="index">
-                {{ tagItem }}
-            </span>
-        </div>
-        
-        <!-- 留言内容区 -->
-        <div class="content-section">
-            <el-empty 
-                v-if="proposals.length === 0" 
-                description="暂无留言" 
-                :image-size="200">
-            </el-empty>
             
-            <div v-else class="card-list">
-                <div class="page-title">
-                    <span class="title-text">用户留言</span>
-                    <div class="line-decoration"></div>
-                </div>
-
-                <div 
-                    v-for="(proposal, index) in proposals" 
-                    :key="index"
-                    class="message-card"
-                    :class="getCardClass(index, proposal)">
-                    
-                    <div class="message-icon">
-                        <i class="el-icon-chat-dot-square"></i>
+            <!-- 筛选标签 -->
+            <div class="category-container">
+                <span class="category" 
+                      :class="{'active-category': tagSelected === tagItem}" 
+                      @click="condition(tagItem)" 
+                      v-for="(tagItem, index) in tags" 
+                      :key="index">
+                    {{ tagItem }}
+                </span>
+            </div>
+            
+            <!-- 留言内容区 -->
+            <div class="content-section">
+                <el-empty 
+                    v-if="proposals.length === 0" 
+                    description="暂无留言" 
+                    :image-size="200">
+                </el-empty>
+                
+                <div v-else class="card-list">
+                    <div class="list-title">
+                        <span class="title-text">用户留言</span>
+                        <div class="line-decoration"></div>
                     </div>
-                    <div class="message-main">
-                        <!-- 卡片头部 -->
-                        <div class="card-header">
-                            <div class="user-info">
-                                <el-avatar :src="proposal.userAvatar" :size="36"></el-avatar>
-                                <div class="user-name">{{ proposal.userName }}</div>
-                            </div>
-                            <div class="message-actions">
-                                <span class="message-time">{{ proposal.createTime }}</span>
-                                <span v-if="proposal.replyTime !== null" class="reply-tag">已回复</span>
-                                <el-popconfirm 
-                                    v-if="myContent(proposal)" 
-                                    title="确定删除这条留言吗？" 
-                                    @confirm="confirmDel(proposal)">
-                                    <el-button slot="reference" type="danger" size="mini" icon="el-icon-delete" circle></el-button>
-                                </el-popconfirm>
-                            </div>
-                        </div>
+
+                    <div v-for="(proposal, index) in proposals" 
+                        :key="index"
+                        class="message-card"
+                        :class="getCardClass(index, proposal)">
                         
-                        <!-- 留言内容 -->
-                        <div class="card-content">
-                            {{ proposal.content }}
+                        <div class="message-icon">
+                            <i class="el-icon-chat-dot-square"></i>
                         </div>
-                        
-                        <!-- 回复内容 -->
-                        <div v-if="proposal.replyTime !== null" class="card-reply">
-                            <div class="reply-header">
-                                <i class="el-icon-s-custom"></i>
-                                <span>管理员回复</span>
-                                <span class="reply-time">{{ proposal.replyTime }}</span>
+                        <div class="message-main">
+                            <!-- 卡片头部 -->
+                            <div class="card-header">
+                                <div class="user-info">
+                                    <el-avatar :src="proposal.userAvatar" :size="36"></el-avatar>
+                                    <div class="user-name">{{ proposal.userName }}</div>
+                                </div>
+                                <div class="message-actions">
+                                    <span class="message-time">{{ proposal.createTime }}</span>
+                                    <span v-if="proposal.replyTime !== null" class="reply-tag">已回复</span>
+                                    <el-popconfirm 
+                                        v-if="myContent(proposal)" 
+                                        title="确定删除这条留言吗？" 
+                                        @confirm="confirmDel(proposal)">
+                                        <el-button slot="reference" type="danger" size="mini" icon="el-icon-delete" circle></el-button>
+                                    </el-popconfirm>
+                                </div>
                             </div>
-                            <div class="reply-content">
-                                {{ proposal.replyContent }}
+                            
+                            <!-- 留言内容 -->
+                            <div class="card-content">
+                                {{ proposal.content }}
+                            </div>
+                            
+                            <!-- 回复内容 -->
+                            <div v-if="proposal.replyTime !== null" class="card-reply">
+                                <div class="reply-header">
+                                    <i class="el-icon-s-custom"></i>
+                                    <span>管理员回复</span>
+                                    <span class="reply-time">{{ proposal.replyTime }}</span>
+                                </div>
+                                <div class="reply-content">
+                                    {{ proposal.replyContent }}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        
-        <!-- 分页控件 -->
-        <div class="pager" v-if="proposals.length !== 0">
-            <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page.sync="current"
-                :page-size="size"
-                layout="total, prev, pager, next"
-                :total="totalCount">
-            </el-pagination>
-        </div>
+            
+            <!-- 分页控件 -->
+            <div class="pager" v-if="proposals.length !== 0">
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page.sync="current"
+                    :page-size="size"
+                    layout="total, prev, pager, next"
+                    :total="totalCount">
+                </el-pagination>
+            </div>
 
         <!-- 留言对话框 -->
         <el-dialog 
@@ -102,6 +101,7 @@
             width="520px"
             custom-class="modern-dialog"
             :append-to-body="true">
+            <!-- 对话框内容 -->
             <div class="dialog-container">
                 <!-- 对话框标题区 -->
                 <div class="dialog-header">
@@ -225,7 +225,7 @@ export default {
         getCardClass(index, proposal) {
             return this.cardColors[index % this.cardColors.length];
         },
-        
+            
         // 发表留言
         postProposal() {
             this.$refs.proposalForm.validate(valid => {
@@ -281,25 +281,25 @@ export default {
             const ids = [proposal.id];
             this.$axios.post(`/readerProposal/batchDelete`, ids)
                 .then(res => {
-                    const { data } = res;
-                    if (data.code === 200) {
-                        this.$notify({
-                            duration: 1000,
-                            title: '留言删除',
-                            message: '留言删除成功',
-                            type: 'success'
-                        });
-                        this.fetchReaderProposal();
-                    }
+                const { data } = res;
+                if (data.code === 200) {
+                    this.$notify({
+                        duration: 1000,
+                        title: '留言删除',
+                        message: '留言删除成功',
+                        type: 'success'
+                    });
+                    this.fetchReaderProposal();
+                }
                 })
                 .catch(error => {
-                    this.$notify({
-                        title: '留言删除',
-                        message: error.message || '删除失败',
-                        type: 'error'
-                    });
-                    console.log("删除留言异常：", error);
+                this.$notify({
+                    title: '留言删除',
+                    message: error.message || '删除失败',
+                    type: 'error'
                 });
+                console.log("删除留言异常：", error);
+            });
         },
         
         // 分页大小变化
@@ -326,19 +326,19 @@ export default {
         paramCondition(tag) {
             switch (tag) {
                 case '全部':
-                    this.queryUser = false;
-                    this.readerProposalQueryDto.isReply = null;
+                this.queryUser = false;
+                this.readerProposalQueryDto.isReply = null;
                     break;
                 case '已回复':
-                    this.queryUser = false;
-                    this.readerProposalQueryDto.isReply = true;
+                this.queryUser = false;
+                this.readerProposalQueryDto.isReply = true;
                     break;
                 case '未回复':
-                    this.queryUser = false;
-                    this.readerProposalQueryDto.isReply = false;
+                this.queryUser = false;
+                this.readerProposalQueryDto.isReply = false;
                     break;
                 case '我的发布':
-                    this.queryUser = true;
+                this.queryUser = true;
                     break;
             }
             this.fetchReaderProposal();
@@ -353,15 +353,15 @@ export default {
             
             this.$axios.post(endpoint, this.readerProposalQueryDto)
                 .then(res => {
-                    const { data } = res;
-                    if (data.code === 200) {
-                        this.proposals = data.data;
-                        this.totalCount = data.total;
-                    }
+                const { data } = res;
+                if (data.code === 200) {
+                    this.proposals = data.data;
+                    this.totalCount = data.total;
+                }
                 })
                 .catch(error => {
-                    console.log("查询用户留言异常：", error);
-                });
+                console.log("查询用户留言异常：", error);
+            });
         }
     },
 };
@@ -392,6 +392,41 @@ $background-light: #f8f9fa;
     background-color: transparent;
     box-shadow: none;
     margin-bottom: 0;
+    position: relative;
+}
+
+// 列表标题样式
+.list-title {
+    margin-bottom: 30px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    
+    .title-text {
+        font-size: 20px;
+        font-weight: 600;
+        color: $text-primary;
+        margin-right: 20px;
+        position: relative;
+        
+        &:after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: $primary-color;
+            border-radius: 3px;
+        }
+    }
+    
+    .line-decoration {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(to right, rgba(0,0,0,0.1), rgba(0,0,0,0.02));
+    }
 }
 
 // 搜索框样式
@@ -400,55 +435,55 @@ $background-light: #f8f9fa;
     justify-content: center;
     margin-bottom: 15px;
     margin-top: 0;
-    
+        
     .item {
         padding: 10px 20px;
         width: 500px;
-        background-color: white;
-        border-radius: 40px;
+            background-color: white;
+            border-radius: 40px;
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        box-sizing: border-box;
+            align-items: center;
+            box-sizing: border-box;
         box-shadow: $card-shadow;
         border: 1px solid $border-light;
-        transition: all 0.3s ease;
-        
-        &:hover, &:focus-within {
+            transition: all 0.3s ease;
+            
+            &:hover, &:focus-within {
             box-shadow: $hover-shadow;
             border-color: $primary-border;
-        }
-        
-        input {
-            flex: 1;
-            border: none;
-            background-color: transparent;
-            outline: none;
-            font-size: 16px;
+            }
+            
+            input {
+                flex: 1;
+                border: none;
+                background-color: transparent;
+                outline: none;
+                font-size: 16px;
             color: $text-primary;
-            margin: 0 15px;
-            height: 24px;
-        }
+                margin: 0 15px;
+                height: 24px;
+            }
 
         i {
             font-size: 18px;
             color: $primary-color;
         }
-        
-        .search-text {
-            display: inline-block;
-            padding: 6px 16px;
-            border-radius: 20px;
-            background-color: $primary-color;
-            color: white;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
             
-            &:hover {
+            .search-text {
+                display: inline-block;
+                padding: 6px 16px;
+                border-radius: 20px;
+            background-color: $primary-color;
+                color: white;
+                font-size: 14px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-align: center;
+                
+                &:hover {
                 background-color: darken($primary-color, 5%);
-                transform: translateY(-1px);
+                    transform: translateY(-1px);
             }
         }
     }
@@ -508,39 +543,6 @@ $background-light: #f8f9fa;
     margin: 0 auto;
 }
 
-// 页面标题样式
-.page-title {
-    margin-bottom: 30px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    
-    .title-text {
-        font-size: 20px;
-        font-weight: 600;
-        color: $text-primary;
-        margin-right: 20px;
-        position: relative;
-        
-        &:after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 0;
-            width: 40px;
-            height: 3px;
-            background: $primary-color;
-            border-radius: 3px;
-        }
-    }
-    
-    .line-decoration {
-        flex: 1;
-        height: 1px;
-        background: linear-gradient(to right, rgba(0,0,0,0.1), rgba(0,0,0,0.02));
-    }
-}
-
 // 留言卡片样式
 .message-card {
     display: flex;
@@ -595,7 +597,7 @@ $background-light: #f8f9fa;
     
     &.green-card .message-icon {
         background-color: rgba(103, 194, 58, 0.15);
-        color: #67C23A;
+            color: #67C23A;
     }
     
     &.orange-card .message-icon {

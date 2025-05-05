@@ -15,7 +15,7 @@ html, body {
 
 #app {
   height: 100%;
-  background: linear-gradient(to right, #f5f7fa, #e4e8f1);
+  background: #ffffff;
   overflow: hidden; /* 防止app容器层级出现滚动条 */
 }
 

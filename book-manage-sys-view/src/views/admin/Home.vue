@@ -11,7 +11,7 @@
         </div>
 
         <!-- 右侧内容区 -->
-        <div class="main-container">
+        <div class="main-container" :class="{'main-expanded': flag}">
             <div class="header">
                 <LevelHeader 
                     @eventListener="eventListener" 
@@ -31,6 +31,7 @@
             width="380px" 
             custom-class="user-center-dialog"
             :show-close="true">
+            <div class="dialog-content-wrapper">
             <div class="user-center-header">
                 <h3>个人中心</h3>
             </div>
@@ -66,9 +67,10 @@
                     <el-input v-model="userInfo.email" placeholder="请输入邮箱"></el-input>
                 </div>
             </div>
-            <div slot="footer" class="user-center-footer">
+                <div class="user-center-footer">
                 <el-button @click="dialogOperaion = false">取 消</el-button>
                 <el-button type="primary" @click="updateUserInfo">确认修改</el-button>
+                </div>
             </div>
         </el-dialog>
     </div>
@@ -210,8 +212,25 @@ export default {
                 showCancelButton: true,
                 confirmButtonText: '确认',
                 cancelButtonText: '取消',
-                confirmButtonColor: '#409EFF',
-                cancelButtonColor: '#909399'
+                confirmButtonColor: '#ff5722',
+                cancelButtonColor: '#909399',
+                iconColor: '#ff9800',
+                customClass: {
+                    popup: 'modern-swal-popup',
+                    header: 'modern-swal-header',
+                    title: 'modern-swal-title',
+                    content: 'modern-swal-content',
+                    confirmButton: 'modern-swal-confirm-button',
+                    cancelButton: 'modern-swal-cancel-button',
+                    actions: 'modern-swal-actions'
+                },
+                buttonsStyling: true,
+                showClass: {
+                    popup: 'animate__animated animate__fadeInUp animate__faster'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutDown animate__faster'
+                }
             });
             
             if (confirmed) {
@@ -220,7 +239,13 @@ export default {
                     text: '正在返回登录页面...',
                     icon: 'success',
                     showConfirmButton: false,
-                    timer: 1000
+                    timer: 1000,
+                    iconColor: '#67C23A',
+                    customClass: {
+                        popup: 'modern-swal-popup',
+                        title: 'modern-swal-title',
+                        content: 'modern-swal-content'
+                    }
                 });
                 
                 setTimeout(() => {
@@ -283,22 +308,39 @@ export default {
 .admin-layout {
     display: flex;
     height: 100vh;
-    background-color: #f6f8fc;
+    background: linear-gradient(135deg, #e8f0ff 0%, #d6e9ff 50%, #e8e0ff 100%);
+    background-attachment: fixed;
     overflow: hidden;
+    position: relative;
+    
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 15% 20%, rgba(255, 130, 180, 0.15) 0%, rgba(255, 130, 180, 0) 35%),
+            radial-gradient(circle at 85% 70%, rgba(100, 180, 255, 0.2) 0%, rgba(100, 180, 255, 0) 35%);
+        pointer-events: none;
+    }
 }
 
 // 侧边栏
 .sidebar {
     width: 240px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: column;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 1000;
+    z-index: 10;
     flex-shrink: 0;
-    border-radius: 0 20px 20px 0;
-    margin-right: 14px;
+    border-radius: 0 16px 16px 0;
+    overflow: hidden;
+    margin-right: 0;
     position: relative;
 }
 
@@ -321,7 +363,7 @@ export default {
     padding: 8px 0;
     
     &::-webkit-scrollbar {
-        width: 0;
+        width: 4px;
     }
     
     &::-webkit-scrollbar-track {
@@ -329,7 +371,12 @@ export default {
     }
     
     &::-webkit-scrollbar-thumb {
-        background-color: transparent;
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 2px;
+        
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
     }
 }
 
@@ -339,37 +386,42 @@ export default {
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    padding: 16px 20px;
-    background-color: #f6f8fc;
-    border-radius: 20px 0 0 20px;
-    margin-left: -14px;
+    padding: 16px 20px 16px 32px;
+    background-color: transparent;
     transition: all 0.3s ease;
+    margin-left: -12px;
+}
+
+.main-expanded {
+    padding-left: 24px;
 }
 
 .header {
     height: 70px;
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
     border-radius: 16px;
     margin-bottom: 16px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 15px rgba(125, 150, 255, 0.1);
     display: flex;
     align-items: center;
 }
 
 .content {
     flex: 1;
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
     border-radius: 16px;
     padding: 24px;
     overflow-y: auto;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 15px rgba(125, 150, 255, 0.1);
     
     &::-webkit-scrollbar {
         width: 6px;
     }
     
     &::-webkit-scrollbar-track {
-        background: #f0f2f5;
+        background: rgba(240, 242, 245, 0.5);
         border-radius: 3px;
     }
     
@@ -387,6 +439,7 @@ export default {
 .user-center-dialog {
     border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 10px 30px rgba(125, 150, 255, 0.2);
     
     ::v-deep .el-dialog__body {
         padding: 0;
@@ -399,18 +452,29 @@ export default {
     ::v-deep .el-dialog__headerbtn {
         z-index: 10;
     }
+    
+    ::v-deep .el-dialog__wrapper {
+        backdrop-filter: blur(4px);
+    }
+}
+
+.dialog-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: 80vh;
 }
 
 .user-center-header {
-    background: linear-gradient(135deg, #f0f7ff, #e0eeff);
+    background: linear-gradient(135deg, #e0eaff, #f2e6ff);
     padding: 24px;
     position: relative;
     
     h3 {
         margin: 0;
         font-size: 18px;
-        color: #303133;
         font-weight: 600;
+        color: #303133;
         position: relative;
         padding-left: 14px;
         
@@ -422,7 +486,7 @@ export default {
             transform: translateY(-50%);
             width: 4px;
             height: 18px;
-            background-color: #409EFF;
+            background: linear-gradient(to bottom, #409EFF, #a18cd1);
             border-radius: 4px;
         }
     }
@@ -430,6 +494,20 @@ export default {
 
 .user-center-body {
     padding: 24px;
+    background-color: white;
+}
+
+.user-center-footer {
+    padding: 16px 24px;
+    background-color: rgba(245, 247, 250, 0.8);
+    text-align: right;
+    border-top: 1px solid rgba(0, 0, 0, 0.03);
+    
+    .el-button {
+        padding: 10px 22px;
+        font-size: 14px;
+        border-radius: 8px;
+    }
 }
 
 .form-item {
@@ -488,16 +566,114 @@ export default {
         color: #409EFF;
     }
 }
+</style>
 
-.user-center-footer {
-    padding: 16px 24px;
-    background-color: #f5f7fa;
-    text-align: right;
-    
-    .el-button {
-        padding: 10px 22px;
-        font-size: 14px;
-        border-radius: 8px;
+<style>
+/* SweetAlert2 自定义样式 */
+.modern-swal-popup {
+    border-radius: 16px !important;
+    padding: 24px !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.modern-swal-header {
+    padding-bottom: 16px !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+.modern-swal-title {
+    font-size: 1.4rem !important;
+    font-weight: 600 !important;
+    color: #333 !important;
+    margin-bottom: 8px !important;
+    font-family: '未来圆SC','PingFang SC', 'Microsoft YaHei', sans-serif !important;
+}
+
+.modern-swal-content {
+    font-size: 1rem !important;
+    color: #606266 !important;
+    margin-top: 16px !important;
+    margin-bottom: 24px !important;
+}
+
+.modern-swal-actions {
+    margin-top: 24px !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 12px !important;
+}
+
+.modern-swal-confirm-button, 
+.modern-swal-cancel-button {
+    border-radius: 40px !important;
+    padding: 10px 24px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: none !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.modern-swal-confirm-button {
+    background: linear-gradient(135deg, #ff7043, #ff5722) !important;
+}
+
+.modern-swal-confirm-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(255, 87, 34, 0.3) !important;
+}
+
+.modern-swal-cancel-button {
+    background-color: #f0f2f5 !important;
+    color: #606266 !important;
+}
+
+.modern-swal-cancel-button:hover {
+    background-color: #e4e7ed !important;
+    transform: translateY(-2px) !important;
     }
+
+/* 为动画效果添加的样式 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+  }
+}
+
+.animate__animated {
+  animation-duration: 300ms;
+  animation-fill-mode: both;
+}
+
+.animate__fadeInUp {
+  animation-name: fadeInUp;
+}
+
+.animate__fadeOutDown {
+  animation-name: fadeOutDown;
+}
+
+.animate__faster {
+  animation-duration: 200ms;
 }
 </style>
