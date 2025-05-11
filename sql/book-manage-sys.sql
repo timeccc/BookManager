@@ -11,7 +11,7 @@
  Target Server Version : 50741 (5.7.41-log)
  File Encoding         : 65001
 
- Date: 05/05/2025 15:47:03
+ Date: 11/05/2025 15:48:08
 */
 
 SET NAMES utf8mb4;
@@ -252,7 +252,7 @@ CREATE TABLE `user`  (
   `is_word` tinyint(1) NULL DEFAULT NULL COMMENT '禁言状态(0：可用，1：不可用)',
   `create_time` datetime NULL DEFAULT NULL COMMENT '用户注册时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
@@ -263,6 +263,7 @@ INSERT INTO `user` VALUES (18, 'liqingzhao', '李清照', '14e1b600b1fd579f47433
 INSERT INTO `user` VALUES (19, 'banzhao', '班昭', '14e1b600b1fd579f47433b88e8d85291', '/api/book-manage-sys-api/v1.0/file/getFile?fileName=f7b0d1bIMG_20250502_214459.png', '4628534@qq.com', 2, 0, 1, '2025-02-05 15:17:25');
 INSERT INTO `user` VALUES (20, 'chenlin', '陈琳', '14e1b600b1fd579f47433b88e8d85291', '/api/book-manage-sys-api/v1.0/file/getFile?fileName=ef3a37f3a31d3b1736421319612.jpeg', '5482342@qq.com', 2, 1, 1, '2025-02-06 12:51:51');
 INSERT INTO `user` VALUES (21, 'caiwenji', '蔡文姬', '14e1b600b1fd579f47433b88e8d85291', '/api/book-manage-sys-api/v1.0/file/getFile?fileName=cdd179fTheCatandtheMaiden1.jpg', '5432754@qq.com', 2, 0, 0, '2025-02-06 12:54:56');
+INSERT INTO `user` VALUES (22, 'zhuowenjun', '卓文君', '14e1b600b1fd579f47433b88e8d85291', '/api/book-manage-sys-api/v1.0/file/getFile?fileName=eaded482521318.jpg', '764324@qq.com', 2, 0, 0, '2025-05-11 14:39:12');
 
 -- ----------------------------
 -- Table structure for user_operation_log
