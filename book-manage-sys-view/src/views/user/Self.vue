@@ -1,15 +1,14 @@
 <template>
     <div class="profile-container">
-        <el-form :model="userInfo" ref="userForm" label-position="top" :rules="rules">
-            <!-- 头像 -->
-            <el-form-item label="头像" prop="userAvatar">
-                <el-upload 
+        <el-form :model="userInfo" ref="userForm" label-position="top" :rules="rules">            <!-- 头像 -->            <el-form-item label="头像" prop="userAvatar">                <el-upload 
                     class="avatar-uploader" 
                     action="http://localhost:2025/api/book-manage-sys-api/v1.0/file/upload" 
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess">
-                    <img v-if="userAvatar" :src="userAvatar" class="avatar-image">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    <div class="avatar-container">
+                        <img v-if="userAvatar" :src="userAvatar" class="avatar-image">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </div>
                 </el-upload>
             </el-form-item>
             
@@ -181,40 +180,52 @@ export default {
 .profile-container {
     padding: 20px;
     max-width: 600px;
-    margin: 0 auto;
-    
-    .avatar-uploader {
-        border: 1px dashed #d9d9d9;
-        border-radius: 6px;
+    margin: 0 auto;      .avatar-uploader {        border: 1px dashed #d9d9d9;
+        border-radius: 16px; /* 更大的圆角 */
         cursor: pointer;
         position: relative;
         overflow: hidden;
-        width: 100px;
-        height: 100px;
+        width: 120px;
+        height: 120px;
         display: flex;
         justify-content: center;
         align-items: center;
         box-sizing: border-box;
-        
-        &:hover {
+        background-color: #f5f7fa;
+          &:hover {
             border-color: #ff5722;
-        }
+            background-color: #fafafa;        }
         
-        .avatar-image {
+        .avatar-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+            .avatar-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
             margin: 0;
+            padding: 0;
             border: none;
-        }
-        
-        .avatar-uploader-icon {
+            border-radius: 0; /* 确保图片没有圆角 */
+            -webkit-mask-image: none !important; /* 移除可能的遮罩 */
+            mask-image: none !important;
+            /* 添加一些额外的样式来确保图片不会被裁剪为圆形 */
+            background-size: cover;
+            background-position: center;
+            clip-path: none !important;
+            transform: none !important;
+            shape-outside: none !important;
+        }.avatar-uploader-icon {
             font-size: 28px;
             color: #8c939d;
-            width: 100px;
-            height: 100px;
-            line-height: 100px;
+            width: 120px;
+            height: 120px;
+            line-height: 120px;
             text-align: center;
         }
     }
@@ -277,12 +288,21 @@ export default {
     ::v-deep .el-button {
         border-radius: 8px;
         padding: 12px 20px;
-    }
-    
-    ::v-deep .el-upload {
+    }      ::v-deep .el-upload {
         width: 100%;
         height: 100%;
         display: block;
+        border-radius: 16px;
+        overflow: hidden;
+        
+        /* 确保图片不会被裁剪为圆形 */
+        &:before, &:after {
+            display: none !important;
+        }
+        
+        /* 消除可能的蒙版效果 */
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
         
         .el-upload-dragger {
             width: 100%;
