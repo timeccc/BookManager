@@ -3,12 +3,6 @@ package cn.kmbeast.pojo.api;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * 通用响应
- *
- * @author 【B站：程序员晨星】
- * @param <T> 泛型
- */
 @Setter
 @Getter
 public class ApiResult<T> extends Result<T> {
