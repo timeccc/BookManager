@@ -370,9 +370,7 @@ export default {
     },
 };
 </script>
-<style lang="scss">
-/* 全局样式移除，使用Element UI原生样式 */
-</style>
+
 <style scoped lang="scss">
 .book-manage-container {
     background-color: #FFFFFF;

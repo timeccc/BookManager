@@ -21,16 +21,13 @@
                     maxlength="20"
                     show-word-limit>
                 </el-input>
-            </el-form-item>
-            
-            <!-- 邮箱 -->
+            </el-form-item>            <!-- 邮箱 -->
             <el-form-item label="邮箱" prop="userEmail">
                 <el-input 
                     v-model="userInfo.userEmail" 
                     placeholder="请输入邮箱"
                     maxlength="50"
                     show-word-limit>
-                    <i slot="prefix" class="el-icon-message"></i>
                 </el-input>
             </el-form-item>
             
@@ -263,15 +260,13 @@ export default {
             }
         }
     }
-    
-    ::v-deep .el-form-item__label {
+      ::v-deep .el-form-item__label {
         line-height: 1.5;
         padding-bottom: 8px;
         font-size: 15px;
         font-weight: 500;
     }
-    
-    ::v-deep .el-input__inner {
+      ::v-deep .el-input__inner {
         border-radius: 8px;
     }
     
